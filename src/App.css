@@ -1,22 +1,78 @@
-.App {
-  text-align: center;
+/* @import "compass/css3"; */
+@import "https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900|Lato&display=swap";
+
+*{
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
+h1, h2, h3, h4, h5 {
+  font-family: 'Montserrat', sans-serif;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+p, a {
+  font-family: 'Lato', sans-serif;
 }
 
-.App-link {
-  color: #09d3ac;
+html,
+body{
+  background-color: #CBE0EC;
+
+}
+
+.parallax {
+  perspective: 100px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 0;
+  bottom: 0;
+  margin-left: -1500px;
+}
+
+.parallax__layer{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  
+}
+
+.parallax__layer img{
+  display: block;
+  position: absolute;
+  bottom: 0;
+}
+
+.parallax__cover{
+  background: #2D112B;
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 2000px;
+  z-index: 2;
+}
+
+.parallax__layer__0 { 
+  transform: translateZ(-300px) scale(4);
+}
+.parallax__layer__1 { 
+  transform: translateZ(-250px) scale(3.5);
+}
+.parallax__layer__2 { 
+  transform: translateZ(-200px) scale(3);
+}
+.parallax__layer__3 { 
+  transform: translateZ(-150px) scale(2.5);
+}
+.parallax__layer__4 { 
+  transform: translateZ(-50px) scale(1.5);
+}
+.parallax__layer__5 { 
+  transform: translateZ(-50px) scale(1.5);
 }
