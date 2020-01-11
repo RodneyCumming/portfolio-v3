@@ -6,8 +6,12 @@ import useOnScreen from '../hooks/useOnScreen'
 const AboutMe = () => {
     const ref = useRef();
     const onScreen = useOnScreen(ref, '-100px');
+
+    const [showAboutMe, setShowAboutMe] = useState(false);
+    useEffect(() => setShowAboutMe(true), []);
+
     return (
-    <Styled.AboutMe>
+    <Styled.AboutMe onScreen={showAboutMe}>
         <Styled.AboutMeInner>
             <Styled.TextPanel ref={ref} >
                 <Styled.Heading onScreen={onScreen}>ABOUT ME</Styled.Heading>

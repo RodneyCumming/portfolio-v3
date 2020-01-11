@@ -22,7 +22,7 @@ export const Heading = styled.h1`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -43,7 +43,7 @@ export const Body = styled.p`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -74,7 +74,7 @@ export const IconContainer = styled.div`
 
     opacity: 0;
     transform: translateX(10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -120,7 +120,7 @@ export const CategoryButton = styled.button`
 
     opacity: 0;
     transform: translateX(-10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;

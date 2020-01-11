@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-export const Contact = styled.div`
+export const ContactButtonsSection = styled.div`
     width: 3000px;
-    background: ${props => props.background ? props.background : '#2c344e'};
+    background: #192835;
 `;
 
 export const ContactInner = styled.div`
@@ -18,7 +18,7 @@ export const Heading = styled.h1`
     text-align: center;
     color: white;
     font-weight: 700;
-    font-size: 100px;
+    font-size: 80px;
     line-height: 1;
 
     opacity: 0;
@@ -94,7 +94,6 @@ export const Icon = styled.img`
         ${props.showContactButtons && `
             height: 80px;
         `}
-        
         color: blue;
         :hover {
             transition: top 1s ease-in-out, left 1s ease-in-out, height 1s ease-in-out, opacity 1.5s ease-in, transform 0.6s ease-out;

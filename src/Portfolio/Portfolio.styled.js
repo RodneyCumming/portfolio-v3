@@ -23,7 +23,7 @@ export const Heading = styled.h1`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -43,7 +43,7 @@ export const Body = styled.p`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -54,7 +54,7 @@ export const Body = styled.p`
 
 
 export const TextPanel = styled.div`
-    width: 50%;
+    width: 65%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,7 +62,7 @@ export const TextPanel = styled.div`
 `;
 
 export const ImagePanel = styled.div`
-    width: 50%;
+    width: 35%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -71,7 +71,7 @@ export const ImagePanel = styled.div`
 
 export const Icon = styled.img`
     max-width: 100%;
-    width: 50%;
+    width: 70%;
 
     :after {
         content: '';
@@ -87,7 +87,7 @@ export const Icon = styled.img`
 
     opacity: 0;
     transform: translateX(-10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;

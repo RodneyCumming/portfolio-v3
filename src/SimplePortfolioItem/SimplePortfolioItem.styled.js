@@ -114,15 +114,17 @@ export const ImageOverlay = styled.div`
 
 `;
 
+
 export const Title = styled.h1`
-    width: 100vw;
+    width: 90vw;
     max-width: 3000px;
     margin: auto;
     position: absolute;
     color: white;
     text-align: center;
     top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-size: 110px;
     font-family: HelveticaNeueCondensedBold;
     letter-spacing: 5px;
@@ -137,23 +139,131 @@ export const Title = styled.h1`
 `;
 
 export const Number = styled.h1`
-    top: 40px;
-    left: 50px;
+    top: 5%;
     margin: 0;
     color: #C95F62;
     position: absolute;
     font-size: 110px;
     font-family: HelveticaNeueCondensedBold;
     letter-spacing: 5px;
-
+    line-height: 1;
     opacity: 0;
     left: 0;
     transition: all 0s;
 
     ${props => props.onScreen && `
         opacity: 1;
-        left: 50px;
+        left: 5%;
         transition: opacity 1.5s ease-in, left 0.6s ease-out;
     `}
 `;
 
+export const InfoBoxOne = styled.div`
+    top: 5%;
+    right: 5%;
+    margin: 0;
+    color: #C95F62;
+    position: absolute;
+    // background: rgba(0, 0, 0, 0.1);
+    background: #393a55;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    // height: 240px;
+    width: 20%;
+    padding: 30px;
+    opacity: 0;
+    z-index: 10;
+    transition: opacity 0.6s;
+    box-shadow: 3px 3px 0 1px #343651;
+
+    ${props => props.onScreen && `
+        opacity: 1;
+        transition: opacity 0.6s ease-in;
+    `}
+
+    ::before {
+      content: '';
+      height: 150px;
+      width: 200px;
+      left: -200px;
+      top: 100px;
+      // background: green;
+      // border-top: 2px solid rgba(0, 0, 0, 0.2);
+      // border-left: 2px solid rgba(0, 0, 0, 0.2);
+      position: absolute;
+      // border-radius: 20px 0 0 0;
+    }
+`;
+
+export const InfoBoxTwo = styled(InfoBoxOne)`
+    bottom: 5%;
+    right: 5%;
+    top: unset;
+    left: unset;
+    margin: 0;
+    color: #C95F62;
+    position: absolute;
+    // background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    // height: 250px;
+    width: 20%;
+    padding: 30px;
+
+    ${props => props.onScreen && `
+        opacity: 1;
+        transition: opacity 0.6s ease-in;
+    `}
+
+    ::before {
+      content: '';
+      height: 50px;
+      width: 250px;
+      left: -70px;
+      top: -50px;
+      // background: green;
+      border-bottom: unset;
+      border-left: unset;
+      // border-right: 2px solid rgba(0, 0, 0, 0.2);
+      // border-top: 2px solid rgba(0, 0, 0, 0.2);
+      position: absolute;
+      // border-radius: 0 20px 0 0;
+    }
+`;
+
+export const InfoBoxThree = styled(InfoBoxOne)`
+  bottom: 25%;
+  top: unset;
+  right: unset;
+  left: 5%;
+  // height: 250px;
+  width: 15%;
+
+  ${props => props.onScreen && `
+  opacity: 1;
+  transition: opacity 0.6s ease-in;
+`}
+
+  ::before {
+    // border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    border-left: unset;
+    border-right: unset;
+    border-top: unset;
+    left: 100%;
+    right: unset;
+    width: 100%;
+    top: 150px;
+  }
+`;
+
+export const InfoBoxHeading = styled.h4`
+  color: #b97d7f;
+  font-size: 20px;
+  margin-bottom: 20px;
+`;
+
+export const InfoBoxParagraph = styled.p`
+  color: #c5c6e4;
+  font-size: 16px;
+  line-height: 30px;
+`;

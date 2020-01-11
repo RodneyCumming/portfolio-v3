@@ -1,8 +1,12 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
+// import polyBackground from '../images/trianglify-lowres.png'
+import polyBackground from '../images/text-bg.svg';
+import buttonBackground from '../images/button-bg.svg';
 
 export const PortfolioHeader = styled.div`
     width: 3000px;
-    background: #1a2835;
+    height: 100vh;
+    background-color: #1a2835;
     scroll-snap-align: start;
 `; 
 
@@ -13,31 +17,68 @@ export const PortfolioHeaderInner = styled.div`
     max-height: 1000px;
     margin: auto;
     padding: 100px;
+    box-sizing: border-box;
     scroll-snap-align: start;
+    display: flex;
 `;
 
 export const Container = styled.div`
     max-width: 1200px;
     margin: auto;
-    padding: 200px;
+    text-align: center;
+`;
+
+const hoveringPlane = keyframes`
+  0% {
+    // background: #7778a5;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-position: left top;
+
+  }
+  50% {
+    // background: #8279ce;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-position: right bottom;
+    
+  }
+  100% {
+    // background: #7778a5;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-position: left top;
+    
+    
+  }
 `;
 
 
 export const Heading = styled.h1`
     text-align: center;
     color: white;
-    font-weight: 700;
-    margin-bottom: 35px;
+    font-weight: 900;
+    margin-bottom: 20px;
     margin-top: 0px;
-    font-size: 100px;
+    font-size: 150px;
+    line-height: 1;
     letter-spacing: 3px;
-    // background: linear-gradient(65deg,#C95F62 25%,transparent 25%),linear-gradient(65deg,#40415E 50%,transparent 50%),linear-gradient(65deg,#C95F62 75%,transparent 75%), linear-gradient(65deg,#40415E 100%,transparent 100%);
-    background: linear-gradient(to right, #C95F62 20%, #7778a5);
-    // background-size: 100px 100px;
+    background-image: url(${polyBackground});
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
-    // background-size: cover;
+    background-size: cover;
+    background-position: center center;
 
+
+    opacity: 0;
+    transform: translateY(10vh);
+    transition: all 0.6s;
+
+    ${props => props.onScreen && `
+        opacity: 1;
+        transform: none;
+        transition: opacity 1.7s ease-in, transform 0.6s ease-out;
+    `}
 `;
 
 
@@ -49,4 +90,44 @@ export const Body = styled.p`
     line-height: 1.6em;
     font-size: 22px;
     font-family: Lato,serif;
+
+    opacity: 0;
+    transform: translateY(10vh);
+    transition: all 0.6s;
+
+    ${props => props.onScreen && `
+        opacity: 1;
+        transform: none;
+        transition: opacity 1.5s ease-in, transform 0.8s ease-out;
+    `}
+`;
+
+export const Button = styled.button`
+  border: none;
+  background: #2c5f88;
+  color: #fff;
+  font-family: Lato,serif;
+  padding: 15px 100px;
+  border-radius: 10px;
+  margin-top: 40px;
+  transition: background .3s;
+  font-size: 18px;
+
+  :hover {
+    cursor: pointer;
+    background: #3495d9;
+    transition: background .3s;
+    background-image: url(${buttonBackground});
+    
+  }
+
+  opacity: 0;
+    transform: translateY(10vh);
+    transition: all 0.6s;
+
+    ${props => props.onScreen && `
+        opacity: 1;
+        transform: none;
+        transition: opacity 1.3s ease-in, transform 1s ease-out;
+    `}
 `;

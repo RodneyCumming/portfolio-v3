@@ -1,12 +1,14 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import * as Styled from './Nav.styled'
 import Logo from "../images/logo.svg";
+import { withRouter } from "react-router";
 
-
-const Nav = () => (
-  <Styled.Nav>
+const Nav = props => {
+  const [initLoadTrigger, setInitialLoad] = useState(false);
+  useEffect(() => setInitialLoad(true));
+  return (
+  <Styled.Nav homePage={props.history.location.pathname === '/'} initLoadTrigger={initLoadTrigger}>
     <Styled.NavInner>
-    
       <Styled.UnordedList>
         <Styled.HomeLink to='/'>
           <Styled.Logo
@@ -23,6 +25,6 @@ const Nav = () => (
       </Styled.UnordedList>
     </Styled.NavInner>
   </Styled.Nav>
-)
+)}
 
-export default Nav
+export default withRouter(Nav)

@@ -3,6 +3,13 @@ import styled from 'styled-components';
 export const AboutMe = styled.div`
     width: 3000px;
     background: #222838;
+
+    opacity: 0;
+    transition: opacity 1.5s;
+    ${props => props.onScreen && `
+        opacity: 1;
+        transition: opacity 1.5s;
+    `}
 `; 
 
 export const AboutMeInner = styled.div`
@@ -23,7 +30,7 @@ export const Heading = styled.h1`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0s;
+    transition: all 0.6s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -42,7 +49,7 @@ export const Body = styled.p`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0s;
+    transition: all 0.6s;
     will-change: opacity, visibility;
 
     ${props => props.onScreen && `
@@ -80,7 +87,7 @@ export const Icon = styled.img`
     // height: 60px;
     opacity: 0;
     transform: translateX(10vw);
-    transition: all 0s;
+    transition: all 0.6s;
     overflow: 0;
 
     ${props => props.onScreen && `

@@ -7,6 +7,21 @@ export const Nav = styled.header`
     top: 0px;
     right: 0;
     left: 0;
+
+
+    ${props => props.homePage && `
+        opacity: 0;
+        top: -100px;
+        box-shadow: 0 6px 7px 2px rgba(0, 0, 0, 0.2);
+
+        ${props.initLoadTrigger && `
+            opacity: 1;
+            top: 0;
+            transition: opacity 2s, top 1s;
+        `}
+    `}
+
+    
 `;
 
 export const NavInner = styled.div`
@@ -20,7 +35,7 @@ export const UnordedList = styled.div`
     display: flex;
     max-width: 100vw;
     margin: auto;
-    box-shadow: 0 6px 7px 2px rgba(0, 0, 0, 0.2);
+    
 `;
 
 export const NavItemsContainer = styled.div`
