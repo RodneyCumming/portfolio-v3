@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'
 
 export const Portfolio = styled.div`
     width: 3000px;
@@ -67,6 +68,36 @@ export const ImagePanel = styled.div`
     justify-content: center;
     align-items: center;
     margin-right: 5vw;
+`;
+
+export const Button = styled(Link)`
+    background: #3b4873;
+    padding: 16px 50px;
+    margin-top: 40px;
+    font-size: 20px;
+    width: fit-content;
+    text-decoration: none;
+    color: #fff;
+    font-family: Lato,serif;
+    border-radius: 10px;
+    font-size: 18px;
+    transition: background 0.2s;
+
+    :hover {
+        cursor: pointer;
+        background: #495c9a;
+    }
+
+    opacity: 0;
+    transform: translateX(-10vh);
+    transition: all 0.6s;
+
+    ${props => props.onScreen && `
+        opacity: 1;
+        transform: none;
+        transition: opacity 1.5s ease-in, transform 0.6s ease-out, background 0.2s;
+    `}
+
 `;
 
 export const Icon = styled.img`

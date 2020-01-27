@@ -52,7 +52,6 @@ export const Heading = styled.h1`
     -webkit-background-clip: text;
     background-size: cover;
     background-position: center center;
-    filter: hue-rotate(333deg);
     
     // filter: hue-rotate(388deg) brightness(1.4);
     // filter: brightness(1.4) hue-rotate(4deg);
@@ -61,10 +60,13 @@ export const Heading = styled.h1`
     transform: translateY(10vh);
     transition: all 0.6s;
 
+    filter: blur(20px) hue-rotate(333deg);
+
     ${props => props.onScreen && `
         opacity: 1;
         transform: none;
-        transition: opacity 1.7s ease-in, transform 0.6s ease-out;
+        transition: opacity 1.7s ease-in, transform 0.6s ease-out, filter 1s;
+        filter: blur(0px) hue-rotate(333deg);
     `}
 `;
 

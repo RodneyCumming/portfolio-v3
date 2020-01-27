@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const SimplePortfolioItemThree = styled.div`
     width: 3000px;
     background: #39757f;
-    scroll-snap-align: start;
+    // scroll-snap-align: start;
 `; 
 
 export const SimplePortfolioItemThreeInner = styled.div`
@@ -11,7 +11,7 @@ export const SimplePortfolioItemThreeInner = styled.div`
     max-width: 100vw;
     margin: auto;
     display: flex;
-    scroll-snap-align: start;
+    // scroll-snap-align: start;
 `;
 
 export const Container = styled.div`
@@ -23,7 +23,7 @@ export const Container = styled.div`
     background: #2d4463;
     position: relative;
     box-shadow: inset 0 0 50px 50px #20334c;
-    scroll-snap-align: start;
+    // scroll-snap-align: start;
 `;
 
 export const Image = styled.img`

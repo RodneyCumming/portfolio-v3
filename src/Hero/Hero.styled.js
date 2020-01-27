@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import polyBackground from '../images/hero-text-bg.svg';
+import polyBackground from '../images/hero-text-bg-static.svg';
 
 export const Hero = styled.section`
 `;
@@ -85,14 +85,14 @@ export const Heading = styled.h1`
     // background-image: url("https://www.transparenttextures.com/patterns/buried.png");
     // background-color: #00C2E6;
     // background-image: linear-gradient(to top left,#00C2E6 5%,#00C2E6);
-    // background-size: 100px 100px;
+    background-size: 500px;
     // -webkit-text-fill-color: transparent;
     // -webkit-background-clip: text;
     // background-size: cover;
     background-image: url(${polyBackground});
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
-    background-size: cover;
+    // background-size: cover;
     background-position: center center;
 
     opacity: 0;
@@ -168,4 +168,14 @@ export const Image = styled.img`
         opacity: 1;
         transition: opacity 2s ${props.opacityDelayTime}s;
     `}
+`;
+
+export const FadeInAndOutOfPages = styled.div`
+    background: ${({fadeIn}) => fadeIn ? '#203244' : 'rgba(0, 0, 0, 0)'};
+    transition: background 1.8s, z-index 0s 1.8s;
+    height: 100%;
+    width: 100%;
+    z-index: ${({fadeIn}) => fadeIn ? '1000' : '0'};;
+    position: absolute;
+    margin: auto;
 `;

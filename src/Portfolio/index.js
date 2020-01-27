@@ -19,6 +19,7 @@ const Portfolio = () => {
             <Styled.TextPanel ref={ref}>
                 <Styled.Heading onScreen={onScreen}>PORTFOLIO</Styled.Heading>
                 <Styled.Body onScreen={onScreen}>Go to my portfolio to see my lastest projects I have build end-to-end to showcase my abilities using core web development technologies.</Styled.Body>
+                <Styled.Button onScreen={onScreen} to='/portfolio' >PORTFOLIO</Styled.Button>
             </Styled.TextPanel>
         </Styled.PortfolioInner>
     </Styled.Portfolio>

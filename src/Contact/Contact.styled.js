@@ -64,7 +64,6 @@ export const ImagePanel = styled.div`
     display: inline-block;
     
     
-    transition: all 1s;
     position: relative;
 
     opacity: 0;
@@ -73,7 +72,7 @@ export const ImagePanel = styled.div`
 
     ${props => props.onScreen && `
         opacity: 1;
-        transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s;
+        transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s ease-out;
         transform: ${props.showContactButtons ? 'translateX(0)' : 'translateX(-50%)'};
         left: ${props.showContactButtons ? '0' : '50%'};
     `}

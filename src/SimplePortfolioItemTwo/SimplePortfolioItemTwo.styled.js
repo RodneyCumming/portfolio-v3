@@ -1,29 +1,29 @@
 import styled, {keyframes} from 'styled-components';
 
 export const SimplePortfolioItemTwo = styled.div`
-    width: 3000px;
     background: #39757f;
-    scroll-snap-align: start;
 `; 
 
 export const SimplePortfolioItemTwoInner = styled.div`
     overflow: auto;
-    max-width: 100vw;
-    margin: auto;
+    // max-width: 100vw;
     display: flex;
-    scroll-snap-align: start;
+    height: 100%;
+    margin: 0;
+    // scroll-snap-align: start;
 `;
 
 export const Container = styled.div`
-    height: 100vh;
-    width: 100vw;
+    // height: 100vh;
+    // width: 100vw;
+    width: 100%;
     max-width: 3000px;
-    max-height: 1000px;
-    margin: auto;
+    max-height: 3000px;
+    margin: 0;
     background: #39757f;
     position: relative;
     box-shadow: inset 0 0 50px 50px #2b5961;
-    scroll-snap-align: start;
+    // scroll-snap-align: start;
 `;
 
 const hoverImage = keyframes`
@@ -105,17 +105,17 @@ export const ImageContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50vw;
+    // width: 50vw;
     max-width: 600px;
 
-    transform: translate(-50%, -50%) scale(0.3, 0.3);
+    transform: translate(-50%, -50%) scale(0.4, 0.4);
     transition: all 0s;
 
-    ${props => props.onScreen && `
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1, 1);
-        transition: transform 2s ease-out;
-    `}
+    // ${props => props.onScreen && `
+    //     opacity: 1;
+    //     transform: translate(-50%, -50%) scale(1, 1);
+    //     transition: transform 2s ease-out;
+    // `}
 `;
 
 const shadowSize = keyframes`
@@ -157,25 +157,26 @@ export const ImageOverlay = styled.div`
     width: 100%;
     top: 0;
     left: 0;
-    background: ;
+    // background: ;
     opacity: 0.5;
     background: #244248;
 
 `;
 
 export const Title = styled.h1`
-    width: 50vw;
+    width: 45vw;
     max-width: 3000px;
-    margin: auto;
+    margin: 0 auto;
     position: absolute;
     color: white;
     text-align: center;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 110px;
+    font-size: 45px;
+    line-height: 1;
     font-family: HelveticaNeueCondensedBold;
-    letter-spacing: 5px;
+    // letter-spacing: 5px;
 
     opacity: 0;
     transition: all 0s;

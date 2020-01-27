@@ -5,9 +5,8 @@ import buttonBackground from '../images/button-bg.svg';
 
 export const PortfolioHeader = styled.div`
     width: 3000px;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #1a2835;
-    scroll-snap-align: start;
 `; 
 
 export const PortfolioHeaderInner = styled.div`
@@ -18,7 +17,6 @@ export const PortfolioHeaderInner = styled.div`
     margin: auto;
     padding: 100px;
     box-sizing: border-box;
-    scroll-snap-align: start;
     display: flex;
 `;
 
@@ -72,12 +70,16 @@ export const Heading = styled.h1`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0.6s;
+    transition: opacity 0.6s, transform 0.6s 0.5s;
+
+    filter: blur(20px);
+
 
     ${props => props.onScreen && `
         opacity: 1;
         transform: none;
-        transition: opacity 1.7s ease-in, transform 0.6s ease-out;
+        transition: opacity 1.7s ease-in, transform 0.6s ease-out, filter 1s;
+        filter: none;
     `}
 `;
 
@@ -93,7 +95,7 @@ export const Body = styled.p`
 
     opacity: 0;
     transform: translateY(10vh);
-    transition: all 0.6s;
+    transition: opacity 0.6s, transform 0.6s 0.5s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -102,7 +104,7 @@ export const Body = styled.p`
     `}
 `;
 
-export const Button = styled.button`
+export const Button = styled.a`
   border: none;
   background: #2c5f88;
   color: #fff;
@@ -112,6 +114,8 @@ export const Button = styled.button`
   margin-top: 40px;
   transition: background .3s;
   font-size: 18px;
+  display: inline-block;
+  text-decoration: none;
 
   :hover {
     cursor: pointer;
@@ -122,12 +126,12 @@ export const Button = styled.button`
   }
 
   opacity: 0;
-    transform: translateY(10vh);
-    transition: all 0.6s;
+  transform: translateY(10vh);
+  transition: opacity 0.6s, transform 0.6s 0.5s;
 
-    ${props => props.onScreen && `
-        opacity: 1;
-        transform: none;
-        transition: opacity 1.3s ease-in, transform 1s ease-out;
-    `}
+  ${props => props.onScreen && `
+      opacity: 1;
+      transform: none;
+      transition: opacity 1.3s ease-in, transform 1s ease-out;
+  `}
 `;

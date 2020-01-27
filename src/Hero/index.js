@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import * as Styled from './Hero.styled'
 import AboutMe from '../AboutMe'
 import Skills from '../Skills'
@@ -16,7 +16,7 @@ import Cloud from "../images/cloud.svg";
 // const setImagesLoaded(oldArray => [...oldArray, newElement]);
 
 
-const Hero = () => {
+const Hero = props => {
     const [imagesLoaded, setImagesLoaded] = useState([]);
     const ref = useRef();
     const scrollRef = useRef();
@@ -25,27 +25,35 @@ const Hero = () => {
     useLayoutEffect(() => scrollRef.current.scrollTo(0, 1000), [])
     useLayoutEffect(() => console.log('useLayouteffect', scrollRef))
 
+    // useEffect(() => (
+    //     imagesLoaded.length > 4 ? props.setFadeIn(false) : props.setFadeIn(false)
+    // ), [imagesLoaded]);
+
+    console.log(props);
+    
     return (
         <Styled.Hero ref={ref}> 
+            <Styled.FadeInAndOutOfPages fadeIn={!!(imagesLoaded.length < 5)} />
             <Styled.ParallaxLayerOne >
+            
                 <Styled.BackgroundInnerShadow>
                     <Styled.Box>
-                        <Styled.HeadingContainer show={imagesLoaded.length >= 5}> 
+                        <Styled.HeadingContainer show={true}> 
                             <Styled.CloudOne
                                 src={Cloud}
                                 alt="cloud"
                                 height={55}
                                 onLoad={() => setImagesLoaded([...imagesLoaded, 'cloud'])}
-                                show={imagesLoaded.filter(value => value === 'cloud')[0]}
+                                show={true}
                                 opacityDelayTime={0.8}
                             />
                             <Styled.Heading onScreen={onScreen} >RODNEY CUMMING</Styled.Heading>
-                            <Styled.SubHeading onScreen={onScreen}>Web Developer</Styled.SubHeading>
+                            <Styled.SubHeading onScreen={onScreen}>Developer</Styled.SubHeading>
                             <Styled.CloudTwo
                                 src={Cloud}
                                 alt="cloud"
                                 height={55}
-                                show={imagesLoaded.filter(value => value === 'cloud')[0]}
+                                show={true}
                                 opacityDelayTime={0.8}
                             />
                         </Styled.HeadingContainer>
@@ -64,7 +72,7 @@ const Hero = () => {
                     className="parallax__img"
                     alt="mountains"
                     onLoad={() => setImagesLoaded([...imagesLoaded, 'layer1'])}
-                    show={imagesLoaded.filter(value => value === 'layer1')[0]}
+                    show={true}
                     opacityDelayTime={1.2}
                 />
             </Styled.ParallaxLayerTwo>
@@ -76,7 +84,7 @@ const Hero = () => {
                     className="parallax__img"
                     alt="mountains"
                     onLoad={() => setImagesLoaded([...imagesLoaded, 'layer2'])}
-                    show={imagesLoaded.filter(value => value === 'layer2')[0]}
+                    show={true}
                     opacityDelayTime={0.8}
                 />
             </Styled.ParallaxLayerThree>
@@ -89,7 +97,7 @@ const Hero = () => {
                     className="parallax__img"
                     alt="mountains"
                     onLoad={() => setImagesLoaded([...imagesLoaded, 'layer3'])}
-                    show={imagesLoaded.filter(value => value === 'layer3')[0]}
+                    show={true}
                     opacityDelayTime={0.4}
                 />
             </Styled.ParallaxLayerFour>
@@ -101,11 +109,11 @@ const Hero = () => {
                     className="parallax__img"
                     alt="mountains"
                     onLoad={() => setImagesLoaded([...imagesLoaded, 'layer4'])}
-                    show={imagesLoaded.filter(value => value === 'layer4')[0]}
+                    show={true}
                     opacityDelayTime={0}
                     
                 />
-                <AboutMe  show={imagesLoaded.filter(value => value === 'layer4')[0]} />
+                <AboutMe  show={true} />
                 <Skills />
                 <Portfolio />
                 <Contact showHeader />

@@ -34,3 +34,4 @@ export const App = styled.div`
     scroll-snap-type: y mandatory;
     overflow-x: hidden;
 `;
+
