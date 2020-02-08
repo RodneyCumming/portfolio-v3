@@ -10,7 +10,7 @@ const ContactHeader = () => {
         <Styled.ContactHeaderInner>
             <Styled.Container ref={ref}>
                 <Styled.Heading onScreen={onScreen}>CONTACT</Styled.Heading>
-                <Styled.Body onScreen={onScreen}>If you think we could work together in some capcity or just want to reach out, get in touch and I will get back to you.</Styled.Body>
+                <Styled.Body onScreen={onScreen}>If you think we could work together in some capcity or just want to reach out, get in touch and I will get back to you as soon as possible.</Styled.Body>
                 <Styled.Button onScreen={onScreen}>EMAIL</Styled.Button>
             </Styled.Container>
         </Styled.ContactHeaderInner>

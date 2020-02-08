@@ -15,7 +15,7 @@ const Contact = props => {
             {props.showHeader && (
                 <Styled.TextPanel ref={ref}>
                     <Styled.Heading onScreen={onScreen} onClick={() => console.log(showContactButtons)}>CONTACT</Styled.Heading>
-                    <Styled.Body onScreen={onScreen}>I love getting calls and emails regarding web development so please get in touch, and I will respond super quick.</Styled.Body>
+                    <Styled.Body onScreen={onScreen}>If you think we could work together in some capcity or just want to reach out, get in touch and I will get back to you as soon as possible.</Styled.Body>
                 </Styled.TextPanel>
             )}
             <Styled.ImagePanel showContactButtons={showContactButtons} onScreen={onScreen}>

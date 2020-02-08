@@ -20,6 +20,7 @@ export const Heading = styled.h1`
     font-weight: 700;
     font-size: 100px;
     line-height: 1;
+    color: #bbc3da;
 
     opacity: 0;
     transform: translateY(10vh);
@@ -67,14 +68,18 @@ export const ImagePanel = styled.div`
     position: relative;
 
     opacity: 0;
-    transform: translateX(-10vh);
+    transform: translateX(-30%);
     transition: all 0.6s;
+    left: 50%;
 
     ${props => props.onScreen && `
         opacity: 1;
-        transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s ease-out;
         transform: ${props.showContactButtons ? 'translateX(0)' : 'translateX(-50%)'};
         left: ${props.showContactButtons ? '0' : '50%'};
+        transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s ease-out;
+        ${'' /* transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s ease-out;
+        transform: ${props.showContactButtons ? 'translateX(0)' : 'translateX(-50%)'};
+        left: ${props.showContactButtons ? '0' : '50%'}; */}
     `}
 `;
 
@@ -86,6 +91,7 @@ export const Icon = styled.img`
     vertical-align: top;
     opacity: 1;
     transform: scale(0.9);
+    transition: all 1s;
 
     ${props => props.onScreen && `
         opacity: 1;
@@ -93,7 +99,7 @@ export const Icon = styled.img`
         ${props.showContactButtons && `
             height: 80px;
         `}
-        
+
         color: blue;
         :hover {
             transition: top 1s ease-in-out, left 1s ease-in-out, height 1s ease-in-out, opacity 1.5s ease-in, transform 0.6s ease-out;

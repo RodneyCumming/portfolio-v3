@@ -21,6 +21,7 @@ export const Heading = styled.h1`
     font-weight: 700;
     font-size: 100px;
     line-height: 1;
+    color: #bbc3da;
 
     opacity: 0;
     transform: translateY(10vh);

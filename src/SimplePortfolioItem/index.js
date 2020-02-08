@@ -1,8 +1,7 @@
 import React, {useRef, useState} from 'react';
 import * as Styled from './SimplePortfolioItem.styled.js';
-import crimsonPortfolioImage from '../images/crimsonPortfolioImage.png';
 import useOnScreen from '../hooks/useOnScreen';
-
+// import { Link } from 'react-router-dom'
 
 
 const SimplePortfolioItem = props => {
@@ -17,8 +16,8 @@ const SimplePortfolioItem = props => {
         <Styled.SimplePortfolioItemInner>
             <Styled.Container ref={ref} bgColor={bgColor} boxShadowColor={boxShadowColor}>
                 <Styled.Number onScreen={onScreen} textColor={textColor}>{`0${index + 1}.`}</Styled.Number>
-                <Styled.ImageContainer>
-                    <Styled.ImageAndOverlay>
+                <Styled.ImageContainer as={link ? 'a' : 'div'} href={link} target={'_blank'} >{name}>
+                    <Styled.ImageAndOverlay >
                         <Styled.Image
                             src={image}
                             alt="Portfolio Item Screen Shot"
@@ -28,12 +27,16 @@ const SimplePortfolioItem = props => {
                     
                     <Styled.Shadow bgColor={bgColor} shadowColor={shadowColor} />
                 </Styled.ImageContainer>
-                <Styled.Title onScreen={onScreen}>{name}</Styled.Title>
+                <Styled.Title onScreen={onScreen} as={link ? 'a': 'h1'} href={link} target={'_blank'}>{name}</Styled.Title>
                 <Styled.ButtonContainer>
-                {link && (<Styled.Button bgColor={bgColor} href={link}>DEMO</Styled.Button>)}
-                {githubLink && (<Styled.Button bgColor={bgColor} secondButton={true} href={githubLink}>GITHUB</Styled.Button>)}
+                {/* {link && (<Styled.Button bgColor={bgColor} href={link}>DEMO</Styled.Button>)} */}
+                
                 </Styled.ButtonContainer>
-
+                {/* {githubLink && (<a bgColor={bgColor} secondButton={true} href={githubLink}><Styled.GithubLogo
+                            src={githubLogo}
+                            alt="github logo"
+                        /></a>)} */}
+                {githubLink && (<Styled.GithubLink href={githubLink} target={'_blank'} ><Styled.GithubLogo fill={bgColor} /></Styled.GithubLink>)}
 
             </Styled.Container>
             

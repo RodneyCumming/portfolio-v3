@@ -14,7 +14,7 @@ const Footer = () => {
                     alt="logo"
                     height={33}
                 />
-                <Styled.Body onClick={() => console.log(onScreen)}>Design & development by Rodney Cumming ©2019</Styled.Body>
+                <Styled.Body onClick={() => console.log(onScreen)}>Design & development by Rodney Cumming 2020</Styled.Body>
             </Styled.FooterInner>
         </Styled.Footer>
 )};

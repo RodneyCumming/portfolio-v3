@@ -1,60 +1,126 @@
 import React, { useState, useRef } from 'react';
 import * as Styled from './Skills.styled.js'
-import HTML5 from "../images/icons/html5.svg";
-import CSS3 from "../images/icons/css3.svg";
-import Javascript from "../images/icons/js.svg";
-import ReactJS from "../images/icons/react.svg";
-import NodeJS from "../images/icons/nodejs.svg";
-import MongoDB from "../images/icons/mongodb.svg";
-import Express from "../images/icons/express.svg";
-import Git from "../images/icons/git.svg";
-import VScode from "../images/icons/vscode.svg";
+import HtmlSVG from "../images/icons/html5.svg";
+import CssSVG from "../images/icons/css3.svg";
+import JavascriptSVG from "../images/icons/js.svg";
+import ReactSVG from "../images/icons/react.svg";
+import NodeSVG from "../images/icons/nodejs.svg";
+import MongoSVG from "../images/icons/mongodb.svg";
+import ExpressSVG from "../images/icons/express.svg";
+import GitSVG from "../images/icons/git.svg";
+import VScodeSVG from "../images/icons/vscode.svg";
+import GatsbySVG from "../images/icons/gatsby.svg";
+import DigitalOceanSVG from "../images/icons/digital-ocean.svg";
+import StoryblokSVG from "../images/icons/storyblok.svg";
+import HerokuSVG from "../images/icons/heroku.svg";
+import GraphQlSVG from "../images/icons/graphql.svg";
+import SketchSVG from "../images/icons/sketch.svg";
+import JestSVG from "../images/icons/jest.svg";
+import BuildKiteSVG from "../images/icons/buildkite.svg";
+import ContentfulSVG from "../images/icons/contentful.svg";
+import prettierSVG from "../images/icons/prettier.svg";
+import StyledComponentsSVG from "../images/icons/styled-components.svg";
 import useOnScreen from '../hooks/useOnScreen';
 
 const icons = [
     {
         label: 'HTML5',
-        image: HTML5,
+        image: HtmlSVG,
         category: 'Frontend'
     },
     {
         label: 'CSS3',
-        image: CSS3,
+        image: CssSVG,
         category: 'Frontend'
     },
     {
         label: 'Javascript',
-        image: Javascript,
+        image: JavascriptSVG,
         category: 'Frontend'
     },
     {
         label: 'ReactJS',
-        image: ReactJS,
+        image: ReactSVG,
         category: 'Frontend'
     },
     {
         label: 'NodeJS',
-        image: NodeJS,
+        image: NodeSVG,
         category: 'Backend'
     },
     {
         label: 'MongoDB',
-        image: MongoDB,
+        image: MongoSVG,
         category: 'Backend'
     },
     {
         label: 'Express',
-        image: Express,
+        image: ExpressSVG,
         category: 'Backend'
     },
     {
         label: 'git',
-        image: Git,
+        image: GitSVG,
         category: 'Tools'
     },
     {
         label: 'VScode',
-        image: VScode,
+        image: VScodeSVG,
+        category: 'Tools'
+    },
+    {
+        label: 'Gatsby',
+        image: GatsbySVG,
+        category: 'Frontend'
+    },
+    {
+        label: 'Digital Ocean',
+        image: DigitalOceanSVG,
+        category: 'Backend'
+    },
+    {
+        label: 'StoryBlok',
+        image: StoryblokSVG,
+        category: 'Frontend'
+    },
+    {
+        label: 'Heroku',
+        image: HerokuSVG,
+        category: 'Backend'
+    },
+    {
+        label: 'GraphQl',
+        image: GraphQlSVG,
+        category: 'Backend'
+    },
+    {
+        label: 'Sketch',
+        image: SketchSVG,
+        category: 'Tools'
+    },
+    {
+        label: 'BuildKite',
+        image: BuildKiteSVG,
+        category: 'Backend'
+    },
+    {
+        label: 'Jest',
+        image: JestSVG,
+        category: 'Tools'
+    },
+    {
+        label: 'Styled Components',
+        image: StyledComponentsSVG,
+        category: 'Frontend'
+    },
+    {
+        label: 'Contentful',
+        image: ContentfulSVG,
+        category: 'Frontend'
+    },
+    {
+        label: 'Prettier',
+        image: prettierSVG,
         category: 'Tools'
     },
 ]
@@ -70,7 +136,7 @@ const Skills = () => {
             <Styled.SkillsInner>
                 <Styled.TextPanel ref={ref}>
                     <Styled.Heading onClick={() => console.log(selectedCategory)} onScreen={onScreen}>TECHNOLOGY</Styled.Heading>
-                    <Styled.Body onScreen={onScreen}>Below are some of the skills I've picked up on my journey to become a full-stack developer. My core strengths currently are CSS, Javascript and React.</Styled.Body>
+                    <Styled.Body onScreen={onScreen}>Below are some of the skills I've picked up on my journey. My core strengths currently are CSS, Javascript and React.</Styled.Body>
                 </Styled.TextPanel>
                 <Styled.CategoriesContainer>
                     {['All', 'Frontend', 'Backend', 'Tools'].map(value => (

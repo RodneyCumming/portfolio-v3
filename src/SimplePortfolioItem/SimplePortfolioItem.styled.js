@@ -1,4 +1,20 @@
 import styled, {keyframes} from 'styled-components';
+import GithubIcon from '../images/githubLogo';
+
+export const GithubLogo = styled(GithubIcon)`
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  right: 5%;
+  top: 5%;
+  opacity: 0;
+  filter: brightness(1.7);
+  transition: opacity 0.5s;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
 
 const hoverImage = keyframes`
   0% {
@@ -51,6 +67,12 @@ export const ImageContainer = styled.div`
     //     transform: translate(-50%, -50%) scale(1, 1);
     //     transition: transform 2s ease-out;
     // `}
+
+
+    display: inline-block;
+    :hover {
+      cursor: pointer;
+    }
 `;
 
 export const ImageAndOverlay = styled.div`
@@ -89,8 +111,15 @@ export const SimplePortfolioItem = styled.div`
 
     }
 
-    :hover ${Shadow} {
-      ${'' /* animation-play-state:running; */}
+    :hover ${GithubLogo} {
+      opacity: 1;
+      transition: filter 0.2s, opacity 3s;
+    }
+
+    :hover ${GithubLogo} {
+      :hover {
+        filter: brightness(2.5);
+      }
     }
 
 
@@ -155,8 +184,10 @@ export const ImageOverlay = styled.div`
 
 
 export const Title = styled.h1`
-    width: 45vw;
-    max-width: 3000px;
+    ${'' /* width: 45vw;
+    max-width: 3000px; */}
+    display: inline-block;
+    width: fit-content;
     margin: auto;
     position: absolute;
     color: white;
@@ -169,6 +200,7 @@ export const Title = styled.h1`
     font-family: HelveticaNeueCondensedBold;
     // letter-spacing: 5px;
     // width: 90vw;
+    text-decoration: none;
 
     ${'' /* opacity: 0;
     transition: all 0s; */}
@@ -177,6 +209,10 @@ export const Title = styled.h1`
         opacity: 1;
         transition: opacity 2s ease-in;
     `} */}
+
+    :hover {
+      cursor: pointer;
+    }
 `;
 
 export const Number = styled.h1`
@@ -233,3 +269,8 @@ export const Button = styled.button`
     cursor: pointer;
   }
 `;
+
+export const GithubLink = styled.a`
+  
+`;
+

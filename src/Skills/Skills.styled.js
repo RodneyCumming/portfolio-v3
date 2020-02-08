@@ -19,6 +19,7 @@ export const Heading = styled.h1`
     font-weight: 700;
     font-size: 100px;
     line-height: 1;
+    color: #bbc3da;
 
     opacity: 0;
     transform: translateY(10vh);
@@ -85,6 +86,7 @@ export const IconContainer = styled.div`
 
 export const Icon = styled.img`
     height: 40px;
+    filter: saturate(0) brightness(1.5);
 `;
 
 export const IconLabel = styled.p`
