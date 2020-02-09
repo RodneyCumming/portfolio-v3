@@ -6,7 +6,7 @@ const ContactForm = () => {
     return (
     <Styled.ContactForm>
         <Styled.ContactFormInner>
-            <Styled.ContactFormContainer>
+            <Styled.ContactFormContainer netlify>
                 
                 <Styled.FormMiddlePanel>
                     <Styled.FormHeader>SEND MESSAGE</Styled.FormHeader>
@@ -14,7 +14,7 @@ const ContactForm = () => {
                     <Styled.TextInput name="email" type="text" placeholder="Email..." autocomplete="foo"/>
                     <Styled.TextAreaInput name="message" type="text" rows="8" placeholder="Message..." spellcheck="false"/>
                 </Styled.FormMiddlePanel>
-                <Styled.SendButton><Styled.SendIcon src={SendIcon}/></Styled.SendButton>
+                <Styled.SendButton type="submit"><Styled.SendIcon src={SendIcon}/></Styled.SendButton>
             </Styled.ContactFormContainer>
             
         </Styled.ContactFormInner>
