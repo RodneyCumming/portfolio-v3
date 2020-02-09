@@ -6,7 +6,7 @@ const ContactForm = () => {
     return (
     <Styled.ContactForm>
         <Styled.ContactFormInner>
-            <Styled.ContactFormContainer name="contact" netlify>
+            <Styled.ContactFormContainer method="post" name="contact">
                 <input type="hidden" name="form-name" value="contact" />
                 <Styled.FormMiddlePanel>
                     <Styled.FormHeader>SEND MESSAGE</Styled.FormHeader>
