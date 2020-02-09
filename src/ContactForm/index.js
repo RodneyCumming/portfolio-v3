@@ -5,9 +5,9 @@ import SendIcon from '../images/icons/sendIcon2.svg';
 const ContactForm = () => {
     return (
     <Styled.ContactForm>
+        <input type="hidden" name="form-name" value="contact" />
         <Styled.ContactFormInner>
             <Styled.ContactFormContainer netlify>
-                
                 <Styled.FormMiddlePanel>
                     <Styled.FormHeader>SEND MESSAGE</Styled.FormHeader>
                     <Styled.TextInput name="name" type="text" placeholder="Name..." autocomplete="foo" rightMargin/>
