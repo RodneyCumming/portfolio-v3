@@ -1,20 +1,29 @@
 import styled from 'styled-components'
 import polyBackground from '../images/hero-text-bg-static.svg';
+import screenSize from 'styles/mediaQueries';
 
 export const Hero = styled.section`
 `;
 
 export const ParallaxLayer = styled.div`
     position: absolute;
-    top: 650px;
+    top: 450px;
     right: 0;
-    bottom: 0;
+    bottom: 0; 
     left: 0;
+
+    ${screenSize.minTablet`
+        top: 650px;
+    `}
+    ${'' /* top: 650px; */}
 `;
 
 export const ParallaxLayerOne = styled(ParallaxLayer)`
     transform: translateZ(-300px) scale(4);
     top: 0;
+    ${screenSize.minTablet`
+        top: 0;
+    `}
 `;
 export const ParallaxLayerTwo = styled(ParallaxLayer)`
     transform: translateZ(-150px) translateY(-50px) scale(2.5);
@@ -45,19 +54,11 @@ export const  Box = styled.div`
     box-shadow: inset 0 0 400px -150px;
     position: relative;
     background-color: #cbe0ec;
-    // background: linear-gradient(to bottom, #7dacc3, #cbebff);
-    // background-image: url("https://www.transparenttextures.com/patterns/brushed-alum-dark.png");
-
-
-    // ${props => props.onLoad && `
-    //     background-color: #cbe0ec;
-    //     transition: 0.6s;
-    // `}
 `;
 
 export const HeadingContainer = styled.div`
-    padding-top: 250px;
-    width: 900px;
+    padding-top: 160px;;
+    max-width: 900px;
     margin: auto;
     position: relative;
 
@@ -67,32 +68,26 @@ export const HeadingContainer = styled.div`
         opacity: 1;
         transition: opacity 1s 2s;
     `}
+
+    ${screenSize.minTablet`
+        padding-top: 250px;
+    `}
 `;
 
 export const Heading = styled.h1`
-    // font-size: 62px;
-    font-size: 110px;
+    font-size: 60px;
     text-align: center;
     font-weight: 600;
     color: #00C2E6;
     letter-spacing: 3px;
-    line-height: 90px;
+    line-height: 1;
     margin: 0;
     font-family: HelveticaNeueCondensedBold;
     letter-spacing: 0px;
-    
-
-    // background-image: url("https://www.transparenttextures.com/patterns/buried.png");
-    // background-color: #00C2E6;
-    // background-image: linear-gradient(to top left,#00C2E6 5%,#00C2E6);
     background-size: 500px;
-    // -webkit-text-fill-color: transparent;
-    // -webkit-background-clip: text;
-    // background-size: cover;
     background-image: url(${polyBackground});
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
-    // background-size: cover;
     background-position: center center;
 
     opacity: 0;
@@ -101,10 +96,15 @@ export const Heading = styled.h1`
         opacity: 1;
         transition: opacity 1s;
     `}
+
+    ${screenSize.minTablet`
+        font-size: 110px;
+        line-height: 90px;
+    `}
 `;
 
 export const SubHeading = styled.h2`
-    font-size: 26px;
+    font-size: 16px;
     text-align: center;
     font-weight: 700;
     color: #67A6BE;
@@ -119,17 +119,15 @@ export const SubHeading = styled.h2`
         opacity: 1;
         transition: opacity 1s;
     `}
+
+    ${screenSize.minTablet`
+        font-size: 26px;
+    `}
 `;
 
 export const CloudOne = styled.img`
     position: absolute;
     top: 220px;
-    
-    // opacity: 0.5;
-
-    // :hover {
-    //     opacity: 1;
-    // }
 
     right: -400px;
     opacity: 0;
@@ -144,12 +142,6 @@ export const CloudOne = styled.img`
 export const CloudTwo = styled.img`
     position: absolute;
     bottom: 0;
-    
-    // opacity: 0.5;
-
-    // :hover {
-    //     opacity: 1;
-    // }
 
     left: -400px;
     opacity: 0;

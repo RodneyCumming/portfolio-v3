@@ -2,9 +2,12 @@ import React, {useEffect, useState} from 'react'
 import * as Styled from './Nav.styled'
 import Logo from "../images/logo.svg";
 import { withRouter } from "react-router";
+import CloseIcon from 'images/icons/close.svg'
+import MenuIcon from 'images/icons/menu.svg'
 
 const Nav = props => {
   const [initLoadTrigger, setInitialLoad] = useState(false);
+  const {isMenuOpen, setIsMenuOpen} = props;
   useEffect(() => setInitialLoad(true));
   return (
   <Styled.Nav homePage={props.history.location.pathname === '/'} initLoadTrigger={initLoadTrigger}>
@@ -17,10 +20,16 @@ const Nav = props => {
               height={60}
           />
         </Styled.HomeLink>
-        <Styled.NavItemsContainer>
-            <Styled.NavItem to='/' exact>HOME</Styled.NavItem>
-            <Styled.NavItem to='/portfolio'>PORTFOLIO</Styled.NavItem>
-            <Styled.NavItem to='/contact'>CONTACT</Styled.NavItem>
+        <Styled.NavItemsContainer >
+            
+            <Styled.NavLinksInnerContainer isMenuOpen={isMenuOpen}>
+            <Styled.NavItemsWrapper isMenuOpen={isMenuOpen}>
+            <Styled.NavItem to='/' exact isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>HOME</Styled.NavItem>
+            <Styled.NavItem to='/portfolio' isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>PORTFOLIO</Styled.NavItem>
+            <Styled.NavItem to='/contact' isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>CONTACT</Styled.NavItem>
+            </Styled.NavItemsWrapper>
+            </Styled.NavLinksInnerContainer>
+            <Styled.MenuIcon onClick={() => setIsMenuOpen(!isMenuOpen)}><Styled.MenuBars src={MenuIcon}/></Styled.MenuIcon>
         </Styled.NavItemsContainer>
       </Styled.UnordedList>
     </Styled.NavInner>

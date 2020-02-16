@@ -18,11 +18,9 @@ import styled from 'styled-components'
 
 // `;
 
-export const App = styled.div`
+export const Perspective = styled.div`
     perspective: 100px;
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
+
     position: absolute;
     top: 0;
     left: 50%;
@@ -33,5 +31,14 @@ export const App = styled.div`
     height: 100vh;
     scroll-snap-type: y mandatory;
     overflow-x: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+`;
+
+export const App = styled.div`
+    
+    
+
+    
 `;
 

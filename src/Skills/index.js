@@ -136,7 +136,7 @@ const Skills = () => {
             <Styled.SkillsInner>
                 <Styled.TextPanel ref={ref}>
                     <Styled.Heading onClick={() => console.log(selectedCategory)} onScreen={onScreen}>TECHNOLOGY</Styled.Heading>
-                    <Styled.Body onScreen={onScreen}>Below are some of the skills I've picked up on my journey. My core strengths currently are CSS, Javascript and React.</Styled.Body>
+                    <Styled.Body onScreen={onScreen}>Below are some of the techologies I've learnt to use. My core strengths currently are CSS, Javascript and React.</Styled.Body>
                 </Styled.TextPanel>
                 <Styled.CategoriesContainer>
                     {['All', 'Frontend', 'Backend', 'Tools'].map(value => (

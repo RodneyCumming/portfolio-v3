@@ -71,7 +71,7 @@ export const ImagePanel = styled.div`
     margin-right: 5vw;
 `;
 
-export const Button = styled(Link)`
+export const Button = styled.a`
     background: #3b4873;
     padding: 16px 50px;
     margin-top: 40px;

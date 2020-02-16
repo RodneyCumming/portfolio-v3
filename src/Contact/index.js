@@ -10,7 +10,7 @@ const Contact = props => {
     const [showContactButtons, setContactButtons] = useState(false);
 
     return (
-    <Styled.Contact background={props.background}>
+    <Styled.Contact background={props.background} id='contact-section'>
         <Styled.ContactInner showContactButtons={showContactButtons}>
             {props.showHeader && (
                 <Styled.TextPanel ref={ref}>

@@ -24,7 +24,8 @@ const portfolioItems =[
         bgColor: '#40415E',
         boxShadowColor: '#36374e',
         shadowColor: '#333550',
-        link: 'https://www.crimsoneducation.org/nz'
+        link: 'https://www.crimsoneducation.org/nz',
+        note: '- Contributed as part of an agile team.'
     },
     {
         name: 'CODE SNIPPETS',
@@ -76,7 +77,8 @@ const portfolioItems =[
         bgColor: '#343954',
         boxShadowColor: '#2a2d40',
         shadowColor: '#2a2d40',
-        
+        link: 'https://www.rodneycumming.com',
+        githubLink: 'https://github.com/RodneyCumming/portfolio-v3'
     },
 
 ]

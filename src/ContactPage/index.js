@@ -1,17 +1,26 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import ContactHeader from '../ContactHeader';
 import ContactForm from '../ContactForm';
 import ContactButtonsSection from '../ContactButtonsSection';
 import Footer from '../Footer';
 
-const ContactPage = () => (
+const ContactPage = () => {
+    const ref = useRef();
+    const handleClick = () => {
+        console.log(ref);
+        ref.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+    };
+    return (
     <>
-        <ContactHeader />
+        <ContactHeader handleClick={handleClick}/>
         <ContactForm />
-        <ContactButtonsSection />
-        {/* <Contact background={"#192835"} showHeader={false} /> */}
+        <div ref={ref}></div>
+        <ContactButtonsSection  />
         <Footer />
     </>
-)
+)}
 
 export default ContactPage;

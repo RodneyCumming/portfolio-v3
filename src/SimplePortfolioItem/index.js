@@ -5,7 +5,7 @@ import useOnScreen from '../hooks/useOnScreen';
 
 
 const SimplePortfolioItem = props => {
-    const {name, image, textColor, bgColor, boxShadowColor, shadowColor, overlayColor, link, githubLink} = props.data;
+    const {name, image, textColor, bgColor, boxShadowColor, shadowColor, overlayColor, link, githubLink, note} = props.data;
     const {index} = props;
     console.log(bgColor)
     console.log(index);
@@ -32,10 +32,7 @@ const SimplePortfolioItem = props => {
                 {/* {link && (<Styled.Button bgColor={bgColor} href={link}>DEMO</Styled.Button>)} */}
                 
                 </Styled.ButtonContainer>
-                {/* {githubLink && (<a bgColor={bgColor} secondButton={true} href={githubLink}><Styled.GithubLogo
-                            src={githubLogo}
-                            alt="github logo"
-                        /></a>)} */}
+                <Styled.Note>{note}</Styled.Note>
                 {githubLink && (<Styled.GithubLink href={githubLink} target={'_blank'} ><Styled.GithubLogo fill={bgColor} /></Styled.GithubLink>)}
 
             </Styled.Container>

@@ -16,6 +16,15 @@ export const GithubLogo = styled(GithubIcon)`
   }
 `;
 
+export const Note = styled.p`
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+  color: white;
+  opacity: 0;
+  transition: 0.4s;
+`;
+
 const hoverImage = keyframes`
   0% {
     top: -20px;
@@ -120,6 +129,10 @@ export const SimplePortfolioItem = styled.div`
       :hover {
         filter: brightness(2.5);
       }
+    }
+
+    :hover ${Note} {
+      opacity: 0.5;
     }
 
 
@@ -273,4 +286,3 @@ export const Button = styled.button`
 export const GithubLink = styled.a`
   
 `;
-
