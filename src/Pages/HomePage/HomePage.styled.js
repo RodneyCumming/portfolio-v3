@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import polyBackground from 'Images/hero-text-bg-static.svg';
 import screenSize from 'Styles/mediaQueries';
 
-export const Hero = styled.section`
+export const HomePage = styled.section`
 `;
 
 export const ParallaxLayer = styled.div`
@@ -15,7 +15,6 @@ export const ParallaxLayer = styled.div`
     ${screenSize.minTablet`
         top: 650px;
     `}
-    ${'' /* top: 650px; */}
 `;
 
 export const ParallaxLayerOne = styled(ParallaxLayer)`

@@ -120,12 +120,11 @@ export const Shadow = styled.div`
 `;
 
 export const SimplePortfolioItem = styled.div`
-       
+
     ${ImageContainer} {
       transition: transform 0.5s;
     }
 
-    // background: #2f324e;
     :hover ${ImageContainer} {
       transform: translate(-50%, -50%) scale(0.41, 0.41);   
       transition: transform 0.3s;
@@ -154,24 +153,18 @@ export const SimplePortfolioItem = styled.div`
 
 export const SimplePortfolioItemInner = styled.div`
     overflow: auto;
-    // max-width: 100vw;
     margin: auto;
     display: flex;
     height: 100%;
-    // scroll-snap-align: start;
 `;
 
 export const Container = styled.div`
-    // height: 100vh;
-    // width: 100vw;
     width: 100%;
     max-width: 3000px;
     max-height: 3000px;
-    // margin: auto;
     background: ${({bgColor}) => bgColor};
     position: relative;
     box-shadow: inset 0 0 50px 50px ${({boxShadowColor}) => boxShadowColor};;
-    // scroll-snap-align: start;
     transition: filter 0.4s;
     filter: brightness(95%);
 
@@ -181,20 +174,9 @@ export const Container = styled.div`
     }
 `;
 
-
-
-
 export const Image = styled.img`
     width: 100%;
 `;
-
-
-
-
-
-
-
-
 
 export const ImageOverlay = styled.div`
     height: 100%;
@@ -204,13 +186,10 @@ export const ImageOverlay = styled.div`
     left: 0;
     background: ${props => props.bgColor ? props.bgColor : 'blue'};
     opacity: 0.5;
-
 `;
 
 
 export const Title = styled.h1`
-    ${'' /* width: 45vw;
-    max-width: 3000px; */}
     display: inline-block;
     width: fit-content;
     margin: auto;
@@ -223,17 +202,7 @@ export const Title = styled.h1`
     font-size: 30px;
     line-height: 1;
     font-family: HelveticaNeueCondensedBold;
-    // letter-spacing: 5px;
-    // width: 90vw;
     text-decoration: none;
-
-    ${'' /* opacity: 0;
-    transition: all 0s; */}
-
-    ${'' /* ${props => props.onScreen && `
-        opacity: 1;
-        transition: opacity 2s ease-in;
-    `} */}
 
     :hover {
       cursor: pointer;
@@ -257,28 +226,10 @@ export const Number = styled.h1`
     left: 5%;
     transition: all 0s;
 
-    ${'' /* ${props => props.onScreen && `
-        opacity: 1;
-        left: 5%;
-        transition: opacity 1.5s ease-in, left 0.6s ease-out;
-    `} */}
-
   ${screenSize.minTablet`
     font-size: 35px;
   `}
     
-`;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  margin: auto;
-  position: absolute;
-  color: white;
-  bottom: 20px;
-  right: 30px;
-  * + * {
-	  margin-left: 10px;
-  }
 `;
 
 export const Button = styled.button`

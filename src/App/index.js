@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import Hero from 'Pages/Hero';
+import Hero from 'Pages/HomePage';
 import PortfolioPage from 'Pages/PortfolioPage';
 import ContactPage from 'Pages/ContactPage';
 import Nav from 'Nav';
@@ -13,20 +13,14 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    // timeoutId for debounce mechanism
     let timeoutId = null;
     const resizeListener = () => {
-      // prevent execution of previous setTimeout
       clearTimeout(timeoutId);
-      // change width from the state object after 150 milliseconds
       timeoutId = setTimeout(() => setIsMenuOpen(false), 150);
     };
-    // set resize listener
     window.addEventListener('resize', resizeListener);
 
-    // clean up function
     return () => {
-      // remove resize listener
       window.removeEventListener('resize', resizeListener);
     }
   }, [])

@@ -30,7 +30,6 @@ export const NavInner = styled.div`
     width: 3000px;
 `;
 
-// todo: change name
 export const UnordedList = styled.div`
     justify-content: space-between;
     display: flex;
@@ -44,32 +43,12 @@ export const NavItemsContainer = styled.div`
     display: flex;
     align-items: center;
 
-    ${'' /* ${({ isMenuOpen }) => isMenuOpen && `
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100vh;
-        width: 100vw;
-        margin: auto;
-        background: rgba(0, 0, 0, 0.8);
-    `}
-    
-
-    ${screenSize.minTablet`
-        position: static;
-        height: unset;
-        width: unset;
-        margin: unset;
-        background: unset;
-    `} */}
-
     ${screenSize.minTablet`
         margin-right: 50px;
     `}
 `;
 
 export const NavLinksInnerContainer = styled.div`
-    ${'' /* margin-right: 50px; */}
 
     ${({ isMenuOpen }) => isMenuOpen && `
         display: none;
@@ -94,9 +73,6 @@ export const NavItemsWrapper = styled.div`
     right: 0;
     margin: auto;
     text-align: center;
-    ${({ isMenuOpen }) => isMenuOpen && `
-     ${'' /* position: fixed; */}
-    `}
     
 
     ${screenSize.minTablet`
@@ -127,10 +103,6 @@ export const NavItem = styled(NavLink)`
 
     :hover {
         color: #00d7ff;
-    }
-
-    &.active {
-        ${'' /* color: #00C2E6; */}
     }
 
     ${({ isMenuOpen }) => isMenuOpen && `

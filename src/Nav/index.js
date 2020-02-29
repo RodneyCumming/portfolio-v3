@@ -22,7 +22,7 @@ const Nav = props => {
         <Styled.NavItemsContainer >
             
             <Styled.NavLinksInnerContainer isMenuOpen={isMenuOpen}>
-            <Styled.NavItemsWrapper isMenuOpen={isMenuOpen}>
+            <Styled.NavItemsWrapper>
             <Styled.NavItem to='/' exact isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>HOME</Styled.NavItem>
             <Styled.NavItem to='/portfolio' isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>PORTFOLIO</Styled.NavItem>
             <Styled.NavItem to='/contact' isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>CONTACT</Styled.NavItem>

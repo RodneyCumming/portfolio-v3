@@ -1,8 +1,6 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef } from 'react';
 import * as Styled from './SimplePortfolioItem.styled.js';
 import useOnScreen from 'Hooks/useOnScreen';
-// import { Link } from 'react-router-dom'
-
 
 const SimplePortfolioItem = props => {
     const {name, image, textColor, bgColor, boxShadowColor, shadowColor, overlayColor, link, githubLink, note} = props.data;
@@ -28,10 +26,6 @@ const SimplePortfolioItem = props => {
                     <Styled.Shadow bgColor={bgColor} shadowColor={shadowColor} />
                 </Styled.ImageContainer>
                 <Styled.Title onScreen={onScreen} as={link ? 'a': 'h1'} href={link} target={'_blank'}>{name}</Styled.Title>
-                <Styled.ButtonContainer>
-                {/* {link && (<Styled.Button bgColor={bgColor} href={link}>DEMO</Styled.Button>)} */}
-                
-                </Styled.ButtonContainer>
                 <Styled.Note>{note}</Styled.Note>
                 {githubLink && (<Styled.GithubLink href={githubLink} target={'_blank'} ><Styled.GithubLogo fill={bgColor} /></Styled.GithubLink>)}
 

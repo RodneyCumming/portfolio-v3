@@ -2,10 +2,7 @@ import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom'
 import screenSize from 'Styles/mediaQueries';
 
-
-
 export const NavLinksInnerContainer = styled.div`
-    ${'' /* margin-right: 50px; */}
 
     ${({ isMenuOpen }) => isMenuOpen && `
         position: absolute;
@@ -36,10 +33,6 @@ export const NavItemsWrapper = styled.div`
     right: 0;
     margin: auto;
     text-align: center;
-    ${({ isMenuOpen }) => isMenuOpen && `
-     ${'' /* position: fixed; */}
-    `}
-    
 
     ${screenSize.minTablet`
         width: unset;
@@ -66,13 +59,8 @@ export const NavItem = styled(NavLink)`
     line-height: 140px;
     font-weight: 600;
 
-
     :hover {
         color: #00d7ff;
-    }
-
-    &.active {
-        ${'' /* color: #00C2E6; */}
     }
 
     ${({ isMenuOpen }) => isMenuOpen && `
