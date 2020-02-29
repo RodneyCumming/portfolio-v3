@@ -1,16 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import Hero from './Hero';
-import PortfolioPage from './PortfolioPage';
-import ContactPage from './ContactPage';
-import Nav from './Nav';
-import MenuPopup from './MenuPopup';
-// import * as Styled from './App.styled'
-// import { Router, Route, Switch } from "react-router";
+import Hero from 'Pages/Hero';
+import PortfolioPage from 'Pages/PortfolioPage';
+import ContactPage from 'Pages/ContactPage';
+import Nav from 'Nav';
+import MenuPopup from 'Nav/MenuPopup';
 import { Switch, Route } from 'react-router-dom'
 import * as Styled from './App.styled'
 
-import './App.css';
-
+import 'Styles/App.css';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

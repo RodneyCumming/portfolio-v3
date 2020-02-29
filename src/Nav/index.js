@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import * as Styled from './Nav.styled'
-import Logo from "../images/logo.svg";
+import Logo from "Images/logo.svg";
 import { withRouter } from "react-router";
-import CloseIcon from 'images/icons/close.svg'
-import MenuIcon from 'images/icons/menu.svg'
+import MenuIcon from 'Images/icons/menu.svg'
 
 const Nav = props => {
   const [initLoadTrigger, setInitialLoad] = useState(false);

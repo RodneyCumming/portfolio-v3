@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { HashRouter } from 'react-router-dom';
-import './styles/sanitize.css';
-import './styles/globalStyles.css';
-import './styles/fonts/stylesheet.css';
+import 'Styles/sanitize.css';
+import 'Styles/globalStyles.css';
+import 'Styles/fonts/stylesheet.css';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

@@ -2,77 +2,19 @@ import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom'
 import screenSize from 'Styles/mediaQueries';
 
-export const Nav = styled.header`
-    z-index: 100;
-    position: absolute;
-    top: 0px;
-    right: 0;
-    left: 0;
 
 
-    ${props => props.homePage && `
-        opacity: 0;
-        top: -100px;
-        box-shadow: 0 6px 7px 2px rgba(0, 0, 0, 0.2);
+export const NavLinksInnerContainer = styled.div`
+    ${'' /* margin-right: 50px; */}
 
-        ${props.initLoadTrigger && `
-            opacity: 1;
-            top: 0;
-            transition: opacity 2s, top 1s;
-        `}
-    `}
-
-    
-`;
-
-export const NavInner = styled.div`
-    background: #203244;
-    width: 3000px;
-`;
-
-// todo: change name
-export const UnordedList = styled.div`
-    justify-content: space-between;
-    display: flex;
-    max-width: 100vw;
-    margin: auto;
-    
-`;
-
-export const NavItemsContainer = styled.div`
-    margin-right: 40px;
-    display: flex;
-    align-items: center;
-
-    ${'' /* ${({ isMenuOpen }) => isMenuOpen && `
+    ${({ isMenuOpen }) => isMenuOpen && `
         position: absolute;
         top: 0;
         right: 0;
         height: 100vh;
         width: 100vw;
         margin: auto;
-        background: rgba(0, 0, 0, 0.8);
-    `}
-    
-
-    ${screenSize.minTablet`
-        position: static;
-        height: unset;
-        width: unset;
-        margin: unset;
-        background: unset;
-    `} */}
-
-    ${screenSize.minTablet`
-        margin-right: 50px;
-    `}
-`;
-
-export const NavLinksInnerContainer = styled.div`
-    ${'' /* margin-right: 50px; */}
-
-    ${({ isMenuOpen }) => isMenuOpen && `
-        display: none;
+        background: rgba(26, 40, 53, 0.93);
     `}
     
 
@@ -120,7 +62,7 @@ export const NavItem = styled(NavLink)`
     padding: 0 30px;
     width: 100%;
     display: none;
-    font-size: 50px;
+    font-size: 30px;
     line-height: 140px;
     font-weight: 600;
 
@@ -135,6 +77,10 @@ export const NavItem = styled(NavLink)`
 
     ${({ isMenuOpen }) => isMenuOpen && `
         display: inline-block;
+    `}
+
+    ${screenSize.minLargeMobile`
+        font-size: 50px;
     `}
 
     ${screenSize.minTablet`

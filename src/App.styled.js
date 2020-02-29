@@ -1,23 +1,5 @@
 import styled from 'styled-components'
 
-// export const SectionOne = styled.section`
-//     background: blue;
-//     height: 700px;
-
-// `;
-
-// export const SectionTwo = styled.section`
-//     background: grey;
-//     height: 700px;
-
-// `;
-
-// export const SectionThree = styled.section`
-//     background: teal;
-//     height: 700px;
-
-// `;
-
 export const Perspective = styled.div`
     perspective: 100px;
 
