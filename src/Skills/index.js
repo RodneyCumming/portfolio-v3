@@ -133,10 +133,10 @@ const Skills = () => {
 
     return (
         <Styled.Skills>
-            <Styled.SkillsInner>
-                <Styled.TextPanel ref={ref}>
+            <Styled.SkillsInner ref={ref}>
+                <Styled.TextPanel >
                     <Styled.Heading onClick={() => console.log(selectedCategory)} onScreen={onScreen}>TECHNOLOGY</Styled.Heading>
-                    <Styled.Body onScreen={onScreen}>Below are some of the techologies I've learnt to use. My core strengths currently are CSS, Javascript and React.</Styled.Body>
+                    <Styled.Body onScreen={onScreen}>Below are some of the techologies I've learnt to use. My core strengths are CSS, Javascript and React.</Styled.Body>
                 </Styled.TextPanel>
                 <Styled.CategoriesContainer>
                     {['All', 'Frontend', 'Backend', 'Tools'].map(value => (

@@ -81,7 +81,7 @@ export const Heading = styled.h1`
     color: #00C2E6;
     letter-spacing: 3px;
     line-height: 1;
-    margin: 0;
+    margin: 0 20px;
     font-family: HelveticaNeueCondensedBold;
     letter-spacing: 0px;
     background-size: 500px;

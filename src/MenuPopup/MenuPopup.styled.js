@@ -62,7 +62,7 @@ export const NavItem = styled(NavLink)`
     padding: 0 30px;
     width: 100%;
     display: none;
-    font-size: 50px;
+    font-size: 30px;
     line-height: 140px;
     font-weight: 600;
 
@@ -77,6 +77,10 @@ export const NavItem = styled(NavLink)`
 
     ${({ isMenuOpen }) => isMenuOpen && `
         display: inline-block;
+    `}
+
+    ${screenSize.minLargeMobile`
+        font-size: 50px;
     `}
 
     ${screenSize.minTablet`

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import screenSize from 'styles/mediaQueries';
 
 export const ContactButtonsSection = styled.div`
     width: 3000px;
@@ -10,17 +11,25 @@ export const ContactInner = styled.div`
     max-width: 100vw;
     margin: auto;
     width: 70vw;
-    padding: ${props => props.showContactButtons ? '200px 0 300px' : '200px 0'};
+    ${'' /* padding: ${props => props.showContactButtons ? '200px 0 300px' : '200px 0'};
+    transition: padding 1s; */}
+
+    padding: 100px 0;
     transition: padding 1s;
+
+    ${screenSize.minDesktop`
+        flex-direction: row;
+        padding: ${props => props.showContactButtons ? '200px 0 300px' : '200px 0'};
+    `}
 `;
 
 export const Heading = styled.h1`
     text-align: center;
     color: white;
     font-weight: 700;
-    font-size: 80px;
+    ${'' /* font-size: 80px; */}
     line-height: 1;
-
+    font-size: 70px;
     opacity: 0;
     transform: translateY(10vh);
     transition: all 0.6s;
@@ -29,6 +38,10 @@ export const Heading = styled.h1`
         opacity: 1;
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
+    `}
+
+    ${screenSize.minDesktop`
+        font-size: 100px;
     `}
 `;
 
@@ -60,34 +73,50 @@ export const TextPanel = styled.div`
 `;
 
 export const ImagePanel = styled.div`
-    padding-top: 60px;
+    padding-top: 20px;
     display: inline-block;
-    
-    
-    transition: all 1s;
+    text-align: center;
     position: relative;
-
+    width: 100%;
     opacity: 0;
-    transform: translateX(-10vh);
+    transform: translateX(-30%);
     transition: all 0.6s;
+    left: 50%;
 
     ${props => props.onScreen && `
         opacity: 1;
+        transform: translateX(0);
+        left: 0;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s ease-out;
-        transform: ${props.showContactButtons ? 'translateX(0)' : 'translateX(-50%)'};
-        left: ${props.showContactButtons ? '0' : '50%'};
+    `}
+
+    ${screenSize.minDesktop`
+        padding-top: 60px;
+        width: unset;
+        text-align: unset;
+        transform: ${props => props.showContactButtons ? 'translateX(0)' : 'translateX(-50%)'};
+        left: ${props => props.showContactButtons ? '0' : '50%'};
+
+
+        ${props => props.onScreen && `
+            transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s ease-out;
+        `}
     `}
 `;
 
 export const Icon = styled.img`
-    height: 110px;
+    height: 40px;
     filter: grayscale(.4);
     display: inline-block;
-    margin: 20px 40px;
+    margin: 20px 10px;
     vertical-align: top;
     opacity: 1;
     transform: scale(0.9);
 
+    ${screenSize.minDesktop`
+        height: 110px;
+        transition: all 1s;
+        margin: 20px 40px;
     ${props => props.onScreen && `
         opacity: 1;
         transition: top 1s ease-in-out, left 1s ease-in-out, height 1s ease-in-out, opacity 1.5s ease-in, transform 0.6s ease-out;
@@ -102,26 +131,43 @@ export const Icon = styled.img`
             filter: grayscale(0);
         }
     `}
+    `}
 `;
 
 export const IconTwo = styled(Icon)`
     position: relative;
-    top: ${props => props.showContactButtons ? '120px' : '0'};
-    left: ${props => props.showContactButtons ? '-220px' : '0'};
+    ${'' /* top: ${props => props.showContactButtons ? '120px' : '0'};
+    left: ${props => props.showContactButtons ? '-220px' : '0'}; */}
+
+
+    ${screenSize.minDesktop`
+        top: ${props => props.showContactButtons ? '120px' : '0'};
+        left: ${props => props.showContactButtons ? '-220px' : '0'};
+    `}
+   
 `;
 
 export const ContactText = styled.h4`
     display: inline-block;
-    // display: ${props => props.showContactButtons ? 'inline-block' : 'none'};
-    opacity: ${props => props.showContactButtons ? '1' : '0'};
-    transition: ${props => props.showContactButtons ? 'opacity 0.4s 1s' : 'opacity 0.4s'};
-    position: absolute;
+    opacity: 1;
+    font-size: 18px;
+    width: 100%;
+
+    ${screenSize.minDesktop`
+        position: absolute;
+        font-size: 30px;
+        width: 520px;
+        opacity: ${props => props.showContactButtons ? '1' : '0'};
+        transition: ${props => props.showContactButtons ? 'opacity 0.4s 1s' : 'opacity 0.4s'};
+        z-index: ${props => props.showContactButtons ? '1' : '0'};
+    `}
+    
     top: 35px;
     left: 210px;
-    width: 520px;
-    font-size: 30px;
+    
+    
     color: #b4c4d8;
-    z-index: ${props => props.showContactButtons ? '1' : '0'};
+    
 `;
 
 
@@ -134,6 +180,13 @@ export const IconAndText = styled.div`
     position: relative;
     display: flex;
     display: inline-block;
+
+    width: 100%;
+
+    ${screenSize.minDesktop`
+        width: unset;
+    `}
+
 `;
 
 

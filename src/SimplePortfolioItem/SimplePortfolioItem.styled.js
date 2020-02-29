@@ -1,19 +1,26 @@
 import styled, {keyframes} from 'styled-components';
 import GithubIcon from '../images/githubLogo';
+import screenSize from 'styles/mediaQueries';
 
 export const GithubLogo = styled(GithubIcon)`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   position: absolute;
   right: 5%;
   top: 5%;
-  opacity: 0;
+  
   filter: brightness(1.7);
   transition: opacity 0.5s;
 
   :hover {
     cursor: pointer;
   }
+
+  ${screenSize.minTablet`
+    opacity: 0;
+    width: 50px;
+    height: 50px;
+  `}
 `;
 
 export const Note = styled.p`
@@ -104,6 +111,11 @@ export const Shadow = styled.div`
     animation: ${shadowSize} 3s ease-in-out infinite;
     animation-timing-function: cubic-bezier(.6,.4,.4,.6);
     animation-play-state:paused;
+    display: none;
+
+    ${screenSize.minTablet`
+      display: block;
+    `}
 
 `;
 
@@ -208,7 +220,7 @@ export const Title = styled.h1`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 45px;
+    font-size: 30px;
     line-height: 1;
     font-family: HelveticaNeueCondensedBold;
     // letter-spacing: 5px;
@@ -226,6 +238,10 @@ export const Title = styled.h1`
     :hover {
       cursor: pointer;
     }
+
+    ${screenSize.minTablet`
+      font-size: 45px;
+    `}
 `;
 
 export const Number = styled.h1`
@@ -246,6 +262,11 @@ export const Number = styled.h1`
         left: 5%;
         transition: opacity 1.5s ease-in, left 0.6s ease-out;
     `} */}
+
+  ${screenSize.minTablet`
+    font-size: 35px;
+  `}
+    
 `;
 
 export const ButtonContainer = styled.div`

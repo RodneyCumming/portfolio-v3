@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import screenSize from 'styles/mediaQueries';
 
 export const Skills = styled.div`
     width: 3000px;
@@ -10,14 +11,19 @@ export const SkillsInner = styled.div`
     max-width: 100vw;
     margin: auto;
     width: 70vw;
-    padding: 200px 0;
+    padding: 100px 0;
+
+    ${screenSize.minDesktop`
+        flex-direction: row;
+        padding: 200px 0;
+    `}
 `;
 
 export const Heading = styled.h1`
     text-align: center;
     color: white;
     font-weight: 700;
-    font-size: 100px;
+    font-size: 70px;
     line-height: 1;
     color: #bbc3da;
 
@@ -29,6 +35,10 @@ export const Heading = styled.h1`
         opacity: 1;
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
+    `}
+
+    ${screenSize.minDesktop`
+        font-size: 100px;
     `}
 `;
 
@@ -51,6 +61,8 @@ export const Body = styled.p`
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
     `}
+
+    
 `;
 
 
@@ -71,7 +83,7 @@ export const IconContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 15px;
 
     opacity: 0;
     transform: translateX(10vh);
@@ -82,11 +94,19 @@ export const IconContainer = styled.div`
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
     `}
+
+    ${screenSize.minTablet`
+        padding: 20px;
+    `}
 `;
 
 export const Icon = styled.img`
-    height: 40px;
+    height: 30px;
     filter: saturate(0) brightness(1.5);
+
+    ${screenSize.minTablet`
+        height: 40px;
+    `}
 `;
 
 export const IconLabel = styled.p`
@@ -95,11 +115,13 @@ export const IconLabel = styled.p`
 
 export const CategoriesContainer = styled.div`
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 30px;
     *+* {
         margin-left: 20px;
     }
+    
 `;
 
 
@@ -110,6 +132,7 @@ export const CategoryButton = styled.button`
     border-radius: 20px;
     color: ${props => props.selected ? '#bbc8f3' : '#828cad'};
     transition: border 0.2s;
+    margin-bottom: 15px;
     :focus {
         outline: 0;
     }
@@ -128,6 +151,10 @@ export const CategoryButton = styled.button`
         opacity: 1;
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
+    `}
+
+    ${screenSize.minTablet`
+        margin-bottom: 0px;
     `}
 `;
 

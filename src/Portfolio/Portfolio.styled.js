@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom'
+import screenSize from 'styles/mediaQueries';
 
 export const Portfolio = styled.div`
     width: 3000px;
@@ -11,15 +11,22 @@ export const PortfolioInner = styled.div`
     max-width: 100vw;
     margin: auto;
     width: 70vw;
-    padding: 200px 0;
+    padding: 100px 0;
     display: flex;
+    flex-direction: column-reverse;
+
+    ${screenSize.minDesktop`
+        flex-direction: row;
+        padding: 200px 0;
+    `}
+
 `;
 
 export const Heading = styled.h1`
-    text-align: left;
+    text-align: center;
     color: white;
     font-weight: 700;
-    font-size: 100px;
+    font-size: 70px;
     line-height: 1;
     color: #bbc3da;
 
@@ -32,17 +39,21 @@ export const Heading = styled.h1`
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
     `}
+
+    ${screenSize.minDesktop`
+        text-align: left;
+        font-size: 100px;
+    `}
 `;
 
 export const Body = styled.p`
-    text-align: left;
+    text-align: center;
     color: #d3d3d3;
     line-height: 2em;
     font-size: 18px;
     font-family: Lato,serif;
     color: #B5B5B5;
     margin-top: 30px;
-
     opacity: 0;
     transform: translateY(10vh);
     transition: all 0.6s;
@@ -52,29 +63,45 @@ export const Body = styled.p`
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
     `}
+
+    ${screenSize.minDesktop`
+        text-align: left;
+    `}
 `;
 
 
 export const TextPanel = styled.div`
-    width: 65%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 5vw;
+    margin-left: 0;
+
+    ${screenSize.minDesktop`
+        width: 65%;
+        margin-left: 5vw;
+    `}
 `;
 
 export const ImagePanel = styled.div`
-    width: 35%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 5vw;
+    margin-right: 0;
+    margin-top: 4rem;
+
+    ${screenSize.minDesktop`
+        width: 35%;
+        margin-right: 5vw;
+        margin-top: unset;
+    `}
 `;
 
 export const Button = styled.a`
     background: #3b4873;
     padding: 16px 50px;
-    margin-top: 40px;
+    margin: 40px auto 0;
     font-size: 20px;
     width: fit-content;
     text-decoration: none;
@@ -99,10 +126,14 @@ export const Button = styled.a`
         transition: opacity 1.5s ease-in, transform 0.6s ease-out, background 0.2s;
     `}
 
+    ${screenSize.minDesktop`
+        margin: 40px 0 0;
+    `}
+
 `;
 
 export const Icon = styled.img`
-    max-width: 100%;
+    max-width: 200px;
     width: 70%;
 
     :after {

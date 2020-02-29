@@ -10,9 +10,9 @@ const Footer = () => {
   return (
     <Styled.Footer ref={ref}>
       <Styled.FooterInner onScreen={onScreen}>
-        <a href="/">
+        <Styled.Link href="/">
           <Styled.Logo src={Logo} alt="logo" height={33} />
-        </a>
+        </Styled.Link>
 
         <Styled.Body onClick={() => console.log(onScreen)}>
           Design & development by Rodney Cumming 2020

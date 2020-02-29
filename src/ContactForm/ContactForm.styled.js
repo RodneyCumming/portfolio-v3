@@ -1,4 +1,5 @@
 import styled, {keyframes} from 'styled-components';
+import screenSize from 'styles/mediaQueries';
 
 export const ContactForm = styled.div`
     width: 3000px;
@@ -6,26 +7,32 @@ export const ContactForm = styled.div`
 `; 
 
 export const ContactFormInner = styled.div`
-    overflow: auto;
+    ${'' /* overflow: auto; */}
     max-width: 100vw;
     margin: auto;
-    padding: 100px;
+    padding: 20px;
     position: relative;
     display: flex;
+
+    ${screenSize.minLargeMobile`
+        padding: 40px;
+    `}
+
+    ${screenSize.minDesktop`
+        padding: 100px;
+    `}
 `;
 
 export const ContactFormContainer = styled.form`
     width: 70vw;
     max-width: 1400px;
     margin: auto;
-    // padding: 70px 110px;
     position: relative;
     display: flex;
-    border-radius: 35px 0 0 35px;
+    border-radius: 35px 35px 0 0;
     transition: all 0.2s;
     width: 100%;
 
-    
     transition: all 0.2s;
     ${props => props.activeMound && `
         // box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c, inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040, inset 10px 10px 7.5px -7.5px #243a4c;
@@ -34,12 +41,13 @@ export const ContactFormContainer = styled.form`
         transition: all 0.2s;
     `}
 
-    // :hover {
-    //     left: 0;
-    //     top: 0;
-    //     box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c, inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040, inset 10px 10px 7.5px -7.5px #243a4c;
-    //     transition: all 0.2s;
-    // }
+    flex-direction: column;
+
+    ${screenSize.minDesktop`
+        flex-direction: row;
+        border-radius: 35px 0 0 35px;
+    `}
+
 `;
 
 export const FormHeader = styled.h3`
@@ -61,7 +69,7 @@ export const TextInput = styled.input`
     font-family: Lato,serif;
     font-size: 18px;
     color: #fff;
-    width: calc(50% - 50px);
+    width: 100%;
     margin-bottom: 30px;
     line-height: 40px;
     padding: 10px 15px;
@@ -75,6 +83,10 @@ export const TextInput = styled.input`
     :focus {
         background: #29506f;
     }
+
+    ${screenSize.minDesktop`
+        width: calc(50% - 50px);
+    `}
 `;
 
 export const TextAreaInput = styled.textarea`
@@ -131,12 +143,11 @@ export const SendButton = styled.button`
     font-size: 18px;
     font-family: Lato,serif;
     padding: 10px 50px;
-    border-radius: 5px;
     margin: 0;
-    width: 30%;
-    max-width: 200px;
+    width: 100%;
+    height: 80px;
     transition: background .3s;
-    border-radius: 0 35px 35px 0;
+    border-radius: 0 0 35px 35px;
     box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c, inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040, inset 10px 10px 7.5px -7.5px #243a4c;
 
     :hover {
@@ -148,17 +159,36 @@ export const SendButton = styled.button`
     }
     :hover ${SendIcon} {
         // width: 70%;
-        
-        animation: ${hoveringPlane} 1s ease-in-out infinite;
+        ${screenSize.minDesktop`
+            animation: ${hoveringPlane} 1s ease-in-out infinite;
+        `}
     }
+
+    ${screenSize.minDesktop`
+        width: 30%;
+        max-width: 200px;
+        height: unset;
+        border-radius: 0 35px 35px 0;
+    `}
 `;
 
 export const FormMiddlePanel = styled.div`
-    padding: 70px 110px;
+    padding: 40px 20px 10px;
     flex-grow: 1;
     // flex-shrink: 0;
-    border-radius: 35px 0 0 35px;
+    border-radius:  35px 35px 0 0;
+   
     box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c, inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040, inset 10px 10px 7.5px -7.5px #243a4c;
+
+    ${screenSize.minLargeMobile`
+        padding: 60px 60px 40px;
+    `}
+
+    ${screenSize.minDesktop`
+        border-radius: 35px 0 0 35px;
+        padding: 70px 110px;
+    `}
+    
 
 `;
 export const BallContainer = styled.div`
