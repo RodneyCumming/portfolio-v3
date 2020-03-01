@@ -42,7 +42,7 @@ Showcase progression in my web development and design abilities to potential emp
 - Styled Components
 - React.js
 - Adobe Illustrator
-- hosted by Netlify
+- Hosted by Netlify
 
 ## Live Website
 
