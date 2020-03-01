@@ -1,6 +1,6 @@
 import React from "react";
 import * as Styled from "./ContactForm.styled.js";
-import SendIcon from "Images//icons/sendIcon2.svg";
+import SendIcon from "Images/icons/sendIcon2.svg";
 
 const ContactForm = () => {
   return (

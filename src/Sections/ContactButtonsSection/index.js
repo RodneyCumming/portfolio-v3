@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import * as Styled from "./ContactButtonsSection.styled.js";
-import Phone from "Images//phone.png";
-import Email from "Images//email.png";
+import Phone from "Images/phone.png";
+import Email from "Images/email.png";
 import useOnScreen from "Hooks/useOnScreen";
 
 const ContactButtonsSection = props => {

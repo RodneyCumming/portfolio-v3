@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import polyBackground from "Images//text-bg.svg";
-import buttonBackground from "Images//button-bg.svg";
+import polyBackground from "Images/text-bg.svg";
+import buttonBackground from "Images/button-bg.svg";
 import screenSize from "Styles/mediaQueries";
 import { fontColours, backgroundColours } from "Styles/colours";
 
