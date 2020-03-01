@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as Styled from "./AboutMe.styled.js";
-import CoffeeCup from "Images//icons/purpleCup.png";
+import CoffeeCup from "Images/icons/purpleCup.png";
 import useOnScreen from "Hooks/useOnScreen";
 
 const AboutMe = () => {

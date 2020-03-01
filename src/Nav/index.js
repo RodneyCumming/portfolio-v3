@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as Styled from "./Nav.styled";
-import Logo from "Images//logo.svg";
+import Logo from "Images/logo.svg";
 import { withRouter } from "react-router";
 import MenuIcon from "Images/icons/menu.svg";
 

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import * as Styled from "./PortfolioSection.styled.js";
-import PortfolioImage from "Images//portfolioImage.png";
+import PortfolioImage from "Images/portfolioImage.png";
 import useOnScreen from "Hooks/useOnScreen";
 
 const PortfolioSection = () => {

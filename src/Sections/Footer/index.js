@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import * as Styled from "./Footer.styled.js";
-import Logo from "Images//logo.svg";
+import Logo from "Images/logo.svg";
 import useOnScreen from "Hooks/useOnScreen";
 
 const Footer = () => {

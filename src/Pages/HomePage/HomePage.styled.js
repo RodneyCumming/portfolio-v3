@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import polyBackground from "Images//hero-text-bg-static.svg";
+import polyBackground from "Images/hero-text-bg-static.svg";
 import screenSize from "Styles/mediaQueries";
 import {
   fontColours,

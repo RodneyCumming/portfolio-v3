@@ -7,11 +7,11 @@ import Contact from "Sections/Contact";
 import Footer from "Sections/Footer";
 import useOnScreen from "Hooks/useOnScreen";
 
-import layer_1 from "Images//parallax/MoutainsLayerOne.png";
-import layer_2 from "Images//parallax/layer_2.svg";
-import layer_3 from "Images//parallax/layer_3.svg";
-import layer_4 from "Images//parallax/layer_4.svg";
-import Cloud from "Images//cloud.svg";
+import layer_1 from "Images/parallax/MoutainsLayerOne.png";
+import layer_2 from "Images/parallax/layer_2.svg";
+import layer_3 from "Images/parallax/layer_3.svg";
+import layer_4 from "Images/parallax/layer_4.svg";
+import Cloud from "Images/cloud.svg";
 
 const HomePage = () => {
   const [imagesLoaded, setImagesLoaded] = useState([]);
