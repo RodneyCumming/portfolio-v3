@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
-import GithubIcon from "Images2/githubLogo";
-import screenSize from "Styles2/mediaQueries";
-import { backgroundColours } from "Styles2/colours";
+import GithubIcon from "Images/githubLogo";
+import screenSize from "Styles/mediaQueries";
+import { backgroundColours } from "Styles/colours";
 
 export const GithubLogo = styled(GithubIcon)`
   width: 40px;

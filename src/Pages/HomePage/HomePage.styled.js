@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import polyBackground from "Images2//hero-text-bg-static.svg";
-import screenSize from "Styles2/mediaQueries";
+import polyBackground from "Images//hero-text-bg-static.svg";
+import screenSize from "Styles/mediaQueries";
 import {
   fontColours,
   backgroundColours,
   boxShadowColours
-} from "Styles2/colours";
+} from "Styles/colours";
 
 export const HomePage = styled.section``;
 

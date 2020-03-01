@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
-import screenSize from "Styles2/mediaQueries";
-import { backgroundColours, boxShadowColours } from "Styles2/colours";
+import screenSize from "Styles/mediaQueries";
+import { backgroundColours, boxShadowColours } from "Styles/colours";
 
 export const ContactForm = styled.div`
   width: 3000px;

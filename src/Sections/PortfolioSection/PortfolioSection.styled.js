@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import screenSize from "Styles2/mediaQueries";
+import screenSize from "Styles/mediaQueries";
 import {
   fontColours,
   backgroundColours,
   boxShadowColours
-} from "Styles2/colours";
+} from "Styles/colours";
 
 export const PortfolioSection = styled.div`
   width: 3000px;

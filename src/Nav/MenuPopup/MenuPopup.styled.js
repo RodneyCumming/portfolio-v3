@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link, NavLink } from "react-router-dom";
-import screenSize from "Styles2/mediaQueries";
-import { backgroundColours } from "Styles2/colours";
+import screenSize from "Styles/mediaQueries";
+import { backgroundColours } from "Styles/colours";
 
 export const NavLinksInnerContainer = styled.div`
   ${({ isMenuOpen }) =>

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import * as Styled from "./ContactHeader.styled.js";
-import useOnScreen from "Hooks2/useOnScreen";
+import useOnScreen from "Hooks/useOnScreen";
 
 const ContactHeader = props => {
   const ref = useRef();

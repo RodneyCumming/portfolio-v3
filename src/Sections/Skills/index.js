@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import * as Styled from "./Skills.styled.js";
 import skillsIcons from "./skills.data";
-import useOnScreen from "Hooks2/useOnScreen";
+import useOnScreen from "Hooks/useOnScreen";
 
 const Skills = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");

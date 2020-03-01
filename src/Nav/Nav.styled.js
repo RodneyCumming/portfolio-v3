@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { Link, NavLink } from "react-router-dom";
-import screenSize from "Styles2/mediaQueries";
+import screenSize from "Styles/mediaQueries";
 import {
   fontColours,
   backgroundColours,
   boxShadowColours
-} from "Styles2/colours";
+} from "Styles/colours";
 
 export const Nav = styled.header`
   z-index: 100;

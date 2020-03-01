@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import polyBackground from "Images2//text-bg.svg";
-import buttonBackground from "Images2//button-bg.svg";
-import screenSize from "Styles2/mediaQueries";
-import { fontColours, backgroundColours } from "Styles2/colours";
+import polyBackground from "Images//text-bg.svg";
+import buttonBackground from "Images//button-bg.svg";
+import screenSize from "Styles/mediaQueries";
+import { fontColours, backgroundColours } from "Styles/colours";
 
 export const ContactHeader = styled.div`
   width: 3000px;
