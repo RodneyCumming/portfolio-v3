@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom'
-import screenSize from 'styles/mediaQueries';
+import screenSize from 'Styles/mediaQueries';
+import { fontColours, backgroundColours, boxShadowColours } from 'Styles/colours';
 
 export const Nav = styled.header`
     z-index: 100;
@@ -10,12 +11,12 @@ export const Nav = styled.header`
     left: 0;
 
 
-    ${props => props.homePage && `
+    ${({homePage, initLoadTrigger}) => homePage && `
         opacity: 0;
         top: -100px;
-        box-shadow: 0 6px 7px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: ${boxShadowColours.lightBottom};
 
-        ${props.initLoadTrigger && `
+        ${initLoadTrigger && `
             opacity: 1;
             top: 0;
             transition: opacity 2s, top 1s;
@@ -26,11 +27,10 @@ export const Nav = styled.header`
 `;
 
 export const NavInner = styled.div`
-    background: #203244;
+    background: ${backgroundColours.cloudBurst};
     width: 3000px;
 `;
 
-// todo: change name
 export const UnordedList = styled.div`
     justify-content: space-between;
     display: flex;
@@ -44,32 +44,12 @@ export const NavItemsContainer = styled.div`
     display: flex;
     align-items: center;
 
-    ${'' /* ${({ isMenuOpen }) => isMenuOpen && `
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100vh;
-        width: 100vw;
-        margin: auto;
-        background: rgba(0, 0, 0, 0.8);
-    `}
-    
-
-    ${screenSize.minTablet`
-        position: static;
-        height: unset;
-        width: unset;
-        margin: unset;
-        background: unset;
-    `} */}
-
     ${screenSize.minTablet`
         margin-right: 50px;
     `}
 `;
 
 export const NavLinksInnerContainer = styled.div`
-    ${'' /* margin-right: 50px; */}
 
     ${({ isMenuOpen }) => isMenuOpen && `
         display: none;
@@ -94,9 +74,6 @@ export const NavItemsWrapper = styled.div`
     right: 0;
     margin: auto;
     text-align: center;
-    ${({ isMenuOpen }) => isMenuOpen && `
-     ${'' /* position: fixed; */}
-    `}
     
 
     ${screenSize.minTablet`
@@ -126,11 +103,7 @@ export const NavItem = styled(NavLink)`
 
 
     :hover {
-        color: #00d7ff;
-    }
-
-    &.active {
-        ${'' /* color: #00C2E6; */}
+        color: ${fontColours.cyan};
     }
 
     ${({ isMenuOpen }) => isMenuOpen && `
@@ -148,12 +121,12 @@ export const NavItem = styled(NavLink)`
 
 
         :hover {
-            background: #192835;
+            background: ${backgroundColours.lightMirage};
             color: white;
         }
 
         &.active {
-            background: #192835;
+            background: ${backgroundColours.lightMirage};
             color: white;
         }
     `}

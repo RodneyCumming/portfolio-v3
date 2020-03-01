@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react'
 import * as Styled from './Nav.styled'
-import Logo from "../images/logo.svg";
+import Logo from "Images/logo.svg";
 import { withRouter } from "react-router";
-import CloseIcon from 'images/icons/close.svg'
-import MenuIcon from 'images/icons/menu.svg'
+import MenuIcon from 'Images/icons/menu.svg'
 
 const Nav = props => {
   const [initLoadTrigger, setInitialLoad] = useState(false);
   const {isMenuOpen, setIsMenuOpen} = props;
-  useEffect(() => setInitialLoad(true));
+  useEffect(() => setInitialLoad(true), []);
   return (
   <Styled.Nav homePage={props.history.location.pathname === '/'} initLoadTrigger={initLoadTrigger}>
     <Styled.NavInner>
@@ -23,7 +22,7 @@ const Nav = props => {
         <Styled.NavItemsContainer >
             
             <Styled.NavLinksInnerContainer isMenuOpen={isMenuOpen}>
-            <Styled.NavItemsWrapper isMenuOpen={isMenuOpen}>
+            <Styled.NavItemsWrapper>
             <Styled.NavItem to='/' exact isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>HOME</Styled.NavItem>
             <Styled.NavItem to='/portfolio' isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>PORTFOLIO</Styled.NavItem>
             <Styled.NavItem to='/contact' isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)}>CONTACT</Styled.NavItem>
