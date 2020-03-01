@@ -1,8 +1,8 @@
 <div align="center">
- <img src="./src/images/readme-logo.svg" width="100" alt="R logo">
+ <img src="../../src/images/readme-logo.svg" width="100" alt="R logo">
  <br>
  <h1 size="+2">Portfolio V3</h1>
- <h4><i>Portfolio website using parallax scrolling on the landing page.</i></h4>
+ <h4><i>Portfolio site to showcase my web development ability</i></h4>
 
  <p align="center">
     <a href="https://www.npmjs.com/package/npm/v/6.4.1" target="_blank"><img
