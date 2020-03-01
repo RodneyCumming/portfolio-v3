@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import screenSize from "Styles/mediaQueries";
-import { fontColours, backgroundColours } from 'Styles/colours';
+import screenSize from "Styles2/mediaQueries";
+import { fontColours, backgroundColours } from "Styles2/colours";
 
 export const ContactButtonsSection = styled.div`
   width: 3000px;
@@ -147,8 +147,10 @@ export const IconTwo = styled(Icon)`
   position: relative;
 
   ${screenSize.minDesktop`
-        top: ${({ showContactButtons }) => (showContactButtons ? "120px" : "0")};
-        left: ${({ showContactButtons }) => (showContactButtons ? "-220px" : "0")};
+        top: ${({ showContactButtons }) =>
+          showContactButtons ? "120px" : "0"};
+        left: ${({ showContactButtons }) =>
+          showContactButtons ? "-220px" : "0"};
     `}
 `;
 
@@ -165,10 +167,12 @@ export const ContactText = styled.h4`
         position: absolute;
         font-size: 30px;
         width: 520px;
-        opacity: ${({ showContactButtons }) => (showContactButtons ? "1" : "0")};
+        opacity: ${({ showContactButtons }) =>
+          showContactButtons ? "1" : "0"};
         transition: ${({ showContactButtons }) =>
           showContactButtons ? "opacity 0.4s 1s" : "opacity 0.4s"};
-        z-index: ${({ showContactButtons }) => (showContactButtons ? "1" : "0")};
+        z-index: ${({ showContactButtons }) =>
+          showContactButtons ? "1" : "0"};
     `}
 `;
 

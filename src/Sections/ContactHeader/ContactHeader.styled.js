@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import polyBackground from "Images/text-bg.svg";
-import buttonBackground from "Images/button-bg.svg";
-import screenSize from "Styles/mediaQueries";
-import { fontColours, backgroundColours } from 'Styles/colours';
+import polyBackground from "Images2//text-bg.svg";
+import buttonBackground from "Images2//button-bg.svg";
+import screenSize from "Styles2/mediaQueries";
+import { fontColours, backgroundColours } from "Styles2/colours";
 
 export const ContactHeader = styled.div`
   width: 3000px;
@@ -80,7 +80,7 @@ export const Body = styled.p`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -111,7 +111,7 @@ export const Button = styled.button`
   transform: translateY(10vh);
   transition: transform 0.6s, opacity 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;

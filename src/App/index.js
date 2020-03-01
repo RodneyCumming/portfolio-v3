@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import Hero from 'Pages/HomePage';
-import PortfolioPage from 'Pages/PortfolioPage';
-import ContactPage from 'Pages/ContactPage';
-import Nav from 'Nav';
-import MenuPopup from 'Nav/MenuPopup';
-import { Switch, Route } from 'react-router-dom'
-import * as Styled from './App.styled'
+import React, { useState, useEffect } from "react";
+import Hero from "Pages/HomePage";
+import PortfolioPage from "Pages/PortfolioPage";
+import ContactPage from "Pages/ContactPage";
+import Nav from "Nav";
+import MenuPopup from "Nav/MenuPopup";
+import { Switch, Route } from "react-router-dom";
+import * as Styled from "./App.styled";
 
-import 'Styles/App.css';
+import "Styles2/App.css";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,23 +18,22 @@ function App() {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => setIsMenuOpen(false), 150);
     };
-    window.addEventListener('resize', resizeListener);
+    window.addEventListener("resize", resizeListener);
 
     return () => {
-      window.removeEventListener('resize', resizeListener);
-    }
-  }, [])
+      window.removeEventListener("resize", resizeListener);
+    };
+  }, []);
 
   return (
     <Styled.App>
       <Styled.Perspective>
         <Nav isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <Switch>
-          <Route exact path='/' component={Hero}  />
-          <Route path='/portfolio' component={PortfolioPage} />
-          <Route path='/contact' component={ContactPage} />
+          <Route exact path="/" component={Hero} />
+          <Route path="/portfolio" component={PortfolioPage} />
+          <Route path="/contact" component={ContactPage} />
         </Switch>
-        
       </Styled.Perspective>
       <MenuPopup isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
     </Styled.App>

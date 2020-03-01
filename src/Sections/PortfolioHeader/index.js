@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import * as Styled from "./PortfolioHeader.styled.js";
-import useOnScreen from "Hooks/useOnScreen";
+import useOnScreen from "Hooks2/useOnScreen";
 
 const PortfolioHeader = () => {
   const ref = useRef();
   const onScreen = useOnScreen(ref, "-100px");
-  
+
   return (
     <Styled.PortfolioHeader>
       <Styled.PortfolioHeaderInner>

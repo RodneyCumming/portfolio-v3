@@ -1,5 +1,5 @@
 import styled from "styled-components";
-// import { fontColours, backgroundColours } from 'Styles/colours';
+// import { fontColours, backgroundColours } from 'Styles2/colours';
 
 export const ContactButtons = styled.div`
   width: 3000px;

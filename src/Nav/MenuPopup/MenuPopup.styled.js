@@ -1,11 +1,12 @@
-import styled from 'styled-components';
-import { Link, NavLink } from 'react-router-dom'
-import screenSize from 'Styles/mediaQueries';
-import { backgroundColours } from 'Styles/colours';
+import styled from "styled-components";
+import { Link, NavLink } from "react-router-dom";
+import screenSize from "Styles2/mediaQueries";
+import { backgroundColours } from "Styles2/colours";
 
 export const NavLinksInnerContainer = styled.div`
-
-    ${({ isMenuOpen }) => isMenuOpen && `
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    `
         position: absolute;
         top: 0;
         right: 0;
@@ -14,9 +15,8 @@ export const NavLinksInnerContainer = styled.div`
         margin: auto;
         background: ${backgroundColours.transparentMirage};
     `}
-    
 
-    ${screenSize.minTablet`
+  ${screenSize.minTablet`
         position: static;
         height: unset;
         width: unset;
@@ -25,17 +25,17 @@ export const NavLinksInnerContainer = styled.div`
     `}
 `;
 export const NavItemsWrapper = styled.div`
-    width: 80%;
-    height: fit-content;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    text-align: center;
+  width: 80%;
+  height: fit-content;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
 
-    ${screenSize.minTablet`
+  ${screenSize.minTablet`
         width: unset;
         height: unset;
         position: unset;
@@ -46,8 +46,6 @@ export const NavItemsWrapper = styled.div`
         margin: unset;
     `}
 `;
-
-
 
 export const NavItem = styled(NavLink)`
     text-decoration: none;
@@ -64,7 +62,9 @@ export const NavItem = styled(NavLink)`
         color: #00d7ff;
     }
 
-    ${({ isMenuOpen }) => isMenuOpen && `
+    ${({ isMenuOpen }) =>
+      isMenuOpen &&
+      `
         display: inline-block;
     `}
 
@@ -94,52 +94,51 @@ export const NavItem = styled(NavLink)`
     `}
 `;
 
-export const HomeLink = styled(Link)`
-`;
+export const HomeLink = styled(Link)``;
 
 export const Logo = styled.img`
-    margin-left: 20px;
-    padding: 20px;
+  margin-left: 20px;
+  padding: 20px;
 
-    :hover {
-        cursor: pointer;
-    }
+  :hover {
+    cursor: pointer;
+  }
 
-    ${screenSize.minTablet`
+  ${screenSize.minTablet`
         margin-left: 30px;
     `}
 `;
 
 export const MenuIcon = styled.div`
-    :hover {
-        cursor: pointer;
-    }
+  :hover {
+    cursor: pointer;
+  }
 
-    ${screenSize.minTablet`
+  ${screenSize.minTablet`
         display: none;
     `}
 `;
 export const CloseMenuButton = styled.div`
-    color: white;
-    font-size: 50px;
-    top: 0;
-    right: 50px;
-    position: absolute;
-    display: none;
-    :hover {
-        cursor: pointer;
-    }
+  color: white;
+  font-size: 50px;
+  top: 0;
+  right: 50px;
+  position: absolute;
+  display: none;
+  :hover {
+    cursor: pointer;
+  }
 
-    ${({ isMenuOpen }) => isMenuOpen && `
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    `
         display: block;
     `}
-
-    
 `;
 export const CloseIcon = styled.img`
-    height: 30px;
+  height: 30px;
 `;
 
 export const MenuBars = styled.img`
-    height: 24px;
+  height: 24px;
 `;

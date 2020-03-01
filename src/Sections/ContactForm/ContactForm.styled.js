@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
-import screenSize from "Styles/mediaQueries";
-import { backgroundColours, boxShadowColours } from "Styles/colours";
+import screenSize from "Styles2/mediaQueries";
+import { backgroundColours, boxShadowColours } from "Styles2/colours";
 
 export const ContactForm = styled.div`
   width: 3000px;
@@ -35,7 +35,7 @@ export const ContactFormContainer = styled.form`
   flex-direction: column;
   transition: all 0.2s;
 
-  ${({ activeMound })  =>
+  ${({ activeMound }) =>
     activeMound &&
     `
         left: -2px;
