@@ -1,5 +1,5 @@
 <div align="center">
- <img src="./src/Images/readme-logo.svg?raw=true" width="100" alt="R logo">
+ <img src="./src/Images/readme-logo.svg" width="100" alt="R logo">
  <br>
  <h1 size="+2">Portfolio V3</h1>
  <h4><i>Portfolio site to showcase my web development ability</i></h4>
