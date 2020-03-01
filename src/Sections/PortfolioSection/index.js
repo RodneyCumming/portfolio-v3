@@ -1,14 +1,14 @@
 import React, { useRef } from "react";
-import * as Styled from "./Portfolio.styled.js";
+import * as Styled from "./PortfolioSection.styled.js";
 import PortfolioImage from "Images/portfolioImage.png";
 import useOnScreen from "Hooks/useOnScreen";
 
-const Portfolio = () => {
+const PortfolioSection = () => {
   const ref = useRef();
   const onScreen = useOnScreen(ref, "-100px");
 
   return (
-    <Styled.Portfolio>
+    <Styled.PortfolioSection>
       <Styled.PortfolioInner ref={ref}>
         <Styled.ImagePanel>
           <Styled.Icon
@@ -28,8 +28,8 @@ const Portfolio = () => {
           </Styled.Button>
         </Styled.TextPanel>
       </Styled.PortfolioInner>
-    </Styled.Portfolio>
+    </Styled.PortfolioSection>
   );
 };
 
-export default Portfolio;
+export default PortfolioSection;

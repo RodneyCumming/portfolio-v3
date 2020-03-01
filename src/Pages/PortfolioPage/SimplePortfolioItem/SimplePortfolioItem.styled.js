@@ -1,6 +1,7 @@
 import styled, {keyframes} from 'styled-components';
 import GithubIcon from 'Images/githubLogo';
 import screenSize from 'Styles/mediaQueries';
+import { backgroundColours } from 'Styles/colours';
 
 export const GithubLogo = styled(GithubIcon)`
   width: 40px;
@@ -72,20 +73,11 @@ export const ImageContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    // width: 50vw;
     max-width: 600px;
-
     transform: translate(-50%, -50%) scale(0.4, 0.4);    
     transition: all 0s;
-
-    // ${props => props.onScreen && `
-    //     opacity: 1;
-    //     transform: translate(-50%, -50%) scale(1, 1);
-    //     transition: transform 2s ease-out;
-    // `}
-
-
     display: inline-block;
+
     :hover {
       cursor: pointer;
     }
@@ -107,7 +99,7 @@ export const Shadow = styled.div`
     left: 0;
     background: ${({shadowColor}) => shadowColor ? shadowColor : ''};
     border-radius: 50%;
-    box-shadow: inset 0 0 10px 10px ${props => props.bgColor ? props.bgColor : ''};
+    box-shadow: inset 0 0 10px 10px ${({bgColor}) => bgColor ? bgColor : ''};
     animation: ${shadowSize} 3s ease-in-out infinite;
     animation-timing-function: cubic-bezier(.6,.4,.4,.6);
     animation-play-state:paused;
@@ -164,7 +156,7 @@ export const Container = styled.div`
     max-height: 3000px;
     background: ${({bgColor}) => bgColor};
     position: relative;
-    box-shadow: inset 0 0 50px 50px ${({boxShadowColor}) => boxShadowColor};;
+    box-shadow: inset 0 0 50px 50px ${({boxShadowColor}) => boxShadowColor};
     transition: filter 0.4s;
     filter: brightness(95%);
 
@@ -184,7 +176,7 @@ export const ImageOverlay = styled.div`
     width: 100%;
     top: 0;
     left: 0;
-    background: ${props => props.bgColor ? props.bgColor : 'blue'};
+    background: ${({bgColor}) => bgColor ? bgColor : 'blue'};
     opacity: 0.5;
 `;
 
@@ -233,7 +225,7 @@ export const Number = styled.h1`
 `;
 
 export const Button = styled.button`
-  color: rgba(255, 255, 255, 0.1);
+  color: ${backgroundColours.transparentLightGrey};
   font-size: 16px;
   line-height: 20px;
   text-align: center;
@@ -243,14 +235,14 @@ export const Button = styled.button`
   padding: 7px 25px;
   border-radius: 8px;
   background: none;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid ${backgroundColours.transparentLightGrey};
   transition: all 0.3s;
 
   :hover {
     background: ${({bgColor}) => bgColor};
     filter: ${({secondButton}) => secondButton ? 'brightness(160%) hue-rotate(0deg)' : 'brightness(160%) hue-rotate(-15deg)'};
     transition: all 0.3s;
-    color: rgba(255, 255, 255, 0.5);
+    color: ${backgroundColours.transparentGrey};
     cursor: pointer;
   }
 `;

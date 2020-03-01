@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import screenSize from "Styles/mediaQueries";
+import { backgroundColours, boxShadowColours } from "Styles/colours";
 
 export const ContactForm = styled.div`
   width: 3000px;
@@ -34,8 +35,8 @@ export const ContactFormContainer = styled.form`
   flex-direction: column;
   transition: all 0.2s;
 
-  ${props =>
-    props.activeMound &&
+  ${({ activeMound })  =>
+    activeMound &&
     `
         left: -2px;
         top: -2px;
@@ -59,9 +60,9 @@ export const FormHeader = styled.h3`
 
 export const TextInput = styled.input`
   display: inline-block;
-  background: #2a3e53;
+  background: ${backgroundColours.purpleWood};
   outline: none;
-  border: 1px solid #2a3e53;
+  border: 1px solid ${backgroundColours.purpleWood};
   font-weight: 400;
   border-radius: 5px;
   font-family: Lato, serif;
@@ -72,14 +73,14 @@ export const TextInput = styled.input`
   line-height: 40px;
   padding: 10px 15px;
   box-sizing: border-box;
-  margin-right: ${props => (props.rightMargin ? "100px" : "")};
+  margin-right: ${({ rightMargin }) => (rightMargin ? "100px" : "")};
 
   :hover {
-    background: #304863;
+    background: ${backgroundColours.rhino};
   }
 
   :focus {
-    background: #29506f;
+    background: ${backgroundColours.sanJuan};
   }
 
   ${screenSize.minDesktop`
@@ -89,10 +90,10 @@ export const TextInput = styled.input`
 
 export const TextAreaInput = styled.textarea`
   display: inline-block;
-  background: #2a3e53;
+  background: ${backgroundColours.purpleWood};
   outline: none;
   font-size: 18px;
-  border: 1px solid #2a3e53;
+  border: 1px solid ${backgroundColours.purpleWood};
   font-weight: 400;
   border-radius: 5px;
   font-family: Lato, serif;
@@ -105,11 +106,11 @@ export const TextAreaInput = styled.textarea`
   resize: none;
 
   :hover {
-    background: #304863;
+    background: ${backgroundColours.rhino};
   }
 
   :focus {
-    background: #29506f;
+    background: ${backgroundColours.sanJuan};
   }
 `;
 
@@ -136,7 +137,7 @@ const hoveringPlane = keyframes`
 
 export const SendButton = styled.button`
   border: none;
-  background: #1e3b52;
+  background: ${backgroundColours.darkCello};
   color: #fff;
   font-size: 18px;
   font-family: Lato, serif;
@@ -146,14 +147,12 @@ export const SendButton = styled.button`
   height: 80px;
   transition: background 0.3s;
   border-radius: 0 0 35px 35px;
-  box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c,
-    inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040,
-    inset 10px 10px 7.5px -7.5px #243a4c;
+  box-shadow: ${boxShadowColours.blueMound};
 
   :hover {
     cursor: pointer;
     transition: background 0.3s;
-    background: #21415a;
+    background: ${backgroundColours.cello};
   }
   :hover ${SendIcon} {
     ${screenSize.minDesktop`
@@ -174,9 +173,7 @@ export const FormMiddlePanel = styled.div`
   flex-grow: 1;
   border-radius: 35px 35px 0 0;
 
-  box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c,
-    inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040,
-    inset 10px 10px 7.5px -7.5px #243a4c;
+  box-shadow: ${boxShadowColours.blueMound};
 
   ${screenSize.minLargeMobile`
         padding: 60px 60px 40px;
@@ -185,60 +182,5 @@ export const FormMiddlePanel = styled.div`
   ${screenSize.minDesktop`
         border-radius: 35px 0 0 35px;
         padding: 70px 110px;
-    `}
-`;
-export const BallContainer = styled.div``;
-
-export const ParallaxBall = styled.div`
-  height: 110px;
-  width: 110px;
-  border-radius: 50%;
-  top: 100px;
-  margin: 30px;
-  transition: box-shadow 0.8s;
-  box-shadow: 5px 5px 7px 2px #1a2b3c, inset -5px -5px 7px 2px #1a2b3c,
-    10px 10px 10px 15px #1d3040, inset 20px 20px 15px -15px #243a4c;
-
-  :hover {
-    box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c,
-      inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040,
-      inset 10px 10px 7.5px -7.5px #243a4c;
-    transition: box-shadow 0.2s;
-    cursor: pointer;
-  }
-`;
-
-export const ParallaxBallTwo = styled.div`
-  height: 110px;
-  width: 110px;
-  border-radius: 50%;
-  top: 100px;
-  position: absolute;
-  top: initial;
-  bottom: 100px;
-  right: 5%;
-  border-radius: 55px;
-  height: 330px;
-  transition: box-shadow 1s;
-  box-shadow: 5px 5px 7px 2px #1a2b3c, inset -5px -5px 7px 2px #1a2b3c,
-    10px 10px 10px 15px #1d3040, inset 20px 20px 15px -15px #243a4c;
-
-  :hover {
-    box-shadow: 2.5px 2.5px 3.5px 1px #1a2b3c,
-      inset -2.5px -2.5px 3.5px 1px #1a2b3c, 5px 5px 5px 7.5px #1d3040,
-      inset 10px 10px 7.5px -7.5px #243a4c;
-    transition: box-shadow 0.2s;
-    cursor: pointer;
-  }
-
-  ${props =>
-    !props.showSecondMound &&
-    `
-        box-shadow: none;
-        transition: box-shadow 1s;
-        :hover {
-            box-shadow: none;
-            transition: box-shadow 1s;
-        }
     `}
 `;

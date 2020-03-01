@@ -2,7 +2,7 @@ import React, { useState, useRef, useLayoutEffect } from "react";
 import * as Styled from "./HomePage.styled";
 import AboutMe from "Sections/AboutMe";
 import Skills from "Sections/Skills";
-import Portfolio from "Sections/Portfolio";
+import PortfolioSection from "Sections/PortfolioSection";
 import Contact from "Sections/Contact";
 import Footer from "Sections/Footer";
 import useOnScreen from "Hooks/useOnScreen";
@@ -104,7 +104,7 @@ const HomePage = () => {
         />
         <AboutMe show={true} />
         <Skills />
-        <Portfolio />
+        <PortfolioSection />
         <Contact showHeader />
         <Footer />
       </Styled.ParallaxLayerFive>

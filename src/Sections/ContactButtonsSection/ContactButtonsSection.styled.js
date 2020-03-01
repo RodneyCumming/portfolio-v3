@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import screenSize from "Styles/mediaQueries";
+import { fontColours, backgroundColours } from 'Styles/colours';
 
 export const ContactButtonsSection = styled.div`
   width: 3000px;
-  background: #192835;
+  background: ${backgroundColours.lightMirage};
 `;
 
 export const ContactInner = styled.div`
@@ -16,8 +17,8 @@ export const ContactInner = styled.div`
 
   ${screenSize.minDesktop`
         flex-direction: row;
-        padding: ${props =>
-          props.showContactButtons ? "200px 0 300px" : "200px 0"};
+        padding: ${({ showContactButtons }) =>
+          showContactButtons ? "200px 0 300px" : "200px 0"};
     `}
 `;
 
@@ -31,8 +32,8 @@ export const Heading = styled.h1`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen }) =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -46,19 +47,19 @@ export const Heading = styled.h1`
 
 export const Body = styled.p`
   text-align: center;
-  color: #d3d3d3;
+  color: ${fontColours.alto};
   line-height: 2em;
   font-size: 18px;
   font-family: Lato, serif;
-  color: #b5b5b5;
+  color: ${fontColours.nobel};
   margin-top: 30px;
 
   opacity: 0;
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen }) =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -83,8 +84,8 @@ export const ImagePanel = styled.div`
   transition: all 0.6s;
   left: 50%;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen }) =>
+    onScreen &&
     `
         opacity: 1;
         transform: translateX(0);
@@ -96,13 +97,13 @@ export const ImagePanel = styled.div`
         padding-top: 60px;
         width: unset;
         text-align: unset;
-        transform: ${props =>
-          props.showContactButtons ? "translateX(0)" : "translateX(-50%)"};
-        left: ${props => (props.showContactButtons ? "0" : "50%")};
+        transform: ${({ showContactButtons }) =>
+          showContactButtons ? "translateX(0)" : "translateX(-50%)"};
+        left: ${({ showContactButtons }) => (showContactButtons ? "0" : "50%")};
 
 
-        ${props =>
-          props.onScreen &&
+        ${({ onScreen }) =>
+          onScreen &&
           `
             transition: opacity 1.5s ease-in, transform 0.6s ease-out, left 1s ease-out;
         `}
@@ -122,12 +123,12 @@ export const Icon = styled.img`
         height: 110px;
         transition: all 1s;
         margin: 20px 40px;
-    ${props =>
-      props.onScreen &&
+    ${({ onScreen, showContactButtons }) =>
+      onScreen &&
       `
         opacity: 1;
         transition: top 1s ease-in-out, left 1s ease-in-out, height 1s ease-in-out, opacity 1.5s ease-in, transform 0.6s ease-out;
-        ${props.showContactButtons &&
+        ${showContactButtons &&
           `
             height: 80px;
         `}
@@ -146,8 +147,8 @@ export const IconTwo = styled(Icon)`
   position: relative;
 
   ${screenSize.minDesktop`
-        top: ${props => (props.showContactButtons ? "120px" : "0")};
-        left: ${props => (props.showContactButtons ? "-220px" : "0")};
+        top: ${({ showContactButtons }) => (showContactButtons ? "120px" : "0")};
+        left: ${({ showContactButtons }) => (showContactButtons ? "-220px" : "0")};
     `}
 `;
 
@@ -158,16 +159,16 @@ export const ContactText = styled.h4`
   width: 100%;
   top: 35px;
   left: 210px;
-  color: #b4c4d8;
+  color: ${fontColours.pigeonPost};
 
   ${screenSize.minDesktop`
         position: absolute;
         font-size: 30px;
         width: 520px;
-        opacity: ${props => (props.showContactButtons ? "1" : "0")};
-        transition: ${props =>
-          props.showContactButtons ? "opacity 0.4s 1s" : "opacity 0.4s"};
-        z-index: ${props => (props.showContactButtons ? "1" : "0")};
+        opacity: ${({ showContactButtons }) => (showContactButtons ? "1" : "0")};
+        transition: ${({ showContactButtons }) =>
+          showContactButtons ? "opacity 0.4s 1s" : "opacity 0.4s"};
+        z-index: ${({ showContactButtons }) => (showContactButtons ? "1" : "0")};
     `}
 `;
 

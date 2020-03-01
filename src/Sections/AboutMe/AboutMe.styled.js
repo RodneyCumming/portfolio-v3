@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import screenSize from "Styles/mediaQueries";
+import { fontColours, backgroundColours } from 'Styles/colours';
 
 export const AboutMe = styled.div`
   width: 3000px;
-  background: #222838;
+  background: ${backgroundColours.ebonyClay};
 
   opacity: 0;
   transition: opacity 1.5s;
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen }) =>
+    onScreen &&
     `
         opacity: 1;
         transition: opacity 1.5s;
@@ -32,7 +33,7 @@ export const AboutMeInner = styled.div`
 
 export const Heading = styled.h1`
   text-align: center;
-  color: #bbc3da;
+  color: ${fontColours.blueHaze};
   font-weight: 700;
   font-size: 70px;
   line-height: 1;
@@ -41,8 +42,8 @@ export const Heading = styled.h1`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen }) =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -60,7 +61,7 @@ export const Body = styled.p`
   line-height: 2em;
   font-size: 18px;
   font-family: Lato, serif;
-  color: #b5b5b5;
+  color: ${fontColours.nobel};
   margin-top: 30px;
 
   opacity: 0;
@@ -72,8 +73,8 @@ export const Body = styled.p`
         text-align: left;
     `}
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen }) =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -112,8 +113,8 @@ export const Icon = styled.img`
     overflow: 0;
     height: 40px;
 
-    ${props =>
-      props.onScreen &&
+    ${({ onScreen }) =>
+      onScreen &&
       `
         opacity: 1;
         transform: none;

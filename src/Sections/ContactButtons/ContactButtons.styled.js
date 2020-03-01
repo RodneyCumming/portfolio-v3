@@ -1,8 +1,9 @@
 import styled from "styled-components";
+// import { fontColours, backgroundColours } from 'Styles/colours';
 
 export const ContactButtons = styled.div`
   width: 3000px;
-  background: #2c344e;
+  background: ${backgroundColours.bluewood};s
 `;
 
 export const ContactButtonsInner = styled.div`
@@ -21,7 +22,7 @@ export const Heading = styled.h1`
 
 export const Body = styled.p`
   text-align: center;
-  color: #d3d3d3;
+  color: ${fontColours.alto};
   line-height: 1.6em;
   font-size: 22px;
   font-family: Lato, serif;

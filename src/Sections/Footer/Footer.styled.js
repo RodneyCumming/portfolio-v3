@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import screenSize from 'Styles/mediaQueries';
+import { fontColours, backgroundColours } from 'Styles/colours';
 
 export const Footer = styled.div`
     width: 3000px;
-    background: #1a212f;
+    background: ${backgroundColours.darkMirage};
 `; 
 
 export const FooterInner = styled.div`
@@ -25,7 +26,7 @@ export const FooterInner = styled.div`
         padding: 100px;
     `}
 
-    ${props => props.onScreen && `
+    ${({ onScreen }) => onScreen && `
         opacity: 1;
         transform: none;
         transition: opacity 1.5s ease-in, transform 0.6s ease-out;
@@ -34,7 +35,7 @@ export const FooterInner = styled.div`
 
 export const Body = styled.p`
     text-align: center;
-    color: #d3d3d3;
+    color: ${fontColours.alto};
     line-height: 2rem;
     font-size: 16px;
     font-family: Lato,serif;

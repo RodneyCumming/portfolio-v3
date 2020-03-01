@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom'
 import screenSize from 'Styles/mediaQueries';
+import { backgroundColours } from 'Styles/colours';
 
 export const NavLinksInnerContainer = styled.div`
 
@@ -11,7 +12,7 @@ export const NavLinksInnerContainer = styled.div`
         height: 100vh;
         width: 100vw;
         margin: auto;
-        background: rgba(26, 40, 53, 0.93);
+        background: ${backgroundColours.transparentMirage};
     `}
     
 
@@ -82,12 +83,12 @@ export const NavItem = styled(NavLink)`
 
 
         :hover {
-            background: #192835;
+            background: ${backgroundColours.lightMirage};
             color: white;
         }
 
         &.active {
-            background: #192835;
+            background: ${backgroundColours.lightMirage};
             color: white;
         }
     `}

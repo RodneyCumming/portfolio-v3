@@ -2,10 +2,11 @@ import styled from "styled-components";
 import polyBackground from "Images/text-bg.svg";
 import buttonBackground from "Images/button-bg.svg";
 import screenSize from "Styles/mediaQueries";
+import { fontColours, backgroundColours } from 'Styles/colours';
 
 export const ContactHeader = styled.div`
   width: 3000px;
-  background: #1a2835;
+  background: ${backgroundColours.lightMirage};
 
   ${screenSize.minDesktop`
       min-height: 100vh;
@@ -53,8 +54,8 @@ export const Heading = styled.h1`
   margin: 0 20px 20px;
   font-size: 90px;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen }) =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -69,7 +70,7 @@ export const Heading = styled.h1`
 
 export const Body = styled.p`
   text-align: center;
-  color: #b5b5b5;
+  color: ${fontColours.nobel};
   line-height: 1.6em;
   font-size: 22px;
   font-family: Lato, serif;
@@ -79,8 +80,8 @@ export const Body = styled.p`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -90,7 +91,7 @@ export const Body = styled.p`
 
 export const Button = styled.button`
   border: none;
-  background: #2c5f88;
+  background: ${backgroundColours.calypso};
   color: #fff;
   font-family: Lato, serif;
   padding: 15px 100px;
@@ -110,8 +111,8 @@ export const Button = styled.button`
   transform: translateY(10vh);
   transition: transform 0.6s, opacity 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;

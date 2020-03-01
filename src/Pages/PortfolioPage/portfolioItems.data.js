@@ -4,6 +4,7 @@ import rdny from 'Images/rdny-small.png';
 import typingPracticer from 'Images/typing-practicer-small.png';
 import loremIpsum from 'Images/lorem-ipsum-small.png';
 import portfolioV3 from 'Images/portfolio-v3-small.png';
+import { backgroundColours } from 'Styles/colours';
 
 const portfolioItems = [
   {
@@ -12,7 +13,7 @@ const portfolioItems = [
       textColor: 'white',
       bgColor: '#40415E',
       boxShadowColor: '#36374e',
-      shadowColor: '#333550',
+      shadowColor: `${backgroundColours.martinique}`,
       link: 'https://www.crimsoneducation.org/nz',
       note: '- Contributed as part of an agile team.'
   },

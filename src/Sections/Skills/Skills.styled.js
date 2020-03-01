@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import screenSize from "Styles/mediaQueries";
+import { fontColours, backgroundColours } from 'Styles/colours';
 
 export const Skills = styled.div`
   width: 3000px;
-  background: #2c344e;
+  background: ${backgroundColours.bluewood};
 `;
 
 export const SkillsInner = styled.div`
@@ -25,14 +26,13 @@ export const Heading = styled.h1`
   font-weight: 700;
   font-size: 70px;
   line-height: 1;
-  color: #bbc3da;
-
+  color: ${fontColours.blueHaze};
   opacity: 0;
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -46,20 +46,18 @@ export const Heading = styled.h1`
 
 export const Body = styled.p`
   text-align: center;
-  color: #d3d3d3;
   line-height: 2em;
   font-size: 18px;
   font-family: Lato, serif;
-  color: #b5b5b5;
+  color: ${fontColours.nobel};
   margin-top: 30px;
   margin-bottom: 40px;
-
   opacity: 0;
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -90,8 +88,8 @@ export const IconContainer = styled.div`
   transform: translateX(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -131,7 +129,7 @@ export const CategoryButton = styled.button`
   padding: 8px 20px;
   border: 1px solid #828cad;
   border-radius: 20px;
-  color: ${props => (props.selected ? "#bbc8f3" : "#828cad")};
+  color: ${({ selected })  => (selected ? "#bbc8f3" : "#828cad")};
   transition: border 0.2s;
   margin-bottom: 15px;
   :focus {
@@ -148,8 +146,8 @@ export const CategoryButton = styled.button`
   transform: translateX(-10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({onScreen}) =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;

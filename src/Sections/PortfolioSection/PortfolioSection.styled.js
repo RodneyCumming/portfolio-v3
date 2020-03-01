@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import screenSize from "Styles/mediaQueries";
+import { fontColours, backgroundColours, boxShadowColours } from 'Styles/colours';
 
-export const Portfolio = styled.div`
+export const PortfolioSection = styled.div`
   width: 3000px;
-  background: #222838;
+  background: ${backgroundColours.ebonyClay};
 `;
 
 export const PortfolioInner = styled.div`
@@ -27,14 +28,14 @@ export const Heading = styled.h1`
   font-weight: 700;
   font-size: 70px;
   line-height: 1;
-  color: #bbc3da;
+  color: ${fontColours.blueHaze};
 
   opacity: 0;
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -49,18 +50,18 @@ export const Heading = styled.h1`
 
 export const Body = styled.p`
   text-align: center;
-  color: #d3d3d3;
+  color: ${fontColours.alto};
   line-height: 2em;
   font-size: 18px;
   font-family: Lato, serif;
-  color: #b5b5b5;
+  color: ${fontColours.nobel};
   margin-top: 30px;
   opacity: 0;
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -101,7 +102,7 @@ export const ImagePanel = styled.div`
 `;
 
 export const Button = styled.a`
-  background: #3b4873;
+  background: ${backgroundColours.eastBay};
   padding: 16px 50px;
   margin: 40px auto 0;
   font-size: 20px;
@@ -115,15 +116,15 @@ export const Button = styled.a`
 
   :hover {
     cursor: pointer;
-    background: #495c9a;
+    background: ${backgroundColours.kashmirBlue};
   }
 
   opacity: 0;
   transform: translateX(-10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;
@@ -146,17 +147,17 @@ export const Icon = styled.img`
     height: 50px;
     width: 100%;
     left: 0;
-    background: #333550;
+    background: ${backgroundColours.martinique};
     border-radius: 50%;
-    box-shadow: inset 0 0 10px 10px #40415e;
+    box-shadow: ${boxShadowColours.purpleInset};
   }
 
   opacity: 0;
   transform: translateX(-10vh);
   transition: all 0.6s;
 
-  ${props =>
-    props.onScreen &&
+  ${({ onScreen })  =>
+    onScreen &&
     `
         opacity: 1;
         transform: none;

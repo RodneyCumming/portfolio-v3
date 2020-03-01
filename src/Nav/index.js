@@ -7,7 +7,7 @@ import MenuIcon from 'Images/icons/menu.svg'
 const Nav = props => {
   const [initLoadTrigger, setInitialLoad] = useState(false);
   const {isMenuOpen, setIsMenuOpen} = props;
-  useEffect(() => setInitialLoad(true));
+  useEffect(() => setInitialLoad(true), []);
   return (
   <Styled.Nav homePage={props.history.location.pathname === '/'} initLoadTrigger={initLoadTrigger}>
     <Styled.NavInner>
