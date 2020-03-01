@@ -8,9 +8,6 @@
     <a href="https://www.npmjs.com/package/npm/v/6.13.1" target="_blank"><img
     	alt="npm version"
     	src="https://img.shields.io/badge/npm-6.13.1-brightgreen.svg"></a>
-    <!-- <a href="#"><img
-    	alt="size of repository"
-    	src="https://img.shields.io/badge/Size-4.24%20MB-green.svg"></a> -->
     <a href="https://badges.mit-license.org/" target="_blank"><img
     	alt="licence"
     	src="https://img.shields.io/packagist/l/doctrine/orm.svg">
