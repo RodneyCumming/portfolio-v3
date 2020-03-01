@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import * as Styled from "./PortfolioSection.styled.js";
-import PortfolioImage from "Images/portfolioImage.png";
-import useOnScreen from "Hooks/useOnScreen";
+import PortfolioImage from "Images2//portfolioImage.png";
+import useOnScreen from "Hooks2/useOnScreen";
 
 const PortfolioSection = () => {
   const ref = useRef();

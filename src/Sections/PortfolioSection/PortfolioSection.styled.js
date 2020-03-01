@@ -1,6 +1,10 @@
 import styled from "styled-components";
-import screenSize from "Styles/mediaQueries";
-import { fontColours, backgroundColours, boxShadowColours } from 'Styles/colours';
+import screenSize from "Styles2/mediaQueries";
+import {
+  fontColours,
+  backgroundColours,
+  boxShadowColours
+} from "Styles2/colours";
 
 export const PortfolioSection = styled.div`
   width: 3000px;
@@ -34,7 +38,7 @@ export const Heading = styled.h1`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -60,7 +64,7 @@ export const Body = styled.p`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -123,7 +127,7 @@ export const Button = styled.a`
   transform: translateX(-10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -156,7 +160,7 @@ export const Icon = styled.img`
   transform: translateX(-10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;

@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import polyBackground from "Images/text-bg.svg";
-import buttonBackground from "Images/button-bg.svg";
-import screenSize from "Styles/mediaQueries";
-import { fontColours, backgroundColours } from 'Styles/colours';
+import polyBackground from "Images2//text-bg.svg";
+import buttonBackground from "Images2//button-bg.svg";
+import screenSize from "Styles2/mediaQueries";
+import { fontColours, backgroundColours } from "Styles2/colours";
 
 export const PortfolioHeader = styled.div`
   width: 3000px;
@@ -55,7 +55,7 @@ export const Heading = styled.h1`
 
   filter: blur(20px);
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -81,7 +81,7 @@ export const Body = styled.p`
   transform: translateY(10vh);
   transition: opacity 0.6s, transform 0.6s 0.5s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -114,7 +114,7 @@ export const Button = styled.a`
   transform: translateY(10vh);
   transition: opacity 0.6s, transform 0.6s 0.5s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
       opacity: 1;

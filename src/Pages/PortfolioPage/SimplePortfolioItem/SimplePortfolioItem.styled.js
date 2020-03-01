@@ -1,7 +1,7 @@
-import styled, {keyframes} from 'styled-components';
-import GithubIcon from 'Images/githubLogo';
-import screenSize from 'Styles/mediaQueries';
-import { backgroundColours } from 'Styles/colours';
+import styled, { keyframes } from "styled-components";
+import GithubIcon from "Images2/githubLogo";
+import screenSize from "Styles2/mediaQueries";
+import { backgroundColours } from "Styles2/colours";
 
 export const GithubLogo = styled(GithubIcon)`
   width: 40px;
@@ -9,7 +9,7 @@ export const GithubLogo = styled(GithubIcon)`
   position: absolute;
   right: 5%;
   top: 5%;
-  
+
   filter: brightness(1.7);
   transition: opacity 0.5s;
 
@@ -69,159 +69,150 @@ const shadowSize = keyframes`
 `;
 
 export const ImageContainer = styled.div`
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 600px;
-    transform: translate(-50%, -50%) scale(0.4, 0.4);    
-    transition: all 0s;
-    display: inline-block;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 600px;
+  transform: translate(-50%, -50%) scale(0.4, 0.4);
+  transition: all 0s;
+  display: inline-block;
 
-    :hover {
-      cursor: pointer;
-    }
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 export const ImageAndOverlay = styled.div`
-    position: relative;
-    top: -20px;
-    animation: ${hoverImage} 3s ease-in-out infinite;
-    animation-timing-function: cubic-bezier(.6,.4,.4,.6);
-    animation-play-state:paused;
+  position: relative;
+  top: -20px;
+  animation: ${hoverImage} 3s ease-in-out infinite;
+  animation-timing-function: cubic-bezier(0.6, 0.4, 0.4, 0.6);
+  animation-play-state: paused;
 `;
 
 export const Shadow = styled.div`
-    position: absolute;
-    bottom: -90px;
-    height: 45px;
-    width: 100%;
-    left: 0;
-    background: ${({shadowColor}) => shadowColor ? shadowColor : ''};
-    border-radius: 50%;
-    box-shadow: inset 0 0 10px 10px ${({bgColor}) => bgColor ? bgColor : ''};
-    animation: ${shadowSize} 3s ease-in-out infinite;
-    animation-timing-function: cubic-bezier(.6,.4,.4,.6);
-    animation-play-state:paused;
-    display: none;
+  position: absolute;
+  bottom: -90px;
+  height: 45px;
+  width: 100%;
+  left: 0;
+  background: ${({ shadowColor }) => (shadowColor ? shadowColor : "")};
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px 10px ${({ bgColor }) => (bgColor ? bgColor : "")};
+  animation: ${shadowSize} 3s ease-in-out infinite;
+  animation-timing-function: cubic-bezier(0.6, 0.4, 0.4, 0.6);
+  animation-play-state: paused;
+  display: none;
 
-    ${screenSize.minTablet`
+  ${screenSize.minTablet`
       display: block;
     `}
-
 `;
 
 export const SimplePortfolioItem = styled.div`
+  ${ImageContainer} {
+    transition: transform 0.5s;
+  }
 
-    ${ImageContainer} {
-      transition: transform 0.5s;
+  :hover ${ImageContainer} {
+    transform: translate(-50%, -50%) scale(0.41, 0.41);
+    transition: transform 0.3s;
+  }
+
+  :hover ${GithubLogo} {
+    opacity: 1;
+    transition: filter 0.2s, opacity 3s;
+  }
+
+  :hover ${GithubLogo} {
+    :hover {
+      filter: brightness(2.5);
     }
+  }
 
-    :hover ${ImageContainer} {
-      transform: translate(-50%, -50%) scale(0.41, 0.41);   
-      transition: transform 0.3s;
-
-    }
-
-    :hover ${GithubLogo} {
-      opacity: 1;
-      transition: filter 0.2s, opacity 3s;
-    }
-
-    :hover ${GithubLogo} {
-      :hover {
-        filter: brightness(2.5);
-      }
-    }
-
-    :hover ${Note} {
-      opacity: 0.5;
-    }
-
-
-
-    
-`; 
+  :hover ${Note} {
+    opacity: 0.5;
+  }
+`;
 
 export const SimplePortfolioItemInner = styled.div`
-    overflow: auto;
-    margin: auto;
-    display: flex;
-    height: 100%;
+  overflow: auto;
+  margin: auto;
+  display: flex;
+  height: 100%;
 `;
 
 export const Container = styled.div`
-    width: 100%;
-    max-width: 3000px;
-    max-height: 3000px;
-    background: ${({bgColor}) => bgColor};
-    position: relative;
-    box-shadow: inset 0 0 50px 50px ${({boxShadowColor}) => boxShadowColor};
-    transition: filter 0.4s;
-    filter: brightness(95%);
+  width: 100%;
+  max-width: 3000px;
+  max-height: 3000px;
+  background: ${({ bgColor }) => bgColor};
+  position: relative;
+  box-shadow: inset 0 0 50px 50px ${({ boxShadowColor }) => boxShadowColor};
+  transition: filter 0.4s;
+  filter: brightness(95%);
 
-    :hover {
-      transition: filter 0.4s;
-      filter: brightness(110%);
-    }
+  :hover {
+    transition: filter 0.4s;
+    filter: brightness(110%);
+  }
 `;
 
 export const Image = styled.img`
-    width: 100%;
+  width: 100%;
 `;
 
 export const ImageOverlay = styled.div`
-    height: 100%;
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-    background: ${({bgColor}) => bgColor ? bgColor : 'blue'};
-    opacity: 0.5;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: ${({ bgColor }) => (bgColor ? bgColor : "blue")};
+  opacity: 0.5;
 `;
 
-
 export const Title = styled.h1`
-    display: inline-block;
-    width: fit-content;
-    margin: auto;
-    position: absolute;
-    color: white;
-    text-align: center;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 30px;
-    line-height: 1;
-    font-family: HelveticaNeueCondensedBold;
-    text-decoration: none;
+  display: inline-block;
+  width: fit-content;
+  margin: auto;
+  position: absolute;
+  color: white;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  line-height: 1;
+  font-family: HelveticaNeueCondensedBold;
+  text-decoration: none;
 
-    :hover {
-      cursor: pointer;
-    }
+  :hover {
+    cursor: pointer;
+  }
 
-    ${screenSize.minTablet`
+  ${screenSize.minTablet`
       font-size: 45px;
     `}
 `;
 
 export const Number = styled.h1`
-    top: 5%;
-    margin: 0;
-    color: ${({textColor}) => textColor};
-    position: absolute;
-    font-size: 45px;
-    font-family: HelveticaNeueCondensedBold;
-    letter-spacing: 5px;
-    line-height: 1;
-    opacity: 1;
-    left: 5%;
-    transition: all 0s;
+  top: 5%;
+  margin: 0;
+  color: ${({ textColor }) => textColor};
+  position: absolute;
+  font-size: 45px;
+  font-family: HelveticaNeueCondensedBold;
+  letter-spacing: 5px;
+  line-height: 1;
+  opacity: 1;
+  left: 5%;
+  transition: all 0s;
 
   ${screenSize.minTablet`
     font-size: 35px;
   `}
-    
 `;
 
 export const Button = styled.button`
@@ -239,14 +230,15 @@ export const Button = styled.button`
   transition: all 0.3s;
 
   :hover {
-    background: ${({bgColor}) => bgColor};
-    filter: ${({secondButton}) => secondButton ? 'brightness(160%) hue-rotate(0deg)' : 'brightness(160%) hue-rotate(-15deg)'};
+    background: ${({ bgColor }) => bgColor};
+    filter: ${({ secondButton }) =>
+      secondButton
+        ? "brightness(160%) hue-rotate(0deg)"
+        : "brightness(160%) hue-rotate(-15deg)"};
     transition: all 0.3s;
     color: ${backgroundColours.transparentGrey};
     cursor: pointer;
   }
 `;
 
-export const GithubLink = styled.a`
-  
-`;
+export const GithubLink = styled.a``;

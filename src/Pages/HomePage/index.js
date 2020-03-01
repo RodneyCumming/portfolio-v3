@@ -5,13 +5,13 @@ import Skills from "Sections/Skills";
 import PortfolioSection from "Sections/PortfolioSection";
 import Contact from "Sections/Contact";
 import Footer from "Sections/Footer";
-import useOnScreen from "Hooks/useOnScreen";
+import useOnScreen from "Hooks2/useOnScreen";
 
-import layer_1 from "Images/parallax/MoutainsLayerOne.png";
-import layer_2 from "Images/parallax/layer_2.svg";
-import layer_3 from "Images/parallax/layer_3.svg";
-import layer_4 from "Images/parallax/layer_4.svg";
-import Cloud from "Images/cloud.svg";
+import layer_1 from "Images2//parallax/MoutainsLayerOne.png";
+import layer_2 from "Images2//parallax/layer_2.svg";
+import layer_3 from "Images2//parallax/layer_3.svg";
+import layer_4 from "Images2//parallax/layer_4.svg";
+import Cloud from "Images2//cloud.svg";
 
 const HomePage = () => {
   const [imagesLoaded, setImagesLoaded] = useState([]);

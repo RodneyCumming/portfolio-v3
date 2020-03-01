@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import screenSize from "Styles/mediaQueries";
-import { fontColours, backgroundColours } from 'Styles/colours';
+import screenSize from "Styles2/mediaQueries";
+import { fontColours, backgroundColours } from "Styles2/colours";
 
 export const Skills = styled.div`
   width: 3000px;
@@ -31,7 +31,7 @@ export const Heading = styled.h1`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -56,7 +56,7 @@ export const Body = styled.p`
   transform: translateY(10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -88,7 +88,7 @@ export const IconContainer = styled.div`
   transform: translateX(10vh);
   transition: all 0.6s;
 
-  ${({ onScreen })  =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;
@@ -129,7 +129,7 @@ export const CategoryButton = styled.button`
   padding: 8px 20px;
   border: 1px solid #828cad;
   border-radius: 20px;
-  color: ${({ selected })  => (selected ? "#bbc8f3" : "#828cad")};
+  color: ${({ selected }) => (selected ? "#bbc8f3" : "#828cad")};
   transition: border 0.2s;
   margin-bottom: 15px;
   :focus {
@@ -146,7 +146,7 @@ export const CategoryButton = styled.button`
   transform: translateX(-10vh);
   transition: all 0.6s;
 
-  ${({onScreen}) =>
+  ${({ onScreen }) =>
     onScreen &&
     `
         opacity: 1;

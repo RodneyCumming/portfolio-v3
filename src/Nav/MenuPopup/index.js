@@ -1,7 +1,7 @@
 import React from "react";
 import * as Styled from "./MenuPopup.styled";
 import { withRouter } from "react-router";
-import CloseIcon from "Images/icons/close.svg";
+import CloseIcon from "Images2//icons/close.svg";
 
 const MenuPopup = props => {
   const { isMenuOpen, setIsMenuOpen } = props;

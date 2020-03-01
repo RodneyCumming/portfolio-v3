@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import screenSize from "Styles/mediaQueries";
-import { fontColours, backgroundColours } from 'Styles/colours';
+import screenSize from "Styles2/mediaQueries";
+import { fontColours, backgroundColours } from "Styles2/colours";
 
 export const AboutMe = styled.div`
   width: 3000px;
