@@ -1,10 +1,10 @@
-import crimsonEducation from "Images2/crimsoneducation-small.png";
-import codesnippets from "Images2/codesnippets-small.png";
-import rdny from "Images2/rdny-small.png";
-import typingPracticer from "Images2/typing-practicer-small.png";
-import loremIpsum from "Images2/lorem-ipsum-small.png";
-import portfolioV3 from "Images2/portfolio-v3-small.png";
-import { backgroundColours } from "Styles2/colours";
+import crimsonEducation from "Images/crimsoneducation-small.png";
+import codesnippets from "Images/codesnippets-small.png";
+import rdny from "Images/rdny-small.png";
+import typingPracticer from "Images/typing-practicer-small.png";
+import loremIpsum from "Images/lorem-ipsum-small.png";
+import portfolioV3 from "Images/portfolio-v3-small.png";
+import { backgroundColours } from "Styles/colours";
 
 const portfolioItems = [
   {

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import screenSize from "Styles2/mediaQueries";
-import { fontColours, backgroundColours } from "Styles2/colours";
+import screenSize from "Styles/mediaQueries";
+import { fontColours, backgroundColours } from "Styles/colours";
 
 export const Skills = styled.div`
   width: 3000px;

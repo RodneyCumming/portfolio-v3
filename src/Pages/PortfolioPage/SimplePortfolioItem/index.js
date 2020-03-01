@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import * as Styled from "./SimplePortfolioItem.styled.js";
-import useOnScreen from "Hooks2/useOnScreen";
+import useOnScreen from "Hooks/useOnScreen";
 
 const SimplePortfolioItem = props => {
   const {
