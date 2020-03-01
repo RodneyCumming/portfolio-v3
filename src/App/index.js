@@ -7,7 +7,7 @@ import MenuPopup from 'Nav/MenuPopup';
 import { Switch, Route } from 'react-router-dom'
 import * as Styled from './App.styled'
 
-// import 'Styles/App.css';
+import 'Styles/App.css';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
