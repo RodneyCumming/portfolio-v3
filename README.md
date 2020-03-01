@@ -1,5 +1,5 @@
 <div align="center">
- <img src="./src/Images/readme-logo.svg" width="100" alt="R logo">
+ <img src="./src/Images/readme/readme-logo.svg" width="100" alt="R logo">
  <br>
  <h1 size="+2">Portfolio V3</h1>
  <h4><i>Portfolio site to showcase my web development ability</i></h4>
@@ -21,7 +21,7 @@
 	</a>
 </p>
 <br>
- <!-- <img src="https://github.com/devrod/readme-images/blob/master/parallax-screenshot.png?raw=true" width="700" alt="landing page scroll animation"> -->
+ <img src="./src/Images/readme/portfolio-v3-screenshot.png?raw=true" width="700" alt="landing page scroll animation">
 </div>
 <br>
 
