@@ -2,22 +2,22 @@
  <img src="./src/Images/readme/readme-logo.svg" width="100" alt="R logo">
  <br>
  <h1 size="+2">Portfolio V3</h1>
- <h4><i>Portfolio site to showcase my web development ability</i></h4>
+ <h4><i>Portfolio site, with parallax homepage, and updated design</i></h4>
 
  <p align="center">
-    <a href="https://www.npmjs.com/package/npm/v/6.4.1" target="_blank"><img
+    <a href="https://www.npmjs.com/package/npm/v/6.13.1" target="_blank"><img
     	alt="npm version"
-    	src="https://img.shields.io/badge/npm-6.4.1-brightgreen.svg"></a>
-    <a href="#"><img
+    	src="https://img.shields.io/badge/npm-6.13.1-brightgreen.svg"></a>
+    <!-- <a href="#"><img
     	alt="size of repository"
-    	src="https://img.shields.io/badge/Size-4.24%20MB-green.svg"></a>
+    	src="https://img.shields.io/badge/Size-4.24%20MB-green.svg"></a> -->
     <a href="https://badges.mit-license.org/" target="_blank"><img
     	alt="licence"
     	src="https://img.shields.io/packagist/l/doctrine/orm.svg">
 	</a>
     <a href="#" target="_blank"><img
     	alt="Javascript percentage"
-    	src="https://img.shields.io/badge/Javascript-57.5%25-yellow.svg">
+    	src="https://img.shields.io/badge/Javascript-57.9%25-yellow.svg">
 	</a>
 </p>
 <br>
@@ -34,14 +34,15 @@ Showcase progression in my web development and design abilities to potential emp
 - Parallax scrolling
 - Responsive design
 - Custom designed images
-- Pop-up components
 
 ## Technologies
 
 - HTML5
 - CSS3
+- Styled Components
 - React.js
 - Adobe Illustrator
+- hosted by Netlify
 
 ## Live Website
 
