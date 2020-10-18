@@ -12,7 +12,7 @@ const PortfolioHeader = () => {
         <Styled.Container ref={ref}>
           <Styled.Heading onScreen={onScreen}>PORTFOLIO</Styled.Heading>
           <Styled.Body onScreen={onScreen}>
-            Here is a variety of projects I have worked that showcase I my
+            Here is a variety of projects I have worked that showcase my
             abilities as a developer. To see more information about each project
             click on the github icon.
           </Styled.Body>

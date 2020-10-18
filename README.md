@@ -43,7 +43,7 @@ Showcase progression in my web development and design abilities to potential emp
 
 ## Live Website
 
-www.rodneycumming.me :zap:
+www.rodneycumming.com :zap:
 
 ## Author
 
