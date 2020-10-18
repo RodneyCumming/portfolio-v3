@@ -17,6 +17,9 @@ import JestSVG from "Images/icons/jest.svg";
 import BuildKiteSVG from "Images/icons/buildkite.svg";
 import ContentfulSVG from "Images/icons/contentful.svg";
 import prettierSVG from "Images/icons/prettier.svg";
+import awsSVG from "Images/icons/aws.svg";
+import lambdaSVG from "Images/icons/lambda.svg";
+import dynamodbSVG from "Images/icons/dynamodb.svg";
 import StyledComponentsSVG from "Images/icons/styled-components.svg";
 
 const skillsIcons = [
@@ -119,6 +122,21 @@ const skillsIcons = [
     label: "Prettier",
     image: prettierSVG,
     category: "Tools"
+  },
+  {
+    label: "AWS",
+    image: awsSVG,
+    category: "Backend"
+  },
+  {
+    label: "Lambda",
+    image: lambdaSVG,
+    category: "Backend"
+  },
+  {
+    label: "Dynamodb",
+    image: dynamodbSVG,
+    category: "Backend"
   }
 ];
 

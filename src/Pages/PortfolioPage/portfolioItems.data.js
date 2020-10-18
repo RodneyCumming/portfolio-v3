@@ -1,21 +1,22 @@
-import crimsonEducation from "Images/crimsoneducation-small.png";
+import devdrill from "Images/devdrill.png";
 import codesnippets from "Images/codesnippets-small.png";
-import rdny from "Images/rdny-small.png";
+// import rdny from "Images/rdny-small.png";
 import typingPracticer from "Images/typing-practicer-small.png";
-import loremIpsum from "Images/lorem-ipsum-small.png";
+// import loremIpsum from "Images/lorem-ipsum-small.png";
 import portfolioV3 from "Images/portfolio-v3-small.png";
-import { backgroundColours } from "Styles/colours";
+// import { backgroundColours } from "Styles/colours";
 
 const portfolioItems = [
   {
-    name: "CRIMSON EDUCATION",
-    image: crimsonEducation,
+    name: "DEV DRILL",
+    image: devdrill,
     textColor: "white",
-    bgColor: "#40415E",
-    boxShadowColor: "#36374e",
-    shadowColor: `${backgroundColours.martinique}`,
-    link: "https://www.crimsoneducation.org/nz",
-    note: "- Contributed as part of an agile team."
+    bgColor: "#4a4973",
+    boxShadowColor: "#414069",
+    shadowColor: `#414069`,
+    link: "https://devdrill.netlify.app/",
+    githubLink: "https://github.com/RodneyCumming/flash"
+    // note: "- Contributed as part of an agile team."
   },
   {
     name: "CODE SNIPPETS",
@@ -29,27 +30,15 @@ const portfolioItems = [
     githubLink: "https://github.com/RodneyCumming/snippets"
   },
   {
-    name: "PORTFOLIO V2",
-    image: rdny,
+    name: "THIS SITE",
+    image: portfolioV3,
     textColor: "white",
-    bgColor: "#2d4463",
-    boxShadowColor: "#20334c",
-    shadowColor: "#20334c",
-    link: "https://rdny.me/",
-    githubLink: "https://github.com/RodneyCumming/parallax-portfolio"
+    bgColor: "#343954",
+    boxShadowColor: "#2a2d40",
+    shadowColor: "#2a2d40",
+    link: "https://www.rodneycumming.com",
+    githubLink: "https://github.com/RodneyCumming/portfolio-v3"
   },
-  {
-    name: "LOREM IPSUM DOLOR",
-
-    image: loremIpsum,
-    textColor: "white",
-    bgColor: "#463a46",
-    boxShadowColor: "#332c33",
-    shadowColor: "#332c33",
-    link: "https://lorem-ipsum-dolor.netlify.com",
-    githubLink: "https://github.com/RodneyCumming/lorem-ipsum"
-  },
-
   {
     name: "TYPING PRACTICER",
     image: typingPracticer,
@@ -59,17 +48,28 @@ const portfolioItems = [
     shadowColor: "#243b4c",
     link: "https://rodneycumming.github.io/react-typing/",
     githubLink: "https://github.com/RodneyCumming/react-typing"
-  },
-  {
-    name: "THIS SITE",
-    image: portfolioV3,
-    textColor: "white",
-    bgColor: "#343954",
-    boxShadowColor: "#2a2d40",
-    shadowColor: "#2a2d40",
-    link: "https://www.rodneycumming.com",
-    githubLink: "https://github.com/RodneyCumming/portfolio-v3"
   }
+  // {
+  //   name: "LOREM IPSUM DOLOR",
+
+  //   image: loremIpsum,
+  //   textColor: "white",
+  //   bgColor: "#463a46",
+  //   boxShadowColor: "#332c33",
+  //   shadowColor: "#332c33",
+  //   link: "https://lorem-ipsum-dolor.netlify.com",
+  //   githubLink: "https://github.com/RodneyCumming/lorem-ipsum"
+  // },
+  // {
+  //   name: "PORTFOLIO V2",
+  //   image: rdny,
+  //   textColor: "white",
+  //   bgColor: "#2d4463",
+  //   boxShadowColor: "#20334c",
+  //   shadowColor: "#20334c",
+  //   link: "https://rdny.me/",
+  //   githubLink: "https://github.com/RodneyCumming/parallax-portfolio"
+  // }
 ];
 
 export default portfolioItems;
