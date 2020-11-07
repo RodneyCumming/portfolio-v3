@@ -26,7 +26,7 @@ const portfolioItems = [
     boxShadowColor: "#2b5961",
     shadowColor: "#2b5961",
     overlayColor: "#244248",
-    link: "https://www.codingsnippets.netlify.com",
+    link: "https://codingsnippets.netlify.com",
     githubLink: "https://github.com/RodneyCumming/snippets"
   },
   {
