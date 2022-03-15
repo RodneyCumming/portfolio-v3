@@ -6,10 +6,12 @@ import MenuIcon from "Images/icons/menu.svg";
 
 const Nav = props => {
   const [initLoadTrigger, setInitialLoad] = useState(false);
+  // eslint-disable-next-line react/prop-types
   const { isMenuOpen, setIsMenuOpen } = props;
   useEffect(() => setInitialLoad(true), []);
   return (
     <Styled.Nav
+      // eslint-disable-next-line react/prop-types
       homePage={props.history.location.pathname === "/"}
       initLoadTrigger={initLoadTrigger}
     >

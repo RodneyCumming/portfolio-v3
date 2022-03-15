@@ -7,7 +7,7 @@ import {
   boxShadowColours
 } from "Styles/colours";
 
-export const HomePage = styled.section``;
+export const HomePage = styled.div``;
 
 export const ParallaxLayer = styled.div`
   position: absolute;
