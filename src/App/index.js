@@ -27,14 +27,12 @@ function App() {
 
   return (
     <Styled.App>
-      <Styled.Perspective>
-        <Nav isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-        <Switch>
-          <Route exact path="/" component={Hero} />
-          <Route path="/portfolio" component={PortfolioPage} />
-          <Route path="/contact" component={ContactPage} />
-        </Switch>
-      </Styled.Perspective>
+      <Nav isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      <Switch>
+        <Route exact path="/" component={Hero} />
+        <Route path="/portfolio" component={PortfolioPage} />
+        <Route path="/contact" component={ContactPage} />
+      </Switch>
       <MenuPopup isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
     </Styled.App>
   );

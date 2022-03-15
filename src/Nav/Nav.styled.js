@@ -32,7 +32,7 @@ export const Nav = styled.header`
 
 export const NavInner = styled.div`
   background: ${backgroundColours.cloudBurst};
-  width: 3000px;
+  /* width: 3000px; */
 `;
 
 export const UnordedList = styled.div`
@@ -180,4 +180,17 @@ export const CloseIcon = styled.img`
 
 export const MenuBars = styled.img`
   height: 24px;
+`;
+
+export const Parallax = styled.div`
+  perspective: 100px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 0;
+  bottom: 0;
+  margin-left: -1500px;
 `;
