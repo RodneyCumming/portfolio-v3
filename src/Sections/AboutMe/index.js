@@ -16,10 +16,7 @@ const AboutMe = () => {
         <Styled.TextPanel ref={ref}>
           <Styled.Heading onScreen={onScreen}>ABOUT ME</Styled.Heading>
           <Styled.Body onScreen={onScreen}>
-            Hey there, I'm Rodney. I'm passionate about creating beautiful,
-            user-friendly modern websites using clean, modular code. I love
-            learning about the latest technologies and applying them to produce
-            high quality work.
+            {`Hey there, I'm Rodney. I'm passionate about modern web developemnt. I love learning about the latest technologies and applying them to my projects.`}
           </Styled.Body>
         </Styled.TextPanel>
         <Styled.ImagePanel onClick={() => console.log(onScreen)}>

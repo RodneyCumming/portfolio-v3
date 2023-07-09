@@ -20,8 +20,7 @@ const PortfolioSection = () => {
         <Styled.TextPanel>
           <Styled.Heading onScreen={onScreen}>PORTFOLIO</Styled.Heading>
           <Styled.Body onScreen={onScreen}>
-            Check out my portfolio to see some of projects I have build to
-            showcase my abilities using core web development technologies.
+            Check out my portfolio to see some of projects I have build.
           </Styled.Body>
           <Styled.Button onScreen={onScreen} href="/#/portfolio">
             PORTFOLIO

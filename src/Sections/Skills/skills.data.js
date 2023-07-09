@@ -21,6 +21,8 @@ import awsSVG from "Images/icons/aws.svg";
 import lambdaSVG from "Images/icons/lambda.svg";
 import dynamodbSVG from "Images/icons/dynamodb.svg";
 import StyledComponentsSVG from "Images/icons/styled-components.svg";
+import nextJsSVG from "Images/icons/nextjs.svg";
+import figmaSVG from "Images/icons/figma.svg";
 
 const skillsIcons = [
   {
@@ -74,6 +76,11 @@ const skillsIcons = [
     category: "Frontend"
   },
   {
+    label: "NextJs",
+    image: nextJsSVG,
+    category: "Frontend"
+  },
+  {
     label: "Digital Ocean",
     image: DigitalOceanSVG,
     category: "Backend"
@@ -96,6 +103,11 @@ const skillsIcons = [
   {
     label: "Sketch",
     image: SketchSVG,
+    category: "Tools"
+  },
+  {
+    label: "Figma",
+    image: figmaSVG,
     category: "Tools"
   },
   {

@@ -1,5 +1,5 @@
 import devdrill from "Images/devdrill.png";
-import codesnippets from "Images/codesnippets-small.png";
+import stoicismAI from "Images/stoicism-ai.png";
 // import rdny from "Images/rdny-small.png";
 import typingPracticer from "Images/typing-practicer-small.png";
 // import loremIpsum from "Images/lorem-ipsum-small.png";
@@ -7,6 +7,16 @@ import portfolioV3 from "Images/portfolio-v3-small.png";
 // import { backgroundColours } from "Styles/colours";
 
 const portfolioItems = [
+  {
+    name: "STOICISM AI",
+    image: stoicismAI,
+    textColor: "white",
+    bgColor: "#39757f",
+    boxShadowColor: "#2b5961",
+    shadowColor: "#2b5961",
+    overlayColor: "#244248",
+    link: "https://www.stoicismai.com/"
+  },
   {
     name: "DEV DRILL",
     image: devdrill,
@@ -17,17 +27,6 @@ const portfolioItems = [
     link: "https://devdrill.netlify.app/",
     githubLink: "https://github.com/RodneyCumming/flash"
     // note: "- Contributed as part of an agile team."
-  },
-  {
-    name: "CODE SNIPPETS",
-    image: codesnippets,
-    textColor: "white",
-    bgColor: "#39757f",
-    boxShadowColor: "#2b5961",
-    shadowColor: "#2b5961",
-    overlayColor: "#244248",
-    link: "https://codingsnippets.netlify.com",
-    githubLink: "https://github.com/RodneyCumming/snippets"
   },
   {
     name: "THIS SITE",
