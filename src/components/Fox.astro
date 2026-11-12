@@ -1,0 +1,130 @@
+<!--
+  The fox mascot. He sits in the hero foothills; as you scroll he runs down
+  the slope, along the ground at the foot of the mountains, then leaps down
+  onto the ABOUT ME heading and sits. The run cycle is a sprite sheet
+  (sit, six gallop frames, leap) and the frame advances with the distance he
+  covers, so his legs keep pace with his speed. A small script is needed
+  because the path depends on where the hero and heading are at any width.
+-->
+<div class="fox" aria-hidden="true"><div class="fox__sprite"></div></div>
+
+<script is:inline>
+  // Runs after parsing, so the About heading further down exists
+  document.addEventListener('DOMContentLoaded', function () {
+    var fox = document.querySelector('.fox');
+    var sprite = fox && fox.firstElementChild;
+    var hero = document.querySelector('.hero');
+    var target = document.querySelector('.heading-text');
+    if (!fox || !hero || !target) return;
+
+    var W = 76, H = 56; // one frame
+    var STRIDE = 16; // px of travel per gallop frame
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var path, total, s0, s1, lastP = 0, facingRight = false;
+
+    // Path in page coordinates, at paw level. Recomputed on resize.
+    // Layout position, ignoring transforms (the heading fades up into place,
+    // so its on-screen rect is offset while that runs)
+    function layoutRect(el) {
+      var x = 0, y = 0, n = el;
+      while (n) {
+        x += n.offsetLeft;
+        y += n.offsetTop;
+        n = n.offsetParent;
+      }
+      return { left: x, top: y, right: x + el.offsetWidth, bottom: y + el.offsetHeight, width: el.offsetWidth };
+    }
+
+    function layout() {
+      var h = layoutRect(hero), t = layoutRect(target);
+      var em = parseFloat(getComputedStyle(target).fontSize);
+      var desktop = innerWidth >= 768;
+      var ground = h.bottom - (desktop ? 34 : 26);
+      var start = { x: h.left + h.width * 0.84, y: h.top + (desktop ? 806 : 606) };
+      var foot = { x: h.left + h.width * 0.66, y: ground };
+      var land = { x: t.right - W / 2 + 4, y: t.top + em * 0.13 };
+      var launch = { x: Math.max(land.x + 70, Math.min(foot.x - 40, land.x + 160)), y: ground };
+      if (launch.x > foot.x) launch.x = foot.x;
+      path = [start, foot, launch, land];
+      total = dist(start, foot) + dist(foot, launch);
+      // Run while the hero scrolls away; land as the heading reaches mid-screen
+      s0 = 30;
+      s1 = Math.max(s0 + 200, t.top - innerHeight * 0.5);
+      fox.classList.add('is-ready');
+      update();
+    }
+
+    function dist(a, b) {
+      return Math.hypot(b.x - a.x, b.y - a.y);
+    }
+
+    function lerp(a, b, k) {
+      return { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k };
+    }
+
+    function place(pt, frame, flip) {
+      fox.style.transform = 'translate3d(' + (pt.x - W / 2) + 'px,' + (pt.y - H) + 'px,0)';
+      sprite.style.backgroundPosition = -frame * W + 'px 0';
+      sprite.style.transform = flip ? 'scaleX(-1)' : '';
+    }
+
+    function update() {
+      if (!path) return;
+      if (reduce) return place(path[3], 0, false);
+      var p = Math.min(1, Math.max(0, (scrollY - s0) / (s1 - s0)));
+      if (p !== lastP) facingRight = p < lastP;
+      lastP = p;
+      var RUN = 0.78; // share of the scroll spent running; the rest is the leap
+      if (p <= 0) return place(path[0], 0, false);
+      if (p >= 1) return place(path[3], 0, false);
+      if (p < RUN) {
+        var d = (p / RUN) * total, a = dist(path[0], path[1]);
+        var pt = d < a ? lerp(path[0], path[1], d / a) : lerp(path[1], path[2], (d - a) / dist(path[1], path[2]));
+        return place(pt, 1 + (Math.floor(d / STRIDE) % 6), facingRight);
+      }
+      // Leap: a parabola from the launch point down onto the heading
+      var k = (p - RUN) / (1 - RUN);
+      var q = lerp(path[2], path[3], k);
+      q.y -= Math.sin(k * Math.PI) * 46;
+      place(q, k > 0.85 ? 2 : 7, facingRight);
+    }
+
+    var ticking = false;
+    addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        update();
+      });
+    }, { passive: true });
+    addEventListener('resize', layout);
+    if (document.fonts) document.fonts.ready.then(layout);
+    addEventListener('load', layout);
+    layout();
+  });
+</script>
+
+<style>
+  .fox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    width: 76px;
+    height: 56px;
+    pointer-events: none;
+    visibility: hidden;
+    will-change: transform;
+  }
+
+  .fox.is-ready {
+    visibility: visible;
+  }
+
+  .fox__sprite {
+    width: 100%;
+    height: 100%;
+    background: url('/images/fox-sprite.svg') 0 0 / 608px 56px no-repeat;
+  }
+</style>

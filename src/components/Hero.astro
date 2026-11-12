@@ -44,12 +44,6 @@ import mountainsBack from '../assets/mountains-back.png';
   <div class="layer range range--3" style="--lag: 0.333; --i: 3">
     <img class="art" src="/images/mountains-3.svg" alt="" width="3000" height="455" fetchpriority="high" />
   </div>
-  <!-- The fox: sits in the foothills, then bounds down and away as you scroll -->
-  <div class="fox" aria-hidden="true">
-    <img class="fox__sit" src="/images/fox-sit.svg" alt="" width="40" height="51" />
-    <img class="fox__run" src="/images/fox-run.svg" alt="" width="68" height="31" />
-  </div>
-
   <div class="range--4" style="--i: 4">
     <img class="art" src="/images/mountains-4.svg" alt="" width="3000" height="200" fetchpriority="high" />
   </div>
@@ -328,116 +322,6 @@ import mountainsBack from '../assets/mountains-back.png';
     100% {
       background-position: calc(50% - 150px) calc(50% + 200px);
       background-size: 720px;
-    }
-  }
-
-  .fox {
-    position: absolute;
-    z-index: 3;
-    right: 13%;
-    top: 560px;
-    width: 68px;
-    height: 51px;
-  }
-
-  @media (min-width: 768px) {
-    .fox {
-      top: 760px;
-    }
-  }
-
-  .fox img {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    height: auto;
-  }
-
-  .fox__sit {
-    width: 40px;
-    right: 14px !important;
-  }
-
-  .fox__run {
-    width: 68px;
-    opacity: 0;
-  }
-
-  /* Scroll-driven: he stands, then bounds down the foothills to the lower
-     left and out of the hero, toward the next section. */
-  @supports (animation-timeline: scroll()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .fox {
-        animation: fox-bound linear both;
-      }
-      .fox__sit {
-        animation: fox-sit-off linear both;
-      }
-      .fox__run {
-        animation: fox-run-on linear both;
-      }
-      .hero .fox,
-      .hero .fox__sit,
-      .hero .fox__run {
-        animation-timeline: scroll(root block);
-        animation-range: 40px 400px;
-      }
-    }
-  }
-
-  /* Bounding: each stride lifts a little, the overall path runs down-left */
-  @keyframes fox-bound {
-    0% {
-      transform: translate(0, 0);
-    }
-    12% {
-      transform: translate(-50px, 6px);
-    }
-    20% {
-      transform: translate(-90px, -4px);
-    }
-    32% {
-      transform: translate(-150px, 24px);
-    }
-    40% {
-      transform: translate(-190px, 14px);
-    }
-    52% {
-      transform: translate(-260px, 46px);
-    }
-    60% {
-      transform: translate(-300px, 36px);
-    }
-    72% {
-      transform: translate(-370px, 70px);
-    }
-    80% {
-      transform: translate(-410px, 60px);
-      opacity: 1;
-    }
-    100% {
-      transform: translate(-520px, 110px);
-      opacity: 0;
-    }
-  }
-
-  @keyframes fox-sit-off {
-    0% {
-      opacity: 1;
-    }
-    6%,
-    100% {
-      opacity: 0;
-    }
-  }
-
-  @keyframes fox-run-on {
-    0% {
-      opacity: 0;
-    }
-    6%,
-    100% {
-      opacity: 1;
     }
   }
 
