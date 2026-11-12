@@ -1,75 +1,81 @@
 """Low-poly clouds for the hero sky.
 
-Each cloud is a few overlapping round lobes on a flat base, every lobe cut
-into facets like a low-poly sphere seen side on. Light comes from the upper
-right, where the warm glow sits: facets turned toward it are white with a
-hint of warmth, those turned away fall into a soft cool grey.
+Each cloud is a long, flat-bottomed bank cut into facets, in the same style
+as the mountains. Light comes from the upper right, where the warm glow sits,
+so the upper facets are white with a hint of warmth and the underside falls
+into a cool blue-grey.
 
     python3 scripts/hero/clouds.py   # writes public/images/cloud-a.svg, cloud-b.svg
 """
 import math
 
-LX, LY = 0.6, -0.8  # toward the light (right and up)
-
-LIT = (255, 255, 255)
-WARM = (255, 247, 236)
-MID = (236, 242, 247)
-SHADOW = (211, 222, 233)
-
 
 def mix(a, b, t):
-    t = max(0.0, min(1.0, t))
     return tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
 
 
-def colour(k, warm):
-    c = mix(SHADOW, MID, k / 0.5) if k < 0.5 else mix(MID, LIT, (k - 0.5) / 0.5)
-    return '#%02x%02x%02x' % mix(c, WARM, warm * max(0, k - 0.55) / 0.45)
+def hexc(c):
+    return '#%02x%02x%02x' % c
 
 
-def poly(pts, fill):
-    return '<polygon points="%s" fill="%s" stroke="%s" stroke-width=".5" stroke-linejoin="round"/>' % (
-        ' '.join('%.1f,%.1f' % p for p in pts), fill, fill)
+SHADOW = (199, 210, 222)
+MID = (232, 238, 244)
+LIT = (255, 255, 255)
+WARM = (255, 246, 234)
 
 
-def cloud(lobes, w, h):
-    """lobes: (cx, r, segments), drawn back to front; base at y = h."""
-    out = []
-    for cx, r, seg in lobes:
-        cy = h - r * 0.55               # sits on the base, partly sunk
-        hub = (cx + r * 0.12, cy + r * 0.18)  # off-centre hub: facets of different sizes
-        # Upper arc only, from the base on the left round to the base on the right
-        a0 = math.pi - math.asin(min(1, (h - cy) / r))
-        a1 = 2 * math.pi + math.asin(min(1, (h - cy) / r))
-        pts = []
-        for i in range(seg + 1):
-            a = a0 + (a1 - a0) * i / seg
-            # small jitter so lobes aren't perfect polygons
-            j = 1 + 0.06 * math.sin(i * 2.7 + cx)
-            pts.append((cx + math.cos(a) * r * j, min(h, cy + math.sin(a) * r * j)))
-        for i in range(seg):
-            p, q = pts[i], pts[i + 1]
-            mx, my = (p[0] + q[0]) / 2 - cx, (p[1] + q[1]) / 2 - cy
-            n = math.hypot(mx, my) or 1
-            k = 0.5 + 0.5 * (mx / n * LX + my / n * LY)       # facing the light
-            k = 0.15 + 0.85 * k
-            out.append(poly([hub, p, q], colour(k, cx / w)))
-        # underside of the lobe, down to the base
-        out.append(poly([pts[0], hub, pts[-1], (pts[-1][0], h), (pts[0][0], h)], colour(0.32, 0)))
-    # flat base shadow
-    out.append(poly([(lobes[0][0] - lobes[0][1] * 0.8, h - 3), (lobes[-1][0] + lobes[-1][1] * 0.8, h - 3),
-                     (lobes[-1][0] + lobes[-1][1] * 0.75, h), (lobes[0][0] - lobes[0][1] * 0.75, h)],
-                    colour(0.18, 0)))
+def shade(tri, w, h):
+    (x1, y1), (x2, y2), (x3, y3) = tri
+    cx, cy = (x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3
+    tilt = math.atan2(y2 - y1, x2 - x1) - math.atan2(y3 - y1, x3 - x1)
+    up = 1 - cy / h      # higher = lighter
+    right = cx / w       # nearer the glow = warmer
+    k = 0.25 + 0.75 * up + 0.12 * math.sin(tilt * 3.1 + cx * 0.05)
+    k = max(0, min(1, k))
+    base = mix(SHADOW, MID, min(1, k * 1.6)) if k < 0.62 else mix(MID, LIT, (k - 0.62) / 0.38)
+    if k > 0.55:
+        base = mix(base, WARM, 0.55 * right * (k - 0.55) / 0.45)
+    return hexc(base)
+
+
+def zipper(a, b):
+    """Triangulate the strip between two left-to-right polylines."""
+    tris, i, j = [], 0, 0
+    while i < len(a) - 1 or j < len(b) - 1:
+        if j >= len(b) - 1 or (i < len(a) - 1 and a[i + 1][0] <= b[j + 1][0]):
+            tris.append((a[i], a[i + 1], b[j]))
+            i += 1
+        else:
+            tris.append((a[i], b[j + 1], b[j]))
+            j += 1
+    return tris
+
+
+def cloud(top, inner, w, h):
+    bottom = [(0, h)] + [(x, h) for x, _ in inner] + [(w, h)]
+    inner = [top[0]] + inner + [top[-1]]
+    tris = zipper(top, inner) + zipper(inner, bottom)
+    polys = ''.join(
+        '<polygon points="%s" fill="%s" stroke="%s" stroke-width=".6" stroke-linejoin="round"/>' % (
+            ' '.join('%.1f,%.1f' % p for p in t), shade(t, w, h), shade(t, w, h))
+        for t in tris)
     return ('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">%s</svg>'
-            % (w, h, w, h, ''.join(out)))
+            % (w, h, w, h, polys))
 
 
-# Lobes listed back to front: big middle ones first, small edge ones last
-# One dominant dome with a few smaller lobes either side
-A = ([(130, 40, 10), (84, 27, 8), (178, 29, 8), (44, 17, 6), (216, 17, 6)], 240, 64)
-B = ([(92, 31, 9), (138, 23, 7), (54, 19, 6), (174, 14, 5)], 196, 52)
+# A: long bank, highest point right of centre
+A_W, A_H = 260, 58
+A_TOP = [(0, 58), (14, 47), (34, 42), (52, 33), (74, 30), (96, 19), (118, 14), (136, 4),
+         (158, 7), (176, 17), (196, 20), (216, 32), (238, 40), (252, 49), (260, 58)]
+A_IN = [(40, 52), (80, 45), (120, 36), (160, 34), (200, 42), (236, 52)]
 
-for name, (lobes, w, h) in (('a', A), ('b', B)):
+# B: shorter, two humps
+B_W, B_H = 220, 52
+B_TOP = [(0, 52), (12, 42), (30, 36), (46, 22), (66, 14), (84, 18), (100, 28), (118, 24),
+         (136, 10), (156, 6), (174, 15), (192, 28), (208, 40), (220, 52)]
+B_IN = [(34, 46), (70, 36), (108, 40), (150, 30), (190, 42)]
+
+for name, args in (('a', (A_TOP, A_IN, A_W, A_H)), ('b', (B_TOP, B_IN, B_W, B_H))):
     path = 'public/images/cloud-%s.svg' % name
-    open(path, 'w').write(cloud(lobes, w, h))
+    open(path, 'w').write(cloud(*args))
     print(path)
