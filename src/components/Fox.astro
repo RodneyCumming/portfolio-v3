@@ -297,7 +297,7 @@
       update();
     }
 
-    var facing = 1, lastX = null, frame = SIT, still = 0, idle = null, hold = 0;
+    var lastP = null, facing = 1, lastX = null, frame = SIT, still = 0, idle = null, hold = 0;
 
     function show(f) {
       frame = f;
@@ -308,6 +308,7 @@
       fox.style.setProperty('--lift', (lift || 0).toFixed(1));
       if (lastX !== null && Math.abs(p.x - lastX) > 0.4) facing = p.x < lastX ? 1 : -1;
       lastX = p.x;
+      lastP = p;
       fox.style.transform = 'translate3d(' + (p.x - W / 2) + 'px,' + (p.y - H) + 'px,0)';
       sprite.style.transform = facing < 0 ? 'scaleX(-1)' : '';
       show(f);
@@ -401,6 +402,30 @@
         show(idle);
       }
     }, 220);
+
+    // Sitting, he notices the pointer coming close and turns to face it
+    var looking = false;
+    addEventListener(
+      'pointermove',
+      function (e) {
+        if (reduce || looking || !lastP || e.pointerType !== 'mouse') return;
+        looking = true;
+        requestAnimationFrame(function () {
+          looking = false;
+          var sitting = frame <= EAR || frame === LOOK;
+          if (!sitting) return;
+          var mx = e.clientX + scrollX, my = e.clientY + scrollY;
+          var dx = mx - lastP.x, dy = my - (lastP.y - H / 2);
+          if (dx * dx + dy * dy > 170 * 170 || Math.abs(dx) < 12) return;
+          var want = dx < 0 ? 1 : -1;
+          if (want === facing) return;
+          facing = want;
+          sprite.style.transform = facing < 0 ? 'scaleX(-1)' : '';
+          fox.classList.toggle('is-flipped', facing < 0);
+        });
+      },
+      { passive: true }
+    );
 
     var ticking = false;
     addEventListener('scroll', function () {
