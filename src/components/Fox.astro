@@ -73,17 +73,14 @@
       return RIDGE[j] + (RIDGE[j + 1] - RIDGE[j]) * (i - j);
     }
     function ridgeStart(h) {
+      // Well to the right, a little way down the face of the front range
+      // (everything right of the dip is higher, so lower means off the ridge
+      // line), never off screen
       var b = ridgeBox();
-      var want = (h.left + h.w * 0.8 - b.left) / b.sc, best = want, bestSlope = 1e9;
-      for (var sx = want - 220; sx <= want + 220; sx += 10) {
-        if (ridgeAt(sx) < 40) continue;
-        var slope = Math.abs(ridgeAt(sx + 20) - ridgeAt(sx - 20));
-        if (slope < bestSlope) {
-          bestSlope = slope;
-          best = sx;
-        }
-      }
-      return pt(b.left + best * b.sc, b.top + ridgeAt(best) * b.sc + 2);
+      var x = Math.min(h.left + h.w * 0.88, h.left + h.w - 50);
+      var sx = (x - b.left) / b.sc;
+      var drop = innerWidth < 768 ? 34 : 58;
+      return pt(x, b.top + ridgeAt(sx) * b.sc + drop);
     }
 
     // The low-poly ridge along the top of a section (Ridge.astro): a point on
@@ -476,8 +473,8 @@
     position: absolute;
     left: 50%;
     bottom: -3px;
-    width: 46px;
-    height: 7px;
+    width: 36px;
+    height: 6px;
     border-radius: 50%;
     background: radial-gradient(closest-side, rgba(0, 0, 0, 0.32), transparent);
     translate: -50% var(--l);
@@ -551,10 +548,15 @@
     }
   }
 
-  /* A touch smaller on phones */
+  /* Drawn a little under the sprite's size (feet stay put: origin is the
+     bottom centre), and smaller again on phones */
+  .fox__sprite {
+    scale: 0.78;
+  }
+
   @media (max-width: 767px) {
     .fox__sprite {
-      scale: 0.8;
+      scale: 0.64;
     }
   }
 
