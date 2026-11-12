@@ -148,8 +148,8 @@ def fox(F, R, head_dy, tail_deg, legs, head_tilt=0, blink=False):
 
     parts, paws = [], []
     for key, top, l_up, l_lo, w_up, w_lo, cu, cl in (
-            ('ff', (fx + 14, fy + 14), 74, 70, 16, 10, C['leg_f2'], C['leg_f']),
-            ('hf', (rx - 8, ry + 16), 80, 82, 28, 11, C['thigh_f'], C['leg_f2'])):
+            ('ff', (fx + 14, fy + 14), 74, 70, 18, 12, C['leg_f2'], C['leg_f']),
+            ('hf', (rx - 8, ry + 16), 80, 82, 30, 13, C['thigh_f'], C['leg_f2'])):
         lp, paw = leg(top, *legs[key], l_up, l_lo, w_up, w_lo, cu, cl)
         parts += lp
         paws.append(paw)
@@ -180,8 +180,8 @@ def fox(F, R, head_dy, tail_deg, legs, head_tilt=0, blink=False):
     ]
 
     for key, top, l_up, l_lo, w_up, w_lo, cu, cl in (
-            ('hn', (rx + 8, ry + 8), 80, 84, 36, 12, C['haunch'], C['leg_n2']),
-            ('fn', (fx + 2, fy + 12), 76, 72, 20, 11, C['cream2'], C['leg_n'])):
+            ('hn', (rx + 8, ry + 8), 80, 84, 38, 14, C['haunch'], C['leg_n2']),
+            ('fn', (fx + 2, fy + 12), 76, 72, 22, 13, C['cream2'], C['leg_n'])):
         lp, paw = leg(top, *legs[key], l_up, l_lo, w_up, w_lo, cu, cl)
         parts += lp
         paws.append(paw)
@@ -208,11 +208,16 @@ def gallop(phi):
         else:
             a_up = 6 - 50 * u
             legs[k] = (a_up, a_up - 34 - 40 * swing)
-    c = 34 * math.cos(2 * math.pi * (phi + 0.25))
-    F = (250 - c / 2, 262)
-    R = (510 + c / 2, 258)
-    head_dy = 7 * math.sin(2 * math.pi * phi)
-    tail = -6 + 9 * math.sin(2 * math.pi * (phi + 0.3))
+    w = 2 * math.pi * phi
+    # The spine gathers (hind legs reach under) and stretches (all legs out)
+    c = 58 * math.cos(w + math.pi / 2)
+    # The body rocks: forehand rises as the hind legs drive, then the rear
+    pitch = 9 * math.sin(w + 0.6)
+    F = (250 - c / 2, 262 - pitch)
+    R = (510 + c / 2, 258 + pitch * 0.7)
+    head_dy = 6 * math.sin(w) + pitch * 0.4
+    # The tail streams out and swings against the body, a beat behind it
+    tail = -10 + 15 * math.sin(w + 2.2)
     return dict(F=F, R=R, head_dy=head_dy, tail_deg=tail, legs=legs, head_tilt=-3 * math.sin(2 * math.pi * phi))
 
 
@@ -288,18 +293,27 @@ stand = moving((248, 252), (508, 250), -10, -10,
 cells.append(run_cell(4, *stand))
 crouch = moving((262, 290), (488, 286), 10, -2, dict(fn=(-6, -4), ff=(4, 2), hn=(-30, -64), hf=(-24, -60)))
 cells.append(run_cell(5, *crouch))
-for k in range(16):
-    cells.append(run_cell(6 + k, *moving(**gallop(k / 16))))
+GALLOP_FRAMES = 24
+for k in range(GALLOP_FRAMES):
+    cells.append(run_cell(6 + k, *moving(**gallop(k / GALLOP_FRAMES))))
+# Push-off: hind legs straighten behind, front legs fold up
+push = moving((238, 256), (514, 266), -8, -10, dict(fn=(-40, 20), ff=(-34, 30), hn=(38, 30), hf=(30, 22)), head_tilt=-8,
+              lift_max=0)
+cells.append(run_cell(len(cells), push[0] - 8, push[1]))
 leap = moving((222, 250), (540, 250), -6, -14, dict(fn=(-62, -70), ff=(-50, -56), hn=(62, 40), hf=(54, 30)), head_tilt=-6)
-cells.append(run_cell(22, leap[0] - 30, leap[1]))
+cells.append(run_cell(len(cells), leap[0] - 30, leap[1]))
 tuck = moving((246, 250), (500, 250), -4, -18, dict(fn=(34, 96), ff=(42, 104), hn=(-34, -96), hf=(-26, -88)), lift_max=0)
-cells.append(run_cell(23, tuck[0] - 28, tuck[1]))
+cells.append(run_cell(len(cells), tuck[0] - 28, tuck[1]))
+# Reach: front legs stretch down for the ground, hind legs still tucked
+reach = moving((236, 262), (510, 246), 4, -12, dict(fn=(-24, -16), ff=(-14, -6), hn=(-20, -70), hf=(-12, -62)), head_tilt=4,
+               lift_max=0)
+cells.append(run_cell(len(cells), reach[0] - 10, reach[1]))
 land = moving((244, 272), (514, 250), 12, -4, dict(fn=(-14, -10), ff=(-4, -2), hn=(40, 4), hf=(30, -6)), head_tilt=8)
-cells.append(run_cell(24, *land))
+cells.append(run_cell(len(cells), *land))
 lie = moving((246, 318), (492, 312), 26, 6, dict(fn=(-74, -88), ff=(-66, -84), hn=(-54, -110), hf=(-48, -104)), head_tilt=10)
-cells.append(run_cell(25, *lie))
-cells.append(run_cell(26, 0, sleep_frame(0)))
-cells.append(run_cell(27, 0, sleep_frame(1)))
+cells.append(run_cell(len(cells), *lie))
+cells.append(run_cell(len(cells), 0, sleep_frame(0)))
+cells.append(run_cell(len(cells), 0, sleep_frame(1)))
 
 N = len(cells)
 W = CELL_W * N

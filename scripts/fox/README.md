@@ -2,9 +2,9 @@
 
 The sprites in `public/images` are generated, not hand-edited.
 
-- `fox.py` draws every fox pose and builds `fox-sprite.svg` (28 frames, 80×56):
+- `fox.py` draws every fox pose and builds `fox-sprite.svg` (38 frames, 80×56):
   sit and its idle moves (blink, tail flick, ear twitch), stand, crouch, a
-  16-frame gallop, leap (stretched and tucked), land, lie down and sleep
+  24-frame gallop with spine flex, a jump (push-off, stretched, tucked, reach), land, lie down and sleep
   (two breathing frames).
   `python3 fox.py ../../public/images/fox-sprite.svg [preview.html]`
 - `birds.py` builds `bird-sprite.svg` (8-frame wingbeat, 48×44).
