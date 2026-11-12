@@ -50,6 +50,12 @@ import cup from '../assets/cup.png';
   .about__cups img {
     height: 40px;
     width: auto;
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1.4), filter 0.3s;
+  }
+
+  .about__cups img:hover {
+    transform: translateY(-4px) rotate(-4deg);
+    filter: brightness(1.15);
   }
 
   @media (min-width: 481px) {

@@ -41,6 +41,46 @@ import Ridge from './Ridge.astro';
     height: auto;
   }
 
+  /* The stack of pages hovers, with its shadow breathing beneath it */
+  @media (prefers-reduced-motion: no-preference) {
+    .teaser__image img {
+      animation: hover-stack 6s ease-in-out infinite;
+    }
+    .teaser__image::after {
+      animation: hover-shadow 6s ease-in-out infinite;
+    }
+  }
+
+  .teaser__image {
+    position: relative;
+  }
+
+  .teaser__image::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    width: min(56%, 160px);
+    height: 14px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.35), transparent);
+    pointer-events: none;
+  }
+
+  @keyframes hover-stack {
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes hover-shadow {
+    50% {
+      scale: 0.8;
+      opacity: 0.6;
+    }
+  }
+
   .teaser__text {
     display: flex;
     flex-direction: column;

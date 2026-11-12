@@ -412,6 +412,7 @@
     document.addEventListener('change', function (e) {
       if (e.target && e.target.name === 'skill-filter') rebuild();
     });
+    document.addEventListener('change-skills', rebuild);
     build();
   });
 </script>
