@@ -17,9 +17,12 @@ const theme = path === '/' ? 'sky' : 'dark';
 
   <nav class="nav__links" aria-label="Main">
     {links.map((l) => (
-      <a class="pill" href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
+      <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
     ))}
-    <a class="cta" href={contact.href} aria-current={path === contact.href ? 'page' : undefined}>{contact.label}</a>
+    <a class="cta" href={contact.href} aria-current={path === contact.href ? 'page' : undefined}>
+      {contact.label}
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 8L8 2M3 2h5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>
+    </a>
   </nav>
 
   <!-- Phone menu: the Popover API opens and closes it with no script -->
@@ -42,7 +45,6 @@ const theme = path === '/' ? 'sky' : 'dark';
 <style>
   .nav {
     --ink: #203244;
-    --ring: #203244;
     position: absolute;
     z-index: 100;
     inset: 0 0 auto;
@@ -56,7 +58,6 @@ const theme = path === '/' ? 'sky' : 'dark';
 
   .nav[data-theme='dark'] {
     --ink: #d8e0e9;
-    --ring: rgba(255, 255, 255, 0.4);
   }
 
   .nav__logo {
@@ -73,72 +74,66 @@ const theme = path === '/' ? 'sky' : 'dark';
   .nav__links {
     display: none;
     align-items: center;
-    gap: 6px;
+    gap: 40px;
   }
 
+  /* Minimal: plain spaced capitals. A 1px line marks the current page; on
+     hover the same line draws in from the left. */
   .nav__links a {
+    position: relative;
+    padding: 10px 0;
     font-family: var(--font-body);
     font-weight: 700;
     font-size: 12px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
     text-decoration: none;
-    padding: 12px 20px;
-    border-radius: 999px;
-  }
-
-  /* Hover: a soft fill eases in behind the link; no outlines flashing on */
-  .pill {
-    --fill: rgba(255, 255, 255, 0);
     color: var(--ink);
-    background-color: var(--fill);
-    transition:
-      background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: color 0.3s ease;
   }
 
-  .nav[data-theme='sky'] .pill:hover {
-    --fill: rgba(255, 255, 255, 0.5);
+  .nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0.2em; /* ignore the trailing letter-spacing */
+    bottom: 4px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .nav[data-theme='dark'] .pill:hover {
-    --fill: rgba(255, 255, 255, 0.08);
+  .nav__links a:hover::after,
+  .nav__links a[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .nav[data-theme='dark'] .nav__links a:hover,
+  .nav[data-theme='dark'] .nav__links a[aria-current='page'] {
     color: #fff;
   }
 
-  .pill[aria-current='page'] {
-    box-shadow: inset 0 0 0 1.5px var(--ring);
-  }
-
-  .nav[data-theme='dark'] .pill[aria-current='page'] {
-    color: #fff;
-  }
-
-  /* Filled with the same faceted cyan as the name. On hover the facets glide
-     across, as if catching the light, and the button lifts a pixel. */
+  /* Get in touch: same text style, set apart by a small arrow that nudges on hover */
   .cta {
-    margin-left: 14px;
-    color: #fff;
-    background: url('/images/hero-text-bg-static.svg') 0 50% / 260px;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
-    text-shadow: 0 1px 2px rgba(0, 51, 68, 0.55);
-    transition:
-      background-position 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-      translate 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .cta:hover {
-    background-position: -90px 50%;
-    translate: 0 -1px;
+  .cta svg {
+    transition: translate 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .cta:active {
-    translate: 0 0;
-    transition-duration: 0.1s;
+  .cta:hover svg {
+    translate: 2px -2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .cta,
-    .pill {
+    .nav__links a,
+    .nav__links a::after,
+    .cta svg {
       transition: none;
     }
   }
@@ -218,11 +213,5 @@ const theme = path === '/' ? 'sky' : 'dark';
     color: var(--cyan);
   }
 
-  .menu__links .cta {
-    margin: 18px 0 0;
-    padding: 16px 32px;
-    border-radius: 999px;
-    font-size: 18px;
-    letter-spacing: 0.18em;
-  }
+
 </style>
