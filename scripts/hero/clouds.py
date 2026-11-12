@@ -1,9 +1,8 @@
 """Low-poly clouds for the hero sky.
 
 Each cloud is a long, flat-bottomed bank cut into facets, in the same style
-as the mountains. Light comes from the upper right, where the warm glow sits,
-so the upper facets are white with a hint of warmth and the underside falls
-into a cool blue-grey.
+as the mountains. Light comes from above, so the upper facets are white and
+the underside falls into a cool blue-grey.
 
     python3 scripts/hero/clouds.py   # writes public/images/cloud-a.svg, cloud-b.svg
 """
@@ -21,7 +20,6 @@ def hexc(c):
 SHADOW = (199, 210, 222)
 MID = (232, 238, 244)
 LIT = (255, 255, 255)
-WARM = (255, 246, 234)
 
 
 def shade(tri, w, h):
@@ -29,12 +27,9 @@ def shade(tri, w, h):
     cx, cy = (x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3
     tilt = math.atan2(y2 - y1, x2 - x1) - math.atan2(y3 - y1, x3 - x1)
     up = 1 - cy / h      # higher = lighter
-    right = cx / w       # nearer the glow = warmer
     k = 0.25 + 0.75 * up + 0.12 * math.sin(tilt * 3.1 + cx * 0.05)
     k = max(0, min(1, k))
     base = mix(SHADOW, MID, min(1, k * 1.6)) if k < 0.62 else mix(MID, LIT, (k - 0.62) / 0.38)
-    if k > 0.55:
-        base = mix(base, WARM, 0.55 * right * (k - 0.55) / 0.45)
     return hexc(base)
 
 
