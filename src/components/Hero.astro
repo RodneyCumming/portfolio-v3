@@ -21,10 +21,10 @@ import mountainsBack from '../assets/mountains-back.png';
         <span class="bird" style="--y: 196px; --d: 52s; --delay: -30s; --s: 0.55; --flap: 0.44s"><i></i></span>
       </div>
       <div class="heading">
-        <img class="cloud cloud--right" src="/images/cloud-a.svg" alt="" width="246" height="55" />
+        <img class="cloud cloud--right" src="/images/cloud.svg" alt="" width="222" height="55" />
         <div class="name-wrap"><h1 id="hero-name" class="name" data-text="RODNEY CUMMING">RODNEY CUMMING</h1></div>
         <p class="role">Developer</p>
-        <img class="cloud cloud--left" src="/images/cloud-b.svg" alt="" width="203" height="48" />
+        <img class="cloud cloud--left" src="/images/cloud-2.svg" alt="" width="200" height="42" />
       </div>
     </div>
   </div>
@@ -272,7 +272,7 @@ import mountainsBack from '../assets/mountains-back.png';
     }
   }
 
-  /* Low-poly clouds (scripts/hero/clouds.py) */
+  /* The 2020 cloud; the left one is a mirrored, flatter copy so the two differ */
   .cloud {
     position: absolute;
     height: 55px;
@@ -285,7 +285,8 @@ import mountainsBack from '../assets/mountains-back.png';
   }
 
   .cloud--left {
-    height: 48px;
+    width: 200px;
+    height: 42px;
     bottom: 0;
     left: -300px;
   }
