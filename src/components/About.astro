@@ -6,7 +6,18 @@ import cup from '../assets/cup.png';
 <section class="section about" aria-labelledby="about-heading">
   <div class="section__inner about__inner">
     <div class="about__text reveal">
-      <h2 id="about-heading" class="section__heading">ABOUT ME</h2>
+      <h2 id="about-heading" class="section__heading">
+        <span class="heading-text">ABOUT ME<span class="perch" aria-hidden="true"
+            ><img class="perch__sit" src="/images/fox-sit.svg" alt="" width="40" height="51" /><img
+              class="perch__run"
+              src="/images/fox-run.svg"
+              alt=""
+              width="68"
+              height="31"
+            /></span
+          ></span
+        >
+      </h2>
       <p class="section__body">
         Hey there, I'm Rodney. I'm passionate about modern web development. I love learning about the latest
         technologies and applying them to my projects.
@@ -47,6 +58,113 @@ import cup from '../assets/cup.png';
   .about__cups img {
     height: 40px;
     width: auto;
+  }
+
+  /* The fox arrives from the hero: he runs in from the right as the heading
+     scrolls into view, then sits on top of the last letter. */
+  .heading-text {
+    position: relative;
+    display: inline-block;
+  }
+
+  .perch {
+    position: absolute;
+    right: 0.02em;
+    bottom: calc(100% - 0.13em);
+    width: 68px;
+    height: 51px;
+    pointer-events: none;
+  }
+
+  .perch img {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: auto;
+  }
+
+  .perch__sit {
+    width: 40px;
+    right: 6px !important;
+  }
+
+  .perch__run {
+    width: 68px;
+    opacity: 0;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .perch {
+        animation: perch-in linear both;
+      }
+      .perch__sit {
+        animation: perch-sit linear both;
+      }
+      .perch__run {
+        animation: perch-run linear both;
+      }
+      /* Separate rule so the minifier can't fold the timeline into the shorthand */
+      .heading-text .perch,
+      .heading-text .perch__sit,
+      .heading-text .perch__run {
+        animation-timeline: --about-heading;
+        animation-range: entry 90% cover 55%;
+      }
+      .heading-text {
+        view-timeline: --about-heading block;
+      }
+    }
+  }
+
+  @keyframes perch-in {
+    0% {
+      transform: translate(150px, -250px);
+      opacity: 0;
+    }
+    14% {
+      transform: translate(124px, -206px);
+      opacity: 1;
+    }
+    30% {
+      transform: translate(98px, -150px);
+    }
+    40% {
+      transform: translate(80px, -136px);
+    }
+    56% {
+      transform: translate(54px, -78px);
+    }
+    66% {
+      transform: translate(36px, -66px);
+    }
+    82%,
+    100% {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes perch-sit {
+    0%,
+    82% {
+      opacity: 0;
+    }
+    90%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes perch-run {
+    0%,
+    82% {
+      opacity: 1;
+    }
+    90%,
+    100% {
+      opacity: 0;
+    }
   }
 
   @media (min-width: 481px) {
