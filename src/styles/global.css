@@ -117,6 +117,12 @@ a {
   }
 }
 
+/* Headings wrap their text in a span so the fox can perch on the letters */
+.heading-text {
+  position: relative;
+  display: inline-block;
+}
+
 .section__body {
   margin-top: 30px;
   font-size: 18px;

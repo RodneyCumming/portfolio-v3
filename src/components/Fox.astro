@@ -1,127 +1,341 @@
 <!--
-  The fox mascot. He sits in the hero foothills; as you scroll he runs down
-  the slope, along the ground at the foot of the mountains, then leaps down
-  onto the ABOUT ME heading and sits. The run cycle is a sprite sheet
-  (sit, twelve gallop frames, crouch, leap, land) and the frame advances with the distance he
-  covers, so his legs keep pace with his speed. A small script is needed
-  because the path depends on where the hero and heading are at any width.
+  The fox mascot travels the whole home page as you scroll.
+
+  He starts sitting on the front ridge of the hero. Each section has a perch,
+  and as you scroll he runs and leaps from one to the next, only ever moving
+  along real surfaces: the ground at the foot of the mountains, the tops of
+  headings, coffee cups, filter pills and icons, and the edges between
+  sections. He rests on each perch (blinking, flicking his tail) and ends the
+  page curled up asleep on the email icon.
+
+  Frames come from public/images/fox-sprite.svg (order listed in
+  scripts/fox/fox.py). Running frames advance with the distance he covers, so
+  his legs keep pace with his speed; he faces the way he's moving, so he turns
+  around when you scroll back up. With reduced motion he simply sits on the
+  first heading.
 -->
 <div class="fox" aria-hidden="true"><div class="fox__sprite"></div></div>
 
 <script is:inline>
-  // Runs after parsing, so the About heading further down exists
   document.addEventListener('DOMContentLoaded', function () {
     var fox = document.querySelector('.fox');
     var sprite = fox && fox.firstElementChild;
     var hero = document.querySelector('.hero');
-    var target = document.querySelector('.heading-text');
-    if (!fox || !hero || !target) return;
-
-    var W = 80, H = 56; // one frame: 0 sit, 1-12 gallop, 13 crouch, 14 leap, 15 land
-    var STRIDE = 9; // px of travel per gallop frame (a full stride is ~108px)
-    // Top edge of the front mountain range (mountains-4.svg), in its own
-    // units: one height every 20 units across its 3991-unit width. Measured
-    // from the artwork so the fox can sit exactly on the ridge line.
-    var RIDGE = [88,81,74,67,59,52,45,38,31,23,16,9,11,17,24,31,38,45,51,58,65,69,63,56,61,67,73,80,86,92,98,105,111,117,123,130,136,142,148,140,132,124,115,107,96,85,73,62,50,39,28,16,5,7,18,29,39,50,61,58,52,62,71,81,91,101,111,121,124,119,115,111,107,103,98,94,90,86,81,77,73,69,64,62,66,70,74,78,82,86,90,94,98,102,106,110,114,118,122,126,130,134,131,116,102,87,95,109,119,108,97,86,75,64,53,42,45,55,66,76,79,67,55,43,30,18,7,18,7,18,30,41,47,40,33,38,44,51,57,64,70,77,83,89,96,102,109,115,122,122,115,109,103,96,90,83,77,70,64,58,51,45,44,50,56,62,68,74,80,87,93,99,105,111,117,117,106,95,84,73,62,51,48,59,69,80,80,69,58,51,62,72,83,93,103,114,124,134,145,155];
     var range = document.querySelector('.range--4 img');
-    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var path, total, s0, s1, lastP = 0, facingRight = false;
+    if (!fox || !hero || !range) return;
 
-    // Path in page coordinates, at paw level. Recomputed on resize.
-    // Layout position, ignoring transforms (the heading fades up into place,
-    // so its on-screen rect is offset while that runs)
-    function layoutRect(el) {
+    var W = 80, H = 56;
+    var SIT = 0, BLINK = 1, FLICK = 2, EAR = 3, STAND = 4, CROUCH = 5, GALLOP = 6;
+    var LEAP = 22, TUCK = 23, LAND = 24, LIE = 25, SLEEP = 26, BREATHE = 27;
+    var STRIDE = 7; // px per gallop frame; 16 frames make a ~112px stride
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Top edge of the front range (mountains-4.svg), a height every 20 units
+    var RIDGE = [88,81,74,67,59,52,45,38,31,23,16,9,11,17,24,31,38,45,51,58,65,69,63,56,61,67,73,80,86,92,98,105,111,117,123,130,136,142,148,140,132,124,115,107,96,85,73,62,50,39,28,16,5,7,18,29,39,50,61,58,52,62,71,81,91,101,111,121,124,119,115,111,107,103,98,94,90,86,81,77,73,69,64,62,66,70,74,78,82,86,90,94,98,102,106,110,114,118,122,126,130,134,131,116,102,87,95,109,119,108,97,86,75,64,53,42,45,55,66,76,79,67,55,43,30,18,7,18,7,18,30,41,47,40,33,38,44,51,57,64,70,77,83,89,96,102,109,115,122,122,115,109,103,96,90,83,77,70,64,58,51,45,44,50,56,62,68,74,80,87,93,99,105,111,117,117,106,95,84,73,62,51,48,59,69,80,80,69,58,51,62,72,83,93,103,114,124,134,145,155];
+
+    // Layout position, ignoring transforms (sections fade up into place)
+    function box(el) {
+      if (!el || !el.offsetParent) return null;
       var x = 0, y = 0, n = el;
       while (n) {
         x += n.offsetLeft;
         y += n.offsetTop;
         n = n.offsetParent;
       }
-      return { left: x, top: y, right: x + el.offsetWidth, bottom: y + el.offsetHeight, width: el.offsetWidth };
+      return { left: x, top: y, right: x + el.offsetWidth, bottom: y + el.offsetHeight, w: el.offsetWidth, h: el.offsetHeight, cx: x + el.offsetWidth / 2 };
+    }
+    function q(sel) {
+      return document.querySelector(sel);
+    }
+    function qa(sel) {
+      return [].slice.call(document.querySelectorAll(sel)).filter(function (e) {
+        return e.offsetParent;
+      });
+    }
+    function pt(x, y) {
+      return { x: x, y: y };
+    }
+    function dist(a, b) {
+      return Math.hypot(b.x - a.x, b.y - a.y);
+    }
+    function lerp(a, b, k) {
+      return pt(a.x + (b.x - a.x) * k, a.y + (b.y - a.y) * k);
     }
 
-    function layout() {
-      var h = layoutRect(hero), t = layoutRect(target);
-      var em = parseFloat(getComputedStyle(target).fontSize);
-      var desktop = innerWidth >= 768;
-      var ground = h.bottom - (desktop ? 34 : 26);
-      var start = ridgeStart(h);
-      var foot = { x: h.left + h.width * 0.66, y: ground };
-      var land = { x: t.right - W / 2 + 4, y: t.top + em * 0.13 };
-      var launch = { x: Math.max(land.x + 70, Math.min(foot.x - 40, land.x + 160)), y: ground };
-      if (launch.x > foot.x) launch.x = foot.x;
-      path = [start, foot, launch, land];
-      total = dist(start, foot) + dist(foot, launch);
-      // Run while the hero scrolls away; land as the heading reaches mid-screen
-      s0 = 30;
-      s1 = Math.max(s0 + 200, t.top - innerHeight * 0.5);
-      fox.classList.add('is-ready');
-      update();
-    }
-
-    // Where the front range's ridge is drawn on the page
     function ridgeBox() {
-      var r = layoutRect(range);
-      var sc = Math.min(r.width / 3991, range.offsetHeight / 298);
-      return { left: r.left + (r.width - 3991 * sc) / 2, top: r.top, sc: sc };
+      var r = box(range);
+      var sc = Math.min(r.w / 3991, r.h / 298);
+      return { left: r.left + (r.w - 3991 * sc) / 2, top: r.top, sc: sc };
     }
-
     function ridgeAt(sx) {
       var i = Math.max(0, Math.min(RIDGE.length - 1.001, sx / 20)), j = Math.floor(i);
       return RIDGE[j] + (RIDGE[j + 1] - RIDGE[j]) * (i - j);
     }
-
-    // Sit on the ridge near 80% across, at the most level spot within reach,
-    // so he perches on a gentle shoulder of the hill rather than a summit.
     function ridgeStart(h) {
       var b = ridgeBox();
-      var want = (h.left + h.width * 0.8 - b.left) / b.sc, best = want, bestSlope = 1e9;
+      var want = (h.left + h.w * 0.8 - b.left) / b.sc, best = want, bestSlope = 1e9;
       for (var sx = want - 220; sx <= want + 220; sx += 10) {
+        if (ridgeAt(sx) < 40) continue;
         var slope = Math.abs(ridgeAt(sx + 20) - ridgeAt(sx - 20));
-        var y = ridgeAt(sx);
-        if (y < 40) continue; // skip summits
         if (slope < bestSlope) {
           bestSlope = slope;
           best = sx;
         }
       }
-      return { x: b.left + best * b.sc, y: b.top + ridgeAt(best) * b.sc + 2 };
+      return pt(b.left + best * b.sc, b.top + ridgeAt(best) * b.sc + 2);
     }
 
-    function dist(a, b) {
-      return Math.hypot(b.x - a.x, b.y - a.y);
+    // Perch on top of a heading's last letter
+    function onHeading(el) {
+      var b = box(el);
+      if (!b) return null;
+      var em = parseFloat(getComputedStyle(el).fontSize);
+      return pt(b.right - W / 2 + 4, b.top + em * 0.13);
+    }
+    // Stand on top of an element (cup, pill, icon, button)
+    function onTop(el, dx) {
+      var b = box(el);
+      return b ? pt(b.cx + (dx || 0), b.top + 1) : null;
     }
 
-    function lerp(a, b, k) {
-      return { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k };
+    /*
+      The route: legs between perches. Each leg is a list of moves, each move
+      a run (along a surface), a hop (short jump) or a leap (long jump).
+    */
+    var legs, perches, stops;
+
+    function build() {
+      var h = box(hero);
+      if (!h) return;
+      var desktop = innerWidth >= 768;
+      var ground = h.bottom - (desktop ? 34 : 26);
+      var start = ridgeStart(h);
+      perches = [{ at: start, pose: SIT }];
+      legs = [];
+
+      function addLeg(moves, at, pose) {
+        moves = moves.filter(function (m) {
+          return m.from && m.to;
+        });
+        if (!moves.length || !at) return false;
+        legs.push(moves);
+        perches.push({ at: at, pose: pose || SIT });
+        return true;
+      }
+
+      // 1. Hero ridge -> down the hill -> along the ground -> leap onto ABOUT ME
+      var about = onHeading(q('#about-heading .heading-text'));
+      if (!about) return;
+      var foot = pt(h.left + h.w * 0.66, ground);
+      var launch = pt(Math.max(about.x + 70, Math.min(foot.x - 40, about.x + 160)), ground);
+      if (launch.x > foot.x) launch.x = foot.x;
+      addLeg([
+        { kind: 'run', from: start, to: foot },
+        { kind: 'run', from: foot, to: launch },
+        { kind: 'leap', from: launch, to: about }
+      ], about);
+
+      // 2. ABOUT ME -> hop across the top row of coffee cups
+      var cups = qa('.about__cups img');
+      if (cups.length >= 3) {
+        var c0 = onTop(cups[0]), c1 = onTop(cups[1]), c2 = onTop(cups[2]);
+        addLeg([
+          { kind: 'leap', from: about, to: c0 },
+          { kind: 'hop', from: c0, to: c1 },
+          { kind: 'hop', from: c1, to: c2 }
+        ], c2);
+      }
+
+      // 3. Down the cups, onto the edge of the Technology band, along it,
+      //    then down onto TECHNOLOGY
+      var last = perches[perches.length - 1].at;
+      var skills = box(q('.skills'));
+      var tech = onHeading(q('#skills-heading .heading-text'));
+      if (skills && tech) {
+        var moves = [];
+        [cups[5], cups[8]].filter(Boolean).forEach(function (c) {
+          var p = onTop(c);
+          moves.push({ kind: 'hop', from: last, to: p });
+          last = p;
+        });
+        var edgeIn = pt(last.x + (desktop ? 50 : 30), skills.top);
+        var edgeOut = pt(tech.x + (tech.x < edgeIn.x ? 60 : -60), skills.top);
+        moves.push({ kind: 'leap', from: last, to: edgeIn });
+        moves.push({ kind: 'run', from: edgeIn, to: edgeOut });
+        moves.push({ kind: 'leap', from: edgeOut, to: tech });
+        addLeg(moves, tech);
+      }
+
+      // 4. TECHNOLOGY -> across the filter pills -> down the icon rows ->
+      //    along the Portfolio band edge -> onto PORTFOLIO
+      var teaser = box(q('.teaser'));
+      var port = onHeading(q('#teaser-heading .heading-text'));
+      var pills = qa('.filter span');
+      if (teaser && port && tech) {
+        var mv = [];
+        var cur = tech;
+        if (pills.length) {
+          var pr = onTop(pills[pills.length - 1]), pl = onTop(pills[0]);
+          mv.push({ kind: 'leap', from: cur, to: pr });
+          mv.push({ kind: 'run', from: pr, to: pl });
+          cur = pl;
+        }
+        var icons = qa('.skill img'), rows = {};
+        icons.forEach(function (i) {
+          var b = box(i);
+          (rows[b.top] = rows[b.top] || []).push(i);
+        });
+        Object.keys(rows).map(Number).sort(function (a, b) {
+          return a - b;
+        }).forEach(function (top) {
+          var best = rows[top].reduce(function (a, b) {
+            return Math.abs(box(a).cx - cur.x) < Math.abs(box(b).cx - cur.x) ? a : b;
+          });
+          var p = onTop(best);
+          mv.push({ kind: 'hop', from: cur, to: p });
+          cur = p;
+        });
+        var e1 = pt(cur.x + (port.x > cur.x ? 40 : -40), teaser.top);
+        var e2 = pt(port.x + (port.x > e1.x ? -60 : 60), teaser.top);
+        mv.push({ kind: 'leap', from: cur, to: e1 });
+        mv.push({ kind: 'run', from: e1, to: e2 });
+        mv.push({ kind: 'leap', from: e2, to: port });
+        addLeg(mv, port);
+      }
+
+      // 5. PORTFOLIO -> the button -> the Contact band edge -> CONTACT ->
+      //    the email icon, where he lies down and sleeps
+      var contact = box(q('.contact'));
+      var cHead = onHeading(q('#contact-heading .heading-text'));
+      var btn = onTop(q('.teaser .button'));
+      var methods = qa('.methods img');
+      var bed = methods.length ? onTop(methods[methods.length - 1]) : null;
+      if (contact && cHead && port && bed) {
+        var m5 = [];
+        var c = port;
+        if (btn) {
+          m5.push({ kind: 'leap', from: c, to: btn });
+          c = btn;
+        }
+        var f1 = pt(c.x + (cHead.x > c.x ? 40 : -40), contact.top);
+        var f2 = pt(cHead.x + (cHead.x > f1.x ? -60 : 60), contact.top);
+        m5.push({ kind: 'leap', from: c, to: f1 });
+        m5.push({ kind: 'run', from: f1, to: f2 });
+        m5.push({ kind: 'leap', from: f2, to: cHead });
+        m5.push({ kind: 'leap', from: cHead, to: bed });
+        addLeg(m5, bed, SLEEP);
+      }
+
+      // Scroll positions: he settles on each perch as it reaches ~55% down
+      // the screen (the last one a little lower) and sets off a little after.
+      var maxScroll = document.documentElement.scrollHeight - innerHeight;
+      stops = perches.map(function (p, i) {
+        if (i === 0) return 0;
+        var f = i === perches.length - 1 ? 0.62 : 0.55;
+        return Math.min(maxScroll - 4, Math.max(0, p.at.y - innerHeight * f));
+      });
+      for (var i = 1; i < stops.length; i++) stops[i] = Math.max(stops[i], stops[i - 1] + 260);
+
+      // Leaps take a little longer than their length
+      legs.forEach(function (moves) {
+        var sum = 0;
+        moves.forEach(function (m) {
+          m.len = dist(m.from, m.to);
+          m.cost = m.kind === 'run' ? m.len : m.len * 1.3 + (m.kind === 'hop' ? 30 : 60);
+          sum += m.cost;
+        });
+        moves.forEach(function (m) {
+          m.share = m.cost / sum;
+        });
+      });
+      fox.classList.add('is-ready');
+      update();
     }
 
-    function place(pt, frame, flip) {
-      fox.style.transform = 'translate3d(' + (pt.x - W / 2) + 'px,' + (pt.y - H) + 'px,0)';
-      sprite.style.backgroundPosition = -frame * W + 'px 0';
-      sprite.style.transform = flip ? 'scaleX(-1)' : '';
+    var facing = 1, lastX = null, frame = SIT, still = 0, idle = null;
+
+    function show(f) {
+      frame = f;
+      sprite.style.backgroundPosition = -f * W + 'px 0';
+    }
+
+    function place(p, f) {
+      if (lastX !== null && Math.abs(p.x - lastX) > 0.4) facing = p.x < lastX ? 1 : -1;
+      lastX = p.x;
+      fox.style.transform = 'translate3d(' + (p.x - W / 2) + 'px,' + (p.y - H) + 'px,0)';
+      sprite.style.transform = facing < 0 ? 'scaleX(-1)' : '';
+      show(f);
+    }
+
+    function jumpFrame(t) {
+      return t < 0.12 ? CROUCH : t < 0.45 ? LEAP : t < 0.8 ? TUCK : LAND;
+    }
+
+    function resting(i) {
+      var pose = perches[i].pose;
+      if (pose === SLEEP) return frame === BREATHE ? BREATHE : SLEEP;
+      return idle !== null ? idle : SIT;
     }
 
     function update() {
-      if (!path) return;
-      if (reduce) return place(path[3], 0, false);
-      var p = Math.min(1, Math.max(0, (scrollY - s0) / (s1 - s0)));
-      if (p !== lastP) facingRight = p < lastP;
-      lastP = p;
-      var RUN = 0.78; // share of the scroll spent running; the rest is the leap
-      if (p <= 0) return place(path[0], 0, false);
-      if (p >= 1) return place(path[3], 0, false);
-      if (p < RUN) {
-        var d = (p / RUN) * total, a = dist(path[0], path[1]);
-        var pt = d < a ? lerp(path[0], path[1], d / a) : lerp(path[1], path[2], (d - a) / dist(path[1], path[2]));
-        return place(pt, d < 10 ? 13 : 1 + (Math.floor(d / STRIDE) % 12), facingRight);
+      if (!legs || !legs.length) return;
+      if (reduce) return place(perches[1].at, SIT);
+      var y = scrollY;
+      var i = 0;
+      while (i < stops.length - 1 && y >= stops[i + 1]) i++;
+      if (i >= legs.length) return place(perches[i].at, resting(i));
+      var a = stops[i], b = stops[i + 1];
+      var p = (y - a) / (b - a);
+      var go = 0.28; // rest on the perch for a moment before setting off
+      if (p <= go) return place(perches[i].at, resting(i));
+      var k = (p - go) / (1 - go);
+      var moves = legs[i], acc = 0;
+      for (var m = 0; m < moves.length; m++) {
+        var mv = moves[m];
+        if (k <= acc + mv.share || m === moves.length - 1) {
+          var t = Math.min(1, Math.max(0, (k - acc) / mv.share));
+          if (mv.kind === 'run') {
+            var d = t * mv.len;
+            var f = m === 0 && t < 0.03 ? STAND : m === 0 && d < 8 ? CROUCH : GALLOP + (Math.floor(d / STRIDE) % 16);
+            return place(lerp(mv.from, mv.to, t), f);
+          }
+          var arc = mv.kind === 'hop' ? 16 + mv.len * 0.12 : 30 + mv.len * 0.1;
+          var climb = Math.max(0, mv.from.y - mv.to.y);
+          var pos = lerp(mv.from, mv.to, t);
+          pos.y -= Math.sin(t * Math.PI) * (arc + climb * 0.4);
+          var toBed = m === moves.length - 1 && perches[i + 1].pose === SLEEP;
+          if (toBed && t > 0.9) return place(mv.to, t > 0.97 ? SLEEP : LIE);
+          return place(pos, jumpFrame(t));
+        }
+        acc += mv.share;
       }
-      // Leap: a parabola from the launch point down onto the heading
-      var k = (p - RUN) / (1 - RUN);
-      var q = lerp(path[2], path[3], k);
-      q.y -= Math.sin(k * Math.PI) * 46;
-      place(q, k < 0.12 ? 13 : k > 0.86 ? 15 : 14, facingRight);
     }
+
+    // Sitting still: now and then blink, flick the tail or twitch an ear.
+    // Asleep: breathe slowly.
+    setInterval(function () {
+      if (reduce || !legs) return;
+      if (frame >= STAND && frame <= LIE) {
+        still = 0;
+        idle = null;
+        return;
+      }
+      still += 1;
+      if (frame === SLEEP || frame === BREATHE) {
+        if (still % 7 === 0) show(frame === SLEEP ? BREATHE : SLEEP);
+        return;
+      }
+      if (idle !== null) {
+        idle = null;
+        show(SIT);
+        return;
+      }
+      if (still > 4 && Math.random() < 0.16) {
+        var r = Math.random();
+        idle = r < 0.55 ? BLINK : r < 0.8 ? FLICK : EAR;
+        show(idle);
+      }
+    }, 220);
 
     var ticking = false;
     addEventListener('scroll', function () {
@@ -132,10 +346,19 @@
         update();
       });
     }, { passive: true });
-    addEventListener('resize', layout);
-    if (document.fonts) document.fonts.ready.then(layout);
-    addEventListener('load', layout);
-    layout();
+    var timer;
+    function rebuild() {
+      clearTimeout(timer);
+      timer = setTimeout(build, 120);
+    }
+    addEventListener('resize', rebuild);
+    addEventListener('load', build);
+    if (document.fonts) document.fonts.ready.then(build);
+    // The technology filter changes which icons he can hop on
+    document.addEventListener('change', function (e) {
+      if (e.target && e.target.name === 'skill-filter') rebuild();
+    });
+    build();
   });
 </script>
 
@@ -156,6 +379,20 @@
     visibility: visible;
   }
 
+  .fox__sprite {
+    width: 100%;
+    height: 100%;
+    background: url('/images/fox-sprite.svg') 0 0 / 2240px 56px no-repeat;
+    transform-origin: 50% 100%;
+  }
+
+  /* A touch smaller on phones */
+  @media (max-width: 767px) {
+    .fox__sprite {
+      scale: 0.8;
+    }
+  }
+
   /* During the home intro he waits until the mountains are in, then appears */
   :global(html.intro:not(.intro-go)) .fox {
     opacity: 0;
@@ -171,11 +408,5 @@
     from {
       opacity: 0;
     }
-  }
-
-  .fox__sprite {
-    width: 100%;
-    height: 100%;
-    background: url('/images/fox-sprite.svg') 0 0 / 1280px 56px no-repeat;
   }
 </style>

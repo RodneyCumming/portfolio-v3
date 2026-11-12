@@ -14,7 +14,7 @@ const { heading, body, background = 'var(--bluewood)' } = Astro.props;
 <section class="section contact" style={`background: ${background}`} aria-labelledby="contact-heading" id="call-or-email">
   <div class="section__inner">
     <div class="reveal">
-      <h2 id="contact-heading" class="section__heading">{heading}</h2>
+      <h2 id="contact-heading" class="section__heading"><span class="heading-text">{heading}</span></h2>
       {body && <p class="section__body">{body}</p>}
     </div>
     <ul class="methods reveal" role="list">

@@ -1,9 +1,13 @@
-# Fox sprite
+# Fox and birds
 
-`public/images/fox-sprite.svg` is generated, not hand-edited.
+The sprites in `public/images` are generated, not hand-edited.
 
-- `sit.py` draws the sitting fox (`python3 sit.py fox-sit.svg`).
-- `rig.py` builds the sprite sheet from a rigged fox: sit, a 12-frame gallop,
-  crouch, leap and land, each 80×56 (`python3 rig.py ../../public/images/fox-sprite.svg fox-sit.svg`).
+- `fox.py` draws every fox pose and builds `fox-sprite.svg` (28 frames, 80×56):
+  sit and its idle moves (blink, tail flick, ear twitch), stand, crouch, a
+  16-frame gallop, leap (stretched and tucked), land, lie down and sleep
+  (two breathing frames).
+  `python3 fox.py ../../public/images/fox-sprite.svg [preview.html]`
+- `birds.py` builds `bird-sprite.svg` (8-frame wingbeat, 48×44).
 
-`src/components/Fox.astro` picks frames by index, so keep the order if you add frames.
+`src/components/Fox.astro` picks fox frames by index; the order is listed at
+the top of `fox.py`.
