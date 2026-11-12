@@ -16,7 +16,7 @@ import mountainsBack from '../assets/mountains-back.png';
     <div class="sky__box">
       <div class="heading">
         <img class="cloud cloud--right" src="/images/cloud.svg" alt="" width="222" height="55" />
-        <h1 id="hero-name" class="name">RODNEY CUMMING</h1>
+        <div class="name-wrap"><h1 id="hero-name" class="name">RODNEY CUMMING</h1></div>
         <p class="role">Developer</p>
         <img class="cloud cloud--left" src="/images/cloud.svg" alt="" width="222" height="55" />
       </div>
@@ -220,6 +220,27 @@ import mountainsBack from '../assets/mountains-back.png';
     }
   }
 
+  /* The facets inside the name slide diagonally as you scroll, as if the light
+     is moving across them. Scroll-driven, so it tracks the scrollbar exactly. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .name {
+        animation: facets linear both;
+      }
+      /* Separate rule so the minifier can't fold the timeline into the shorthand */
+      .heading .name {
+        animation-timeline: scroll(root block);
+        animation-range: 0 700px;
+      }
+    }
+  }
+
+  @keyframes facets {
+    to {
+      background-position: calc(50% - 320px) calc(50% + 140px);
+    }
+  }
+
   @keyframes lag {
     to {
       transform: translateY(calc(var(--lag) * 1000px));
@@ -235,7 +256,7 @@ import mountainsBack from '../assets/mountains-back.png';
   /* Intro, back to front. Hidden only while html has .intro but not yet
      .intro-go; with no JavaScript neither class is set, so it simply shows. */
   :global(html.intro:not(.intro-go)) .art,
-  :global(html.intro:not(.intro-go)) .name,
+  :global(html.intro:not(.intro-go)) .name-wrap,
   :global(html.intro:not(.intro-go)) .role,
   :global(html.intro:not(.intro-go)) .cloud {
     opacity: 0;
@@ -258,7 +279,7 @@ import mountainsBack from '../assets/mountains-back.png';
     --rise: 90px;
   }
 
-  :global(html.intro-go) .name {
+  :global(html.intro-go) .name-wrap {
     animation: intro-focus 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
   }
   :global(html.intro-go) .role {
@@ -326,7 +347,7 @@ import mountainsBack from '../assets/mountains-back.png';
 
   @media (prefers-reduced-motion: reduce) {
     :global(html.intro-go) .art,
-    :global(html.intro-go) .name,
+    :global(html.intro-go) .name-wrap,
     :global(html.intro-go) .role,
     :global(html.intro-go) .cloud {
       animation: intro-fade 0.4s ease-out both;
