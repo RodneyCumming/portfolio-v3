@@ -76,15 +76,21 @@ def poly(pts, col, w=1.2):
         ' '.join('%.1f,%.1f' % p for p in pts), col, col, w)
 
 
-def sit_frame(blink=False, tail=0, ear=0):
+def sit_frame(blink=False, tail=0, ear=0, look=0):
     out = []
+    neck = (420, 400)
     for i, (pts, col) in enumerate(SIT):
+        if i in HEAD and look:
+            pts = [rot(p, neck, look) for p in pts]
         if i in TAIL and tail:
             pts = [rot(p, (326, 700), tail) for p in pts]
         if i in (2, 3, 4) and ear:
             pts = [rot(p, (456, 280), ear) for p in pts]
         out.append(poly(pts, col, 1))
-    out.append(poly(EYE_SHUT if blink else EYE_OPEN, '#2a1a20', 0.5))
+    eye = EYE_SHUT if blink else EYE_OPEN
+    if look:
+        eye = [rot(p, neck, look) for p in eye]
+    out.append(poly(eye, '#2a1a20', 0.5))
     return out
 
 
@@ -314,6 +320,14 @@ lie = moving((246, 318), (492, 312), 26, 6, dict(fn=(-74, -88), ff=(-66, -84), h
 cells.append(run_cell(len(cells), *lie))
 cells.append(run_cell(len(cells), 0, sleep_frame(0)))
 cells.append(run_cell(len(cells), 0, sleep_frame(1)))
+
+# Appended so earlier indices stay put
+# Settle: arriving, the rear sinks toward a sit while the front stays up
+settle = moving((250, 246), (492, 300), -14, 8, dict(fn=(2, -2), ff=(6, 2), hn=(-58, -128), hf=(-50, -120)), head_tilt=-6,
+                lift_max=0)
+cells.append(run_cell(len(cells), *settle))
+# Look: sitting, head tipped up (watching the birds)
+cells.append(sit_cell(len(cells), sit_frame(look=-14)))
 
 N = len(cells)
 W = CELL_W * N
