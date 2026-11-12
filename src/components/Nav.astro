@@ -2,25 +2,29 @@
 const links = [
   { href: '/', label: 'HOME' },
   { href: '/portfolio', label: 'PORTFOLIO' },
-  { href: '/contact', label: 'CONTACT' },
 ];
+const contact = { href: '/contact', label: 'GET IN TOUCH' };
 const path = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
+// On the home page the nav sits on the light sky; elsewhere on a dark header
+const theme = path === '/' ? 'sky' : 'dark';
 ---
 
-<header class="nav">
+<!-- Sits at the top of the page and scrolls away with it (not fixed or sticky) -->
+<header class="nav" data-theme={theme}>
   <a class="nav__logo" href="/" aria-label="Rodney Cumming, home">
-    <img src="/images/logo.svg" alt="" width="20" height="20" />
+    <img src="/images/logo.svg" alt="" width="24" height="24" />
   </a>
 
   <nav class="nav__links" aria-label="Main">
     {links.map((l) => (
-      <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
+      <a class="pill" href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
     ))}
+    <a class="cta" href={contact.href} aria-current={path === contact.href ? 'page' : undefined}>{contact.label}</a>
   </nav>
 
   <!-- Phone menu: the Popover API opens and closes it with no script -->
   <button class="nav__menu-button" popovertarget="menu" aria-label="Open menu">
-    <img src="/images/icons/menu.svg" alt="" width="24" height="24" />
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" /></svg>
   </button>
   <div id="menu" class="menu" popover>
     <button class="menu__close" popovertarget="menu" popovertargetaction="hide" aria-label="Close menu">
@@ -30,64 +34,93 @@ const path = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, ''
       {links.map((l) => (
         <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
       ))}
+      <a class="cta" href={contact.href} aria-current={path === contact.href ? 'page' : undefined}>{contact.label}</a>
     </nav>
   </div>
 </header>
 
 <style>
   .nav {
+    --ink: #203244;
+    --ring: #203244;
     position: absolute;
     z-index: 100;
     inset: 0 0 auto;
-    height: var(--nav-height);
+    height: 88px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--cloud-burst);
-    box-shadow: 0 6px 7px 2px rgba(0, 0, 0, 0.2);
+    padding: 0 max(24px, 4vw);
     view-transition-name: nav;
   }
 
-  .nav__logo {
-    margin-left: 20px;
-    padding: 20px;
+  .nav[data-theme='dark'] {
+    --ink: #d8e0e9;
+    --ring: rgba(255, 255, 255, 0.4);
   }
 
-  @media (min-width: 768px) {
-    .nav__logo {
-      margin-left: 30px;
-    }
+  .nav__logo {
+    display: block;
+    padding: 8px;
+    margin-left: -8px;
+  }
+
+  /* The logo is pale blue; on the sky it is darkened to navy to stay legible */
+  .nav[data-theme='sky'] .nav__logo img {
+    filter: brightness(0.32) saturate(1.5);
   }
 
   .nav__links {
     display: none;
-    height: 100%;
-    margin-right: 50px;
-  }
-
-  .nav__links a,
-  .menu__links a {
-    color: #fff;
-    text-decoration: none;
-    font-family: var(--font-body);
+    align-items: center;
+    gap: 6px;
   }
 
   .nav__links a {
-    display: flex;
-    align-items: center;
-    padding: 0 30px;
-    font-size: 14px;
-    transition: background 0.2s;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 999px;
+    transition: box-shadow 0.2s, color 0.2s, filter 0.2s;
   }
 
-  .nav__links a:hover,
-  .nav__links a[aria-current='page'] {
-    background: var(--light-mirage);
+  .pill {
+    color: var(--ink);
+  }
+
+  .pill:hover {
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ring), transparent 55%);
+  }
+
+  .pill[aria-current='page'] {
+    box-shadow: inset 0 0 0 1.5px var(--ring);
+  }
+
+  .nav[data-theme='dark'] .pill[aria-current='page'] {
+    color: #fff;
+  }
+
+  /* Filled with the same faceted cyan as the name */
+  .cta {
+    margin-left: 14px;
+    color: #fff;
+    background: url('/images/hero-text-bg-static.svg') center / 260px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    text-shadow: 0 1px 2px rgba(0, 51, 68, 0.55);
+  }
+
+  .cta:hover,
+  .cta[aria-current='page'] {
+    filter: brightness(1.1) saturate(1.1);
   }
 
   .nav__menu-button {
-    margin-right: 30px;
+    margin-right: -8px;
     padding: 8px;
+    color: var(--ink);
     background: none;
     border: 0;
     cursor: pointer;
@@ -111,7 +144,7 @@ const path = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, ''
     margin: 0;
     padding: 0;
     border: 0;
-    background: rgba(26, 40, 53, 0.95);
+    background: rgba(26, 40, 53, 0.96);
     opacity: 0;
     transition: opacity 0.2s, display 0.2s allow-discrete, overlay 0.2s allow-discrete;
   }
@@ -131,8 +164,8 @@ const path = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, ''
 
   .menu__close {
     position: absolute;
-    top: 15px;
-    right: 30px;
+    top: 25px;
+    right: max(16px, 4vw);
     padding: 8px;
     background: none;
     border: 0;
@@ -143,17 +176,27 @@ const path = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, ''
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 18px;
   }
 
   .menu__links a {
-    font-size: clamp(30px, 10vw, 50px);
+    color: #fff;
+    text-decoration: none;
+    font-family: var(--font-body);
     font-weight: 700;
-    line-height: 1.8;
+    font-size: clamp(26px, 8vw, 40px);
+    letter-spacing: 0.08em;
   }
 
-  .menu__links a:hover,
   .menu__links a[aria-current='page'] {
     color: var(--cyan);
+  }
+
+  .menu__links .cta {
+    margin: 18px 0 0;
+    padding: 16px 32px;
+    border-radius: 999px;
+    font-size: 18px;
+    letter-spacing: 0.18em;
   }
 </style>
