@@ -84,15 +84,25 @@ const theme = path === '/' ? 'sky' : 'dark';
     text-decoration: none;
     padding: 12px 20px;
     border-radius: 999px;
-    transition: box-shadow 0.2s, color 0.2s, filter 0.2s;
   }
 
+  /* Hover: a soft fill eases in behind the link; no outlines flashing on */
   .pill {
+    --fill: rgba(255, 255, 255, 0);
     color: var(--ink);
+    background-color: var(--fill);
+    transition:
+      background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .pill:hover {
-    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ring), transparent 55%);
+  .nav[data-theme='sky'] .pill:hover {
+    --fill: rgba(255, 255, 255, 0.5);
+  }
+
+  .nav[data-theme='dark'] .pill:hover {
+    --fill: rgba(255, 255, 255, 0.08);
+    color: #fff;
   }
 
   .pill[aria-current='page'] {
@@ -103,18 +113,34 @@ const theme = path === '/' ? 'sky' : 'dark';
     color: #fff;
   }
 
-  /* Filled with the same faceted cyan as the name */
+  /* Filled with the same faceted cyan as the name. On hover the facets glide
+     across, as if catching the light, and the button lifts a pixel. */
   .cta {
     margin-left: 14px;
     color: #fff;
-    background: url('/images/hero-text-bg-static.svg') center / 260px;
+    background: url('/images/hero-text-bg-static.svg') 0 50% / 260px;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
     text-shadow: 0 1px 2px rgba(0, 51, 68, 0.55);
+    transition:
+      background-position 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      translate 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .cta:hover,
-  .cta[aria-current='page'] {
-    filter: brightness(1.1) saturate(1.1);
+  .cta:hover {
+    background-position: -90px 50%;
+    translate: 0 -1px;
+  }
+
+  .cta:active {
+    translate: 0 0;
+    transition-duration: 0.1s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta,
+    .pill {
+      transition: none;
+    }
   }
 
   .nav__menu-button {
