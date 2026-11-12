@@ -14,7 +14,7 @@
   around when you scroll back up. With reduced motion he simply sits on the
   first heading.
 -->
-<div class="fox" aria-hidden="true"><div class="fox__shadow"></div><div class="fox__sprite"></div></div>
+<div class="fox" aria-hidden="true"><div class="fox__shadow"></div><div class="fox__sprite"></div><div class="fox__z"><i>z</i><i>z</i><i>z</i></div></div>
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', function () {
@@ -311,6 +311,8 @@
       fox.style.transform = 'translate3d(' + (p.x - W / 2) + 'px,' + (p.y - H) + 'px,0)';
       sprite.style.transform = facing < 0 ? 'scaleX(-1)' : '';
       show(f);
+      fox.classList.toggle('is-asleep', f === SLEEP || f === BREATHE);
+      fox.classList.toggle('is-flipped', facing < 0);
     }
 
     // A point a distance d along a polyline
@@ -464,6 +466,64 @@
     height: 100%;
     background: url('/images/fox-sprite.svg') 0 0 / 3200px 56px no-repeat;
     transform-origin: 50% 100%;
+  }
+
+  /* Asleep: a few small z's drift up and fade, one after another */
+  .fox__z {
+    position: absolute;
+    left: 30px;
+    top: 4px;
+    display: none;
+  }
+
+  .fox.is-asleep .fox__z {
+    display: block;
+  }
+
+  /* The z's rise from his head, whichever way he's lying */
+  .fox.is-flipped .fox__z {
+    left: 46px;
+  }
+
+  .fox__z i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font: 700 11px/1 var(--font-body);
+    font-style: normal;
+    color: var(--pigeon-post);
+    opacity: 0;
+    animation: snooze 3.6s ease-out infinite;
+  }
+
+  .fox__z i:nth-child(2) {
+    font-size: 9px;
+    animation-delay: 1.2s;
+  }
+
+  .fox__z i:nth-child(3) {
+    font-size: 13px;
+    animation-delay: 2.4s;
+  }
+
+  @keyframes snooze {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0) rotate(-10deg);
+    }
+    20% {
+      opacity: 0.85;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(14px, -30px) rotate(12deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fox__z {
+      display: none !important;
+    }
   }
 
   /* A touch smaller on phones */
