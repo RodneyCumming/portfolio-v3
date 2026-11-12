@@ -6,9 +6,8 @@
   stretch rather than a texture sliding underneath. Each facet's shade comes
   from a light sweeping across the name plus its own flicker.
 
-  Inputs (custom properties):
+  Input (custom property):
     --facet-t  time in seconds (animated by CSS)
-    --facet-s  scroll progress 0..1 (scroll-driven), speeds up the morph
 */
 function rand(seed) {
   let s = seed >>> 0;
@@ -40,13 +39,12 @@ function shade(k) {
 
 class Facets {
   static get inputProperties() {
-    return ['--facet-t', '--facet-s'];
+    return ['--facet-t'];
   }
 
   paint(ctx, size, props) {
     const t = parseFloat(props.get('--facet-t')) || 0;
-    const s = parseFloat(props.get('--facet-s')) || 0;
-    const time = t + s * 14;
+    const time = t;
     const cell = Math.max(30, Math.min(62, size.height * 0.6));
     const cols = Math.ceil(size.width / cell) + 2;
     const rows = Math.ceil(size.height / cell) + 2;

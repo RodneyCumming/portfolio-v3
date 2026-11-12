@@ -282,8 +282,8 @@ const backMask = await getImage({ src: mountainsBack, format: 'png', width: 3000
   }
 
   /* Two more copies of the facet pattern, clipped to the same letters at other
-     scales and blend modes. As they move against each other the triangles
-     merge and re-form, so the pattern changes instead of just sliding. */
+     scales and blend modes, for a richer static texture where the live
+     facets (CSS Paint API) aren't supported. */
   .name::before,
   .name::after {
     content: attr(data-text);
@@ -399,37 +399,9 @@ const backMask = await getImage({ src: mountainsBack, format: 'png', width: 3000
     }
   }
 
-  /* Each facet layer wanders its own zig-zag path and changes scale as you
-     scroll, tied to the scrollbar, so the pattern shifts unpredictably. */
-  @supports (animation-timeline: scroll()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .name {
-        animation: facets-a linear both;
-      }
-      .name::before {
-        animation: facets-b linear both;
-      }
-      .name::after {
-        animation: facets-c linear both;
-      }
-      /* Separate rules so the minifier can't fold the timeline into the shorthand */
-      .heading .name,
-      .heading .name::before,
-      .heading .name::after {
-        animation-timeline: scroll(root block);
-        animation-range: 0 700px;
-      }
-    }
-  }
-
-  /* Live facets: the triangles themselves drift and change shape over time,
-     and morph faster while you scroll. */
+  /* Live facets: the triangles themselves drift and change shape over time
+     (on a clock only; scrolling doesn't affect the name). */
   @property --facet-t {
-    syntax: '<number>';
-    inherits: false;
-    initial-value: 0;
-  }
-  @property --facet-s {
     syntax: '<number>';
     inherits: false;
     initial-value: 0;
@@ -448,14 +420,7 @@ const backMask = await getImage({ src: mountainsBack, format: 'png', width: 3000
 
   @media (prefers-reduced-motion: no-preference) {
     :global(html.facets-live) .name {
-      animation:
-        facet-clock 3600s linear infinite,
-        facet-scroll linear both;
-    }
-    /* Separate rule so the minifier can't fold the timelines into the shorthand */
-    :global(html.facets-live) .heading .name {
-      animation-timeline: auto, scroll(root block);
-      animation-range: normal, 0 700px;
+      animation: facet-clock 3600s linear infinite;
     }
   }
 
@@ -466,65 +431,6 @@ const backMask = await getImage({ src: mountainsBack, format: 'png', width: 3000
   @keyframes facet-clock {
     to {
       --facet-t: 3600;
-    }
-  }
-
-  @keyframes facet-scroll {
-    to {
-      --facet-s: 1;
-    }
-  }
-
-  @keyframes facets-a {
-    25% {
-      background-position: calc(50% - 120px) calc(50% + 40px);
-      background-size: 540px;
-    }
-    55% {
-      background-position: calc(50% + 70px) calc(50% + 110px);
-      background-size: 470px;
-    }
-    80% {
-      background-position: calc(50% - 200px) calc(50% + 30px);
-      background-size: 560px;
-    }
-    100% {
-      background-position: calc(50% - 90px) calc(50% + 160px);
-      background-size: 500px;
-    }
-  }
-
-  @keyframes facets-b {
-    20% {
-      background-position: calc(50% + 150px) calc(50% - 60px);
-      background-size: 400px;
-    }
-    50% {
-      background-position: calc(50% - 80px) calc(50% + 90px);
-      background-size: 300px;
-    }
-    75% {
-      background-position: calc(50% + 210px) calc(50% + 20px);
-      background-size: 380px;
-    }
-    100% {
-      background-position: calc(50% + 40px) calc(50% - 140px);
-      background-size: 330px;
-    }
-  }
-
-  @keyframes facets-c {
-    30% {
-      background-position: calc(50% - 60px) calc(50% - 120px);
-      background-size: 680px;
-    }
-    60% {
-      background-position: calc(50% + 180px) calc(50% + 60px);
-      background-size: 820px;
-    }
-    100% {
-      background-position: calc(50% - 150px) calc(50% + 200px);
-      background-size: 720px;
     }
   }
 
