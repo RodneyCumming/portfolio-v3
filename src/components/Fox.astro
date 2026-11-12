@@ -2,7 +2,7 @@
   The fox mascot. He sits in the hero foothills; as you scroll he runs down
   the slope, along the ground at the foot of the mountains, then leaps down
   onto the ABOUT ME heading and sits. The run cycle is a sprite sheet
-  (sit, six gallop frames, leap) and the frame advances with the distance he
+  (sit, twelve gallop frames, crouch, leap, land) and the frame advances with the distance he
   covers, so his legs keep pace with his speed. A small script is needed
   because the path depends on where the hero and heading are at any width.
 -->
@@ -17,8 +17,8 @@
     var target = document.querySelector('.heading-text');
     if (!fox || !hero || !target) return;
 
-    var W = 76, H = 56; // one frame
-    var STRIDE = 16; // px of travel per gallop frame
+    var W = 80, H = 56; // one frame: 0 sit, 1-12 gallop, 13 crouch, 14 leap, 15 land
+    var STRIDE = 9; // px of travel per gallop frame (a full stride is ~108px)
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var path, total, s0, s1, lastP = 0, facingRight = false;
 
@@ -80,13 +80,13 @@
       if (p < RUN) {
         var d = (p / RUN) * total, a = dist(path[0], path[1]);
         var pt = d < a ? lerp(path[0], path[1], d / a) : lerp(path[1], path[2], (d - a) / dist(path[1], path[2]));
-        return place(pt, 1 + (Math.floor(d / STRIDE) % 6), facingRight);
+        return place(pt, d < 10 ? 13 : 1 + (Math.floor(d / STRIDE) % 12), facingRight);
       }
       // Leap: a parabola from the launch point down onto the heading
       var k = (p - RUN) / (1 - RUN);
       var q = lerp(path[2], path[3], k);
       q.y -= Math.sin(k * Math.PI) * 46;
-      place(q, k > 0.85 ? 2 : 7, facingRight);
+      place(q, k < 0.12 ? 13 : k > 0.86 ? 15 : 14, facingRight);
     }
 
     var ticking = false;
@@ -111,7 +111,7 @@
     top: 0;
     left: 0;
     z-index: 5;
-    width: 76px;
+    width: 80px;
     height: 56px;
     pointer-events: none;
     visibility: hidden;
@@ -125,6 +125,6 @@
   .fox__sprite {
     width: 100%;
     height: 100%;
-    background: url('/images/fox-sprite.svg') 0 0 / 608px 56px no-repeat;
+    background: url('/images/fox-sprite.svg') 0 0 / 1280px 56px no-repeat;
   }
 </style>
