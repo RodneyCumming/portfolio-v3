@@ -19,6 +19,11 @@
 
     var W = 80, H = 56; // one frame: 0 sit, 1-12 gallop, 13 crouch, 14 leap, 15 land
     var STRIDE = 9; // px of travel per gallop frame (a full stride is ~108px)
+    // Top edge of the front mountain range (mountains-4.svg), in its own
+    // units: one height every 20 units across its 3991-unit width. Measured
+    // from the artwork so the fox can sit exactly on the ridge line.
+    var RIDGE = [88,81,74,67,59,52,45,38,31,23,16,9,11,17,24,31,38,45,51,58,65,69,63,56,61,67,73,80,86,92,98,105,111,117,123,130,136,142,148,140,132,124,115,107,96,85,73,62,50,39,28,16,5,7,18,29,39,50,61,58,52,62,71,81,91,101,111,121,124,119,115,111,107,103,98,94,90,86,81,77,73,69,64,62,66,70,74,78,82,86,90,94,98,102,106,110,114,118,122,126,130,134,131,116,102,87,95,109,119,108,97,86,75,64,53,42,45,55,66,76,79,67,55,43,30,18,7,18,7,18,30,41,47,40,33,38,44,51,57,64,70,77,83,89,96,102,109,115,122,122,115,109,103,96,90,83,77,70,64,58,51,45,44,50,56,62,68,74,80,87,93,99,105,111,117,117,106,95,84,73,62,51,48,59,69,80,80,69,58,51,62,72,83,93,103,114,124,134,145,155];
+    var range = document.querySelector('.range--4 img');
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var path, total, s0, s1, lastP = 0, facingRight = false;
 
@@ -40,7 +45,7 @@
       var em = parseFloat(getComputedStyle(target).fontSize);
       var desktop = innerWidth >= 768;
       var ground = h.bottom - (desktop ? 34 : 26);
-      var start = { x: h.left + h.width * 0.84, y: h.top + (desktop ? 806 : 606) };
+      var start = ridgeStart(h);
       var foot = { x: h.left + h.width * 0.66, y: ground };
       var land = { x: t.right - W / 2 + 4, y: t.top + em * 0.13 };
       var launch = { x: Math.max(land.x + 70, Math.min(foot.x - 40, land.x + 160)), y: ground };
@@ -52,6 +57,35 @@
       s1 = Math.max(s0 + 200, t.top - innerHeight * 0.5);
       fox.classList.add('is-ready');
       update();
+    }
+
+    // Where the front range's ridge is drawn on the page
+    function ridgeBox() {
+      var r = layoutRect(range);
+      var sc = Math.min(r.width / 3991, range.offsetHeight / 298);
+      return { left: r.left + (r.width - 3991 * sc) / 2, top: r.top, sc: sc };
+    }
+
+    function ridgeAt(sx) {
+      var i = Math.max(0, Math.min(RIDGE.length - 1.001, sx / 20)), j = Math.floor(i);
+      return RIDGE[j] + (RIDGE[j + 1] - RIDGE[j]) * (i - j);
+    }
+
+    // Sit on the ridge near 80% across, at the most level spot within reach,
+    // so he perches on a gentle shoulder of the hill rather than a summit.
+    function ridgeStart(h) {
+      var b = ridgeBox();
+      var want = (h.left + h.width * 0.8 - b.left) / b.sc, best = want, bestSlope = 1e9;
+      for (var sx = want - 220; sx <= want + 220; sx += 10) {
+        var slope = Math.abs(ridgeAt(sx + 20) - ridgeAt(sx - 20));
+        var y = ridgeAt(sx);
+        if (y < 40) continue; // skip summits
+        if (slope < bestSlope) {
+          bestSlope = slope;
+          best = sx;
+        }
+      }
+      return { x: b.left + best * b.sc, y: b.top + ridgeAt(best) * b.sc + 2 };
     }
 
     function dist(a, b) {
@@ -120,6 +154,23 @@
 
   .fox.is-ready {
     visibility: visible;
+  }
+
+  /* During the home intro he waits until the mountains are in, then appears */
+  :global(html.intro:not(.intro-go)) .fox {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.intro-go) .fox {
+      animation: fox-appear 0.6s ease-out 1.1s both;
+    }
+  }
+
+  @keyframes fox-appear {
+    from {
+      opacity: 0;
+    }
   }
 
   .fox__sprite {
