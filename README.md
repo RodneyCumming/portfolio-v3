@@ -10,7 +10,7 @@ Same design as the 2020 React version, without the client-side app.
   phone menu uses the Popover API, page changes use native view transitions and
   speculation-rules prerendering.
 - **Images:** the large mountain layer ships as AVIF/WebP (171 KB → 20 KB); the condensed
-  heading font is subset to 8 KB.
+  heading font is subset to basic Latin (9 KB).
 - **Contact form:** Netlify Forms (`data-netlify`), which redirects to `/thanks`.
 
 ## Develop

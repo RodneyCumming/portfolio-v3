@@ -14,5 +14,8 @@
   "dependencies": {
     "@fontsource/lato": "^5.3.0",
     "astro": "^7.4.11"
+  },
+  "devDependencies": {
+    "simple-icons": "^13.21.0"
   }
 }

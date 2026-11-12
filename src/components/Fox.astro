@@ -83,39 +83,6 @@
       return pt(x, b.top + ridgeAt(sx) * b.sc + drop);
     }
 
-    // The low-poly ridge along the top of a section (Ridge.astro): a point on
-    // it at any x, and the polyline between two x positions.
-    function ridgeOf(sel) {
-      var el = document.querySelector(sel + ' > .ridge .ridge__line');
-      var b = box(el);
-      if (!b) return null;
-      var pts = el.dataset.ridge.split(' ').map(function (s) {
-        var v = s.split(',');
-        return pt(b.left + parseFloat(v[0]) * b.w, b.top + parseFloat(v[1]));
-      });
-      function at(x) {
-        for (var i = 0; i < pts.length - 1; i++) {
-          if (x <= pts[i + 1].x) {
-            var k = (x - pts[i].x) / (pts[i + 1].x - pts[i].x || 1);
-            return pt(x, pts[i].y + (pts[i + 1].y - pts[i].y) * Math.max(0, Math.min(1, k)) + 1);
-          }
-        }
-        return pt(x, pts[pts.length - 1].y + 1);
-      }
-      function path(x1, x2) {
-        var out = [at(x1)];
-        var lo = Math.min(x1, x2), hi = Math.max(x1, x2);
-        var mid = pts.filter(function (p) {
-          return p.x > lo && p.x < hi;
-        }).map(function (p) {
-          return pt(p.x, p.y + 1);
-        });
-        if (x2 < x1) mid.reverse();
-        return out.concat(mid, [at(x2)]);
-      }
-      return { at: at, path: path };
-    }
-
     // Perch on top of a heading's last letter
     function onHeading(el) {
       var b = box(el);
@@ -166,105 +133,9 @@
         { kind: 'leap', from: launch, to: about }
       ], about);
 
-      // 2. ABOUT ME -> hop across the top row of coffee cups
-      var cups = qa('.about__cups img');
-      if (cups.length >= 3) {
-        var c0 = onTop(cups[0]), c1 = onTop(cups[1]), c2 = onTop(cups[2]);
-        addLeg([
-          { kind: 'leap', from: about, to: c0 },
-          { kind: 'hop', from: c0, to: c1 },
-          { kind: 'hop', from: c1, to: c2 }
-        ], c2);
-      }
+      // The sections below the hero were redesigned (no cups, ridges or icon
+      // rows to run along), so for now his route ends on ABOUT ME.
 
-      // 3. Down the cups, onto the edge of the Technology band, along it,
-      //    then down onto TECHNOLOGY
-      var last = perches[perches.length - 1].at;
-      var skills = box(q('.skills'));
-      var tech = onHeading(q('#skills-heading .heading-text'));
-      if (skills && tech) {
-        var moves = [];
-        [cups[5], cups[8]].filter(Boolean).forEach(function (c) {
-          var p = onTop(c);
-          moves.push({ kind: 'hop', from: last, to: p });
-          last = p;
-        });
-        var rg = ridgeOf('.skills');
-        var x1 = last.x + (desktop ? 50 : 30), x2 = tech.x + (tech.x < x1 ? 60 : -60);
-        var edgeIn = rg ? rg.at(x1) : pt(x1, skills.top);
-        var edgeOut = rg ? rg.at(x2) : pt(x2, skills.top);
-        moves.push({ kind: 'leap', from: last, to: edgeIn });
-        moves.push({ kind: 'run', from: edgeIn, to: edgeOut, path: rg && rg.path(x1, x2) });
-        moves.push({ kind: 'leap', from: edgeOut, to: tech });
-        addLeg(moves, tech);
-      }
-
-      // 4. TECHNOLOGY -> across the filter pills -> down the icon rows ->
-      //    along the Portfolio band edge -> onto PORTFOLIO
-      var teaser = box(q('.teaser'));
-      var port = onHeading(q('#teaser-heading .heading-text'));
-      var pills = qa('.filter span');
-      if (teaser && port && tech) {
-        var mv = [];
-        var cur = tech;
-        if (pills.length) {
-          var pr = onTop(pills[pills.length - 1]), pl = onTop(pills[0]);
-          mv.push({ kind: 'leap', from: cur, to: pr });
-          mv.push({ kind: 'run', from: pr, to: pl });
-          cur = pl;
-        }
-        var icons = qa('.skill img'), rows = {};
-        icons.forEach(function (i) {
-          var b = box(i);
-          (rows[b.top] = rows[b.top] || []).push(i);
-        });
-        Object.keys(rows).map(Number).sort(function (a, b) {
-          return a - b;
-        }).forEach(function (top) {
-          var best = rows[top].reduce(function (a, b) {
-            return Math.abs(box(a).cx - cur.x) < Math.abs(box(b).cx - cur.x) ? a : b;
-          });
-          var p = onTop(best);
-          mv.push({ kind: 'hop', from: cur, to: p });
-          cur = p;
-        });
-        var rt = ridgeOf('.teaser');
-        var ex1 = cur.x + (port.x > cur.x ? 40 : -40), ex2 = port.x + (port.x > ex1 ? -60 : 60);
-        var e1 = rt ? rt.at(ex1) : pt(ex1, teaser.top);
-        var e2 = rt ? rt.at(ex2) : pt(ex2, teaser.top);
-        mv.push({ kind: 'leap', from: cur, to: e1 });
-        mv.push({ kind: 'run', from: e1, to: e2, path: rt && rt.path(ex1, ex2) });
-        mv.push({ kind: 'leap', from: e2, to: port });
-        addLeg(mv, port);
-      }
-
-      // 5. PORTFOLIO -> the button -> the Contact band edge -> CONTACT ->
-      //    the email icon, where he lies down and sleeps
-      var contact = box(q('.contact'));
-      var cHead = onHeading(q('#contact-heading .heading-text'));
-      var btn = onTop(q('.teaser .button'));
-      var methods = qa('.methods img');
-      var bed = methods.length ? onTop(methods[methods.length - 1]) : null;
-      if (contact && cHead && port && bed) {
-        var m5 = [];
-        var c = port;
-        if (btn) {
-          m5.push({ kind: 'leap', from: c, to: btn });
-          c = btn;
-        }
-        var rc = ridgeOf('.contact');
-        var fx1 = c.x + (cHead.x > c.x ? 40 : -40), fx2 = cHead.x + (cHead.x > fx1 ? -60 : 60);
-        var f1 = rc ? rc.at(fx1) : pt(fx1, contact.top);
-        var f2 = rc ? rc.at(fx2) : pt(fx2, contact.top);
-        m5.push({ kind: 'leap', from: c, to: f1 });
-        m5.push({ kind: 'run', from: f1, to: f2, path: rc && rc.path(fx1, fx2) });
-        m5.push({ kind: 'leap', from: f2, to: cHead });
-        m5.push({ kind: 'leap', from: cHead, to: bed });
-        addLeg(m5, bed, SLEEP);
-      }
-
-      // Scroll positions: he settles on each perch as it reaches ~55% down
-      // the screen (the last one a little lower) and sets off a little after.
       var maxScroll = document.documentElement.scrollHeight - innerHeight;
       stops = perches.map(function (p, i) {
         if (i === 0) return 0;
@@ -442,10 +313,6 @@
     addEventListener('load', build);
     if (document.fonts) document.fonts.ready.then(build);
     // The technology filter changes which icons he can hop on
-    document.addEventListener('change', function (e) {
-      if (e.target && e.target.name === 'skill-filter') rebuild();
-    });
-    document.addEventListener('change-skills', rebuild);
     build();
   });
 </script>

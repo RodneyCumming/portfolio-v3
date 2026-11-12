@@ -1,23 +1,56 @@
 ---
-import { Image } from 'astro:assets';
-import cup from '../assets/cup.png';
+// What Rodney is doing now. Update it when it changes.
+const nowDate = 'November 2026';
+const now = [
+  ['Building', 'SmartCompare, so New Zealanders stop overpaying for their mobile plan'],
+  ['Shipping', 'Whole-site audits for SEO Lamp'],
+  ['Learning', 'Swift and SwiftUI, for the Immerse reader'],
+  ['Based', 'New Zealand'],
+];
+const steps = [
+  ['Fast by default', 'Static where it can be, light on JavaScript, quick on a slow phone.'],
+  ['Details that feel right', 'Spacing, motion and states that make an interface feel considered.'],
+  ['Shipped end to end', 'From first sketch to production, including the parts nobody sees.'],
+];
 ---
 
 <section class="section about" aria-labelledby="about-heading">
-  <div class="section__inner about__inner">
-    <div class="about__text reveal">
-      <h2 id="about-heading" class="section__heading">
-        <span class="heading-text">ABOUT ME</span
-        >
-      </h2>
-      <p class="section__body">
-        Hey there, I'm Rodney. I'm passionate about modern web development. I love learning about the latest
-        technologies and applying them to my projects.
-      </p>
+  <div class="section__inner">
+    <div class="about__grid">
+      <div>
+        <p class="eyebrow">01&nbsp; About</p>
+        <h2 id="about-heading" class="section__heading is-left"><span class="heading-text">ABOUT ME</span></h2>
+        <p class="sub">Ten years building for the web, <em>mostly in React.</em></p>
+        <p class="lede">
+          Hey, I'm Rodney, a senior frontend developer in New Zealand. I've spent more than ten years building fast,
+          polished interfaces, and lately I've been designing, building and shipping my own products end to end.
+        </p>
+      </div>
+
+      <aside class="now px" aria-labelledby="now-heading">
+        <p class="now__head"><b id="now-heading">Now</b><span>{nowDate}</span></p>
+        <dl>
+          {now.map(([term, text]) => (
+            <>
+              <dt>{term}</dt>
+              <dd>{text}</dd>
+            </>
+          ))}
+        </dl>
+      </aside>
     </div>
-    <div class="about__cups reveal" aria-hidden="true">
-      {Array.from({ length: 9 }, () => <Image src={cup} alt="" width={71} height={75} loading="lazy" />)}
-    </div>
+
+    <ol class="steps" role="list">
+      {steps.map(([title, text], i) => (
+        <li class="px" style={`--from: ${30 + i * 30}px; --to: -${30 + i * 30}px`}>
+          <b aria-hidden="true">{i + 1}</b>
+          <div>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
   </div>
 </section>
 
@@ -26,64 +59,118 @@ import cup from '../assets/cup.png';
     background: var(--ebony-clay);
   }
 
-  .about__inner {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .about__text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .about__cups {
-    width: 100%;
+  .about__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
-    gap: 30px;
-    margin-top: 4rem;
+    gap: 56px;
   }
 
-  .about__cups img {
-    height: 40px;
-    width: auto;
-    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1.4), filter 0.3s;
+  .now {
+    --from: 60px;
+    --to: -60px;
+    align-self: start;
+    border-left: 2px solid var(--cyan);
+    padding: 6px 0 6px 28px;
   }
 
-  .about__cups img:hover {
-    transform: translateY(-4px) rotate(-4deg);
-    filter: brightness(1.15);
+  .now__head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
   }
 
-  @media (min-width: 481px) {
-    .about__cups img {
-      height: 60px;
-    }
+  .now__head b {
+    font: 700 56px/1 var(--font-display);
+    letter-spacing: 0.5px;
+    color: var(--ink);
   }
 
-  @media (min-width: 1025px) {
-    .about__text,
-    .about__cups {
-      flex: 1 1 0;
+  .now__head span {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8792b3;
+  }
+
+  dl {
+    margin: 24px 0 0;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    row-gap: 18px;
+  }
+
+  dt {
+    font: 700 12px/1.9 var(--font-body);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .steps {
+    display: grid;
+    gap: 32px;
+    margin: 80px 0 0;
+    padding: 50px 0 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .steps li {
+    display: flex;
+    gap: 20px;
+  }
+
+  .steps b {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    font: 700 17px var(--font-body);
+    color: var(--accent);
+  }
+
+  h3 {
+    font: 700 20px var(--font-body);
+    color: var(--ink);
+  }
+
+  .steps p {
+    margin-top: 8px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  @media (min-width: 900px) {
+    .about__grid {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 90px;
     }
-    .about__inner {
-      flex-direction: row;
-      gap: 10vw;
-      align-items: center;
+    .now {
+      margin-top: 46px;
+      padding-left: 34px;
     }
-    .about__text .section__heading,
-    .about__text .section__body {
-      text-align: left;
+    .now__head b {
+      font-size: 64px;
     }
-    .about__cups {
-      margin-top: 0;
-      align-content: center;
+    dl {
+      grid-template-columns: 110px 1fr;
     }
-    .about__cups img {
-      height: 70px;
+    dd {
+      font-size: 19px;
+    }
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
     }
   }
 </style>

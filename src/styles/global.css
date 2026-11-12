@@ -208,3 +208,94 @@ a {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* ---------------------------------------------------------------------
+   Sections below the hero (2026 redesign)
+   --------------------------------------------------------------------- */
+:root {
+  --panel: #283048;
+  --panel-2: #323b58;
+  --line: rgb(255 255 255 / 0.08);
+  --ink: #eef1f8;
+  --muted: #9aa3bd;
+  --accent: #7fdcf5;
+}
+
+.eyebrow {
+  font: 700 13px/1 var(--font-body);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+/* Left-aligned section heading under an eyebrow */
+.section__heading.is-left {
+  text-align: left;
+  margin-top: 22px;
+}
+
+/* The line under a section heading, with an accent phrase */
+.sub {
+  margin-top: 26px;
+  max-width: 620px;
+  font: 700 clamp(24px, 3.2vw, 34px) / 1.25 var(--font-body);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.sub em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.lede {
+  margin-top: 20px;
+  max-width: 560px;
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* Heading on the left, an action on the right */
+.head-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px 60px;
+}
+
+/* Parallax: an element drifts from --from to --to as it crosses the
+   viewport (scroll-driven, native scrolling, vertical only). Elements that
+   pan an image inside a frame use .px-pan. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .px {
+      animation: px linear both;
+    }
+    .px-pan {
+      animation: px-pan linear both;
+    }
+    /* Separate rule so the minifier can't fold the timeline into the shorthand */
+    main .px,
+    main .px-pan {
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes px {
+  from {
+    transform: translateY(var(--from, 0));
+  }
+  to {
+    transform: translateY(var(--to, 0));
+  }
+}
+
+@keyframes px-pan {
+  to {
+    transform: translateY(-22%);
+  }
+}

@@ -1,0 +1,451 @@
+---
+import { Image } from 'astro:assets';
+import smartcompare from '../assets/projects/smartcompare.png';
+import stoicism from '../assets/projects/stoicism-now-phone.png';
+import seoLamp from '../assets/projects/seo-lamp.png';
+import habits from '../assets/projects/quantified-habits.png';
+
+const sites = [
+  {
+    n: '01',
+    name: 'SmartCompare',
+    text: 'Compares 113 NZ mobile plans from 16 providers, so you can find a better deal in under a minute. Every page is static for speed; filters, a plan finder and calculators run on top.',
+    stack: 'Next.js · React · CSS Modules',
+    url: 'https://smartcompare.co.nz',
+    host: 'smartcompare.co.nz',
+    image: smartcompare,
+    brand: '#2fae78',
+    size: 'lead',
+  },
+  {
+    n: '02',
+    name: 'Stoicism Now',
+    text: 'Stoic quotes with exact sources, the full texts, and guides to the ideas.',
+    stack: 'Next.js · Postgres',
+    url: 'https://stoicismnow.com',
+    host: 'stoicismnow.com',
+    image: stoicism,
+    brand: '#7f8cff',
+    size: 'tall',
+  },
+  {
+    n: '03',
+    name: 'SEO Lamp',
+    text: 'Free SEO tools and whole-site audits, ranked by what to fix first.',
+    stack: 'Next.js · Supabase · Stripe',
+    url: 'https://seolamp.vercel.app',
+    host: 'seolamp.vercel.app',
+    image: seoLamp,
+    brand: '#e8b84a',
+  },
+  {
+    n: '04',
+    name: 'Quantified Habits',
+    text: "Habits, tasks and todos on one board, with the numbers that show it's working.",
+    stack: 'Next.js · MUI · Supabase',
+    url: 'https://quantifiedhabits.vercel.app',
+    host: 'quantifiedhabits.vercel.app',
+    image: habits,
+    brand: '#ff7a4d',
+  },
+];
+---
+
+<section class="section work" aria-labelledby="work-heading">
+  <div class="section__inner">
+    <div class="head-row">
+      <div>
+        <p class="eyebrow">03&nbsp; Portfolio</p>
+        <h2 id="work-heading" class="section__heading is-left"><span class="heading-text">PORTFOLIO</span></h2>
+        <p class="sub">Products I've built, <em>start to finish.</em></p>
+      </div>
+      <a class="more" href="/portfolio">All projects →</a>
+    </div>
+
+    <div class="bento">
+      {sites.map((p, i) => (
+        <article class:list={['card', 'px', p.size]} style={`--brand: ${p.brand}; --from: ${[40, 130, 60, 140][i]}px; --to: -${[40, 130, 60, 140][i]}px`}>
+          <a class="win" href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
+            <span class="win__bar"><i></i><i></i><i></i><span>{p.host}</span></span>
+            <span class="win__view">
+              <Image class="px-pan" src={p.image} alt="" widths={[600, 900, 1200]} sizes="(min-width: 1025px) 760px, 92vw" loading="lazy" />
+            </span>
+          </a>
+          <div class="meta">
+            <span class="n">{p.n}</span>
+            <h3>{p.name}</h3>
+            <p>{p.text}</p>
+            <div class="foot">
+              <span>{p.stack}</span>
+              <a href={p.url} rel="noopener">Visit<span class="visually-hidden"> {p.name}</span> →</a>
+            </div>
+          </div>
+        </article>
+      ))}
+
+      <!-- Quantified Gym: no site; a drawing of a workout in the app -->
+      <article class="card px" style="--brand: #6f9bff; --from: 90px; --to: -90px">
+        <div class="phone" aria-hidden="true">
+          <p class="phone__top">Today · Push</p>
+          <p class="ex done"><b>Bench press</b><span>4 × 8 · 70 kg</span></p>
+          <p class="ex done"><b>Overhead press</b><span>3 × 10 · 40 kg</span></p>
+          <p class="ex"><b>Incline dumbbell</b><span>3 × 12 · 22 kg</span></p>
+          <p class="ex"><b>Triceps dips</b><span>3 × 15</span></p>
+        </div>
+        <div class="meta">
+          <span class="n">05</span>
+          <h3>Quantified Gym</h3>
+          <p>A workout app for Android, built with React and Capacitor, that works fully offline.</p>
+          <div class="foot"><span>React · Ionic · Capacitor</span><span class="where">Android</span></div>
+        </div>
+      </article>
+
+      <!-- Immerse: a page being read along with the audiobook -->
+      <article class="card wide px" style="--brand: #37c2b4; --from: 50px; --to: -50px">
+        <div class="meta">
+          <span class="n">06</span>
+          <h3>Immerse</h3>
+          <p>An Apple Books-style reader that highlights each sentence as the audiobook narrates it, on Mac, iPad and Android.</p>
+          <div class="foot"><span>JavaScript · Swift · Kotlin</span><span class="where">Mac · iPad · Android</span></div>
+        </div>
+        <div class="reader" aria-hidden="true">
+          <p class="reader__top"><span>Pride and Prejudice</span><span>Chapter 1</span></p>
+          <p class="reader__text">
+            It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want
+            of a wife. <mark>However little known the feelings or views of such a man may be on his first entering a
+            neighbourhood, this truth is so well fixed in the minds of the surrounding families,</mark> that he is
+            considered the rightful property of some one or other of their daughters.
+          </p>
+          <p class="reader__audio"><b>▶</b><span><i></i></span><small>12:41 / 37:10</small></p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .work {
+    background: var(--ebony-clay);
+  }
+
+  .more {
+    font: 700 15px var(--font-body);
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .more:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .bento {
+    display: grid;
+    gap: 22px;
+    margin-top: 56px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel);
+  }
+
+  .win {
+    display: block;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .win__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 12px;
+    background: #e9ecf2;
+  }
+
+  .win__bar i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #c7ccd8;
+  }
+
+  .win__bar span {
+    min-width: 40%;
+    margin: 0 auto;
+    padding: 3px 14px;
+    border-radius: 6px;
+    background: #fff;
+    font: 12px var(--font-body);
+    color: #5b647d;
+    text-align: center;
+  }
+
+  .win__view {
+    display: block;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .win__view :global(img) {
+    display: block;
+    width: 100%;
+    height: 150%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px 8px 6px;
+  }
+
+  .n {
+    font: 700 13px var(--font-body);
+    letter-spacing: 0.2em;
+    color: var(--brand);
+  }
+
+  h3 {
+    margin-top: 6px;
+    font: 700 38px/1 var(--font-display);
+    letter-spacing: 0.4px;
+    color: var(--ink);
+  }
+
+  .meta p {
+    margin-top: 12px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: #aeb6cd;
+  }
+
+  .meta p + .foot {
+    margin-top: 18px;
+  }
+
+  .foot a {
+    font: 700 14px var(--font-body);
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .foot a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .where {
+    white-space: nowrap;
+  }
+
+  /* Quantified Gym: a drawn phone */
+  .phone {
+    align-self: center;
+    width: 230px;
+    height: 290px;
+    overflow: hidden;
+    padding: 18px 14px;
+    border: 7px solid #1b2133;
+    border-radius: 30px;
+    background: #f4f6fb;
+  }
+
+  .phone__top {
+    margin-bottom: 12px;
+    font: 700 15px var(--font-body);
+    color: #1b2234;
+  }
+
+  .ex {
+    position: relative;
+    display: grid;
+    gap: 2px;
+    margin-bottom: 8px;
+    padding: 9px 36px 9px 10px;
+    border: 1px solid #e3e7f0;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .ex b {
+    font-size: 13px;
+    color: #1b2234;
+  }
+
+  .ex span {
+    font-size: 11px;
+    color: #6b7390;
+  }
+
+  .ex::after {
+    content: '';
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    margin-top: -9px;
+    border: 2px solid #c7ccd8;
+    border-radius: 50%;
+  }
+
+  .ex.done::after {
+    border-color: var(--brand);
+    background: var(--brand);
+  }
+
+  /* Immerse: a page with the narrated sentence highlighted */
+  .reader {
+    margin-top: 18px;
+    padding: 22px 24px;
+    border-radius: 14px;
+    background: #f7f3ea;
+    color: #2b2a27;
+  }
+
+  .reader__top {
+    display: flex;
+    justify-content: space-between;
+    font: 12px var(--font-body);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a8473;
+  }
+
+  .reader__text {
+    margin-top: 14px;
+    font: 16px/1.75 Georgia, 'Times New Roman', serif;
+  }
+
+  mark {
+    padding: 1px 2px;
+    border-radius: 4px;
+    background: #cdeee9;
+    color: #1d2a29;
+  }
+
+  .reader__audio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .reader__audio b {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    font-size: 11px;
+  }
+
+  .reader__audio > span {
+    flex: 1;
+    height: 4px;
+    border-radius: 9px;
+    background: #e2dccd;
+  }
+
+  .reader__audio i {
+    display: block;
+    width: 34%;
+    height: 100%;
+    border-radius: 9px;
+    background: var(--brand);
+  }
+
+  .reader__audio small {
+    font: 12px var(--font-body);
+    color: #8a8473;
+  }
+
+  @media (hover: hover) {
+    .card:hover .win__view :global(img) {
+      transform: translateY(-4%);
+    }
+  }
+
+  @media (min-width: 700px) {
+    .bento {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .lead,
+    .wide {
+      grid-column: span 2;
+    }
+    .wide {
+      flex-direction: row;
+      align-items: center;
+      gap: 26px;
+      padding: 22px;
+    }
+    .wide .meta {
+      flex: 1;
+    }
+    .wide .reader {
+      flex: 1.15;
+      margin-top: 0;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .bento {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .card {
+      grid-column: span 2;
+    }
+    .lead {
+      grid-column: span 4;
+    }
+    .wide {
+      grid-column: span 6;
+    }
+    .lead .win__view {
+      height: 380px;
+    }
+    .tall .win__view {
+      height: 470px;
+    }
+    .lead h3 {
+      font-size: 54px;
+    }
+    .lead .meta p {
+      max-width: 640px;
+      font-size: 17px;
+    }
+    .win__view {
+      height: 220px;
+    }
+    .reader__text {
+      font-size: 17px;
+    }
+  }
+</style>
