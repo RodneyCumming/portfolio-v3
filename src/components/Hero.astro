@@ -175,6 +175,10 @@ import mountainsBack from '../assets/mountains-back.png';
     @media (prefers-reduced-motion: no-preference) {
       .layer {
         animation: lag linear both;
+      }
+      /* Kept in a separate rule: if the minifier folds animation-timeline
+         into the animation shorthand, Chrome drops the whole declaration. */
+      .hero .layer {
         animation-timeline: scroll(root block);
         animation-range: 0 1000px;
       }

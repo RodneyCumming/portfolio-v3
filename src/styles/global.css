@@ -156,6 +156,9 @@ a {
   @media (prefers-reduced-motion: no-preference) {
     .reveal {
       animation: reveal linear both;
+    }
+    /* Separate rule so the minifier can't fold the timeline into the shorthand */
+    main .reveal {
       animation-timeline: view();
       animation-range: entry 0% entry 60%;
     }
