@@ -12,7 +12,8 @@ const theme = path === '/' ? 'sky' : 'dark';
 <!-- Sits at the top of the page and scrolls away with it (not fixed or sticky) -->
 <header class="nav" data-theme={theme}>
   <a class="nav__logo" href="/" aria-label="Rodney Cumming, home">
-    <img src="/images/logo.svg" alt="" width="24" height="24" />
+    <!-- Two-tone like the original: pale blues on dark pages, navy and steel on the sky -->
+    <img src={theme === 'sky' ? '/images/logo-sky.svg' : '/images/logo.svg'} alt="" width="24" height="24" />
   </a>
 
   <nav class="nav__links" aria-label="Main">
@@ -64,11 +65,6 @@ const theme = path === '/' ? 'sky' : 'dark';
     display: block;
     padding: 8px;
     margin-left: -8px;
-  }
-
-  /* The logo is pale blue; on the sky it is darkened to navy to stay legible */
-  .nav[data-theme='sky'] .nav__logo img {
-    filter: brightness(0.32) saturate(1.5);
   }
 
   .nav__links {
