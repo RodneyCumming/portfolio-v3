@@ -23,6 +23,24 @@ import mountainsBack from '../assets/mountains-back.png';
     </div>
   </div>
 
+  <!-- Morphing facets: Chrome and Edge paint the name with a live mesh
+       (public/worklets/facets.js); other browsers keep the faceted texture. -->
+  <script is:inline>
+    if (window.CSS && CSS.paintWorklet) {
+      CSS.paintWorklet.addModule('/worklets/facets.js').then(function () {
+        document.documentElement.classList.add('facets-live');
+      });
+      // Stop repainting the mesh while the hero is off screen
+      document.addEventListener('DOMContentLoaded', function () {
+        var hero = document.querySelector('.hero');
+        if (!hero || !window.IntersectionObserver) return;
+        new IntersectionObserver(function (e) {
+          document.documentElement.classList.toggle('hero-away', !e[0].isIntersecting);
+        }).observe(hero);
+      });
+    }
+  </script>
+
   <!-- Each layer is a wrapper (parallax) around its art (intro), so the two
        animations never fight over the same element -->
   <div class="layer range range--1" style="--lag: 0.6; --i: 1">
@@ -269,6 +287,59 @@ import mountainsBack from '../assets/mountains-back.png';
         animation-timeline: scroll(root block);
         animation-range: 0 700px;
       }
+    }
+  }
+
+  /* Live facets: the triangles themselves drift and change shape over time,
+     and morph faster while you scroll. */
+  @property --facet-t {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+  @property --facet-s {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  :global(html.facets-live) .name {
+    background-image: paint(facets);
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+
+  :global(html.facets-live) .name::before,
+  :global(html.facets-live) .name::after {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.facets-live) .name {
+      animation:
+        facet-clock 3600s linear infinite,
+        facet-scroll linear both;
+    }
+    /* Separate rule so the minifier can't fold the timelines into the shorthand */
+    :global(html.facets-live) .heading .name {
+      animation-timeline: auto, scroll(root block);
+      animation-range: normal, 0 700px;
+    }
+  }
+
+  :global(html.hero-away) .name {
+    animation-play-state: paused;
+  }
+
+  @keyframes facet-clock {
+    to {
+      --facet-t: 3600;
+    }
+  }
+
+  @keyframes facet-scroll {
+    to {
+      --facet-s: 1;
     }
   }
 
