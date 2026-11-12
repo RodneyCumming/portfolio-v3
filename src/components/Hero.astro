@@ -264,13 +264,57 @@ import mountainsBack from '../assets/mountains-back.png';
   :global(html.intro-go) .role {
     animation: intro-fade 1s ease-out 0.7s both;
   }
-  :global(html.intro-go) .cloud--right {
-    animation: intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
-    --from: 120px;
+  /* Clouds float lazily for as long as the page is open. The float moves
+     `transform` and the intro moves `translate`, so the two add together and
+     the float picks up seamlessly where the intro drift ends. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cloud--right {
+      animation: float-a 19s ease-in-out infinite alternate;
+    }
+    .cloud--left {
+      animation: float-b 23s ease-in-out -6s infinite alternate;
+    }
+    :global(html.intro-go) .cloud--right {
+      animation:
+        intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both,
+        float-a 19s ease-in-out infinite alternate;
+      --from: 120px;
+    }
+    :global(html.intro-go) .cloud--left {
+      animation:
+        intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both,
+        float-b 23s ease-in-out -6s infinite alternate;
+      --from: -120px;
+    }
   }
-  :global(html.intro-go) .cloud--left {
-    animation: intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
-    --from: -120px;
+
+  @keyframes float-a {
+    0% {
+      transform: translate(0, 0);
+    }
+    35% {
+      transform: translate(-26px, -5px);
+    }
+    70% {
+      transform: translate(-48px, 3px);
+    }
+    100% {
+      transform: translate(-70px, -3px);
+    }
+  }
+  @keyframes float-b {
+    0% {
+      transform: translate(0, 0);
+    }
+    40% {
+      transform: translate(30px, 4px);
+    }
+    75% {
+      transform: translate(52px, -4px);
+    }
+    100% {
+      transform: translate(80px, 2px);
+    }
   }
 
   @keyframes intro-fade {
