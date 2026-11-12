@@ -25,13 +25,13 @@ const { number = '04', heading = 'CONTACT' } = Astro.props;
       </div>
 
       <div class="band__side">
-        <a class="tile px" href={github} rel="noopener" style="--from: 60px; --to: -60px">
+        <a class="tile" href={github} rel="noopener" style="--t: 0">
           <small>GitHub</small>
           <strong>RodneyCumming</strong>
           <span class="tile__text">Code for this site and some of my projects.</span>
           <span class="tile__link">Open GitHub →</span>
         </a>
-        <div class="tile px" style="--from: 120px; --to: -120px">
+        <div class="tile" style="--t: 1">
           <small>Local time</small>
           <strong data-nz-time>New Zealand</strong>
           <span class="tile__text" data-nz-zone>New Zealand</span>
@@ -195,6 +195,61 @@ const { number = '04', heading = 'CONTACT' } = Astro.props;
     margin-top: 12px;
     font: 700 15px var(--font-body);
     color: var(--accent);
+  }
+
+  .sub em {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 2px no-repeat;
+    padding-bottom: 2px;
+  }
+
+  /* Scroll choreography: the band opens out to full size, its parts rise
+     in, and "Let's talk." underlines itself */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .band {
+        animation: open-up linear both;
+      }
+      .contact .band {
+        animation-timeline: view();
+        animation-range: entry 0% cover 40%;
+      }
+      .band__main > *,
+      .tile {
+        animation: fade-rise linear both;
+      }
+      .contact .band__main > *,
+      .contact .tile {
+        animation-timeline: --band;
+        animation-range: entry 40% cover 38%;
+      }
+      .contact .tile {
+        animation-range: entry calc(50% + var(--t) * 15%) cover calc(40% + var(--t) * 5%);
+      }
+      .band {
+        view-timeline: --band block;
+      }
+      .sub em {
+        animation: underline linear both;
+      }
+      .contact .sub em {
+        animation-timeline: --band;
+        animation-range: cover 30% cover 48%;
+      }
+    }
+  }
+
+  @keyframes open-up {
+    from {
+      transform: scale(0.88);
+      border-radius: 64px;
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes underline {
+    from {
+      background-size: 0 2px;
+    }
   }
 
   @media (min-width: 1025px) {

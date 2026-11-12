@@ -5,6 +5,24 @@ import stoicism from '../assets/projects/stoicism-now-phone.png';
 import seoLamp from '../assets/projects/seo-lamp.png';
 import habits from '../assets/projects/quantified-habits.png';
 
+// Immerse: the passage is read along as you scroll, phrase by phrase
+const passage = [
+  'It is a truth universally acknowledged,',
+  'that a single man in possession of a good fortune,',
+  'must be in want of a wife.',
+  'However little known the feelings or views of such a man may be',
+  'on his first entering a neighbourhood,',
+  'this truth is so well fixed in the minds of the surrounding families,',
+  'that he is considered the rightful property',
+  'of some one or other of their daughters.',
+];
+const sets = [
+  ['Bench press', '4 × 8 · 70 kg'],
+  ['Overhead press', '3 × 10 · 40 kg'],
+  ['Incline dumbbell', '3 × 12 · 22 kg'],
+  ['Triceps dips', '3 × 15'],
+];
+
 const sites = [
   {
     n: '01',
@@ -64,7 +82,7 @@ const sites = [
 
     <div class="bento">
       {sites.map((p, i) => (
-        <article class:list={['card', 'px', p.size]} style={`--brand: ${p.brand}; --from: ${[40, 130, 60, 140][i]}px; --to: -${[40, 130, 60, 140][i]}px`}>
+        <article class:list={['card', p.size]} style={`--brand: ${p.brand}; --d: ${[0, 1, 0, 1][i]}`}>
           <a class="win" href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
             <span class="win__bar"><i></i><i></i><i></i><span>{p.host}</span></span>
             <span class="win__view">
@@ -84,13 +102,13 @@ const sites = [
       ))}
 
       <!-- Quantified Gym: no site; a drawing of a workout in the app -->
-      <article class="card px" style="--brand: #6f9bff; --from: 90px; --to: -90px">
+      <article class="card gym" style="--brand: #6f9bff; --d: 2">
         <div class="phone" aria-hidden="true">
           <p class="phone__top">Today · Push</p>
-          <p class="ex done"><b>Bench press</b><span>4 × 8 · 70 kg</span></p>
-          <p class="ex done"><b>Overhead press</b><span>3 × 10 · 40 kg</span></p>
-          <p class="ex"><b>Incline dumbbell</b><span>3 × 12 · 22 kg</span></p>
-          <p class="ex"><b>Triceps dips</b><span>3 × 15</span></p>
+          {sets.map(([name, detail], k) => (
+            <p class="ex" style={`--k: ${k}`}><b>{name}</b><span>{detail}</span></p>
+          ))}
+          <p class="phone__bar"><i></i></p>
         </div>
         <div class="meta">
           <span class="n">05</span>
@@ -101,7 +119,7 @@ const sites = [
       </article>
 
       <!-- Immerse: a page being read along with the audiobook -->
-      <article class="card wide px" style="--brand: #37c2b4; --from: 50px; --to: -50px">
+      <article class="card wide" style="--brand: #37c2b4; --d: 0">
         <div class="meta">
           <span class="n">06</span>
           <h3>Immerse</h3>
@@ -111,10 +129,11 @@ const sites = [
         <div class="reader" aria-hidden="true">
           <p class="reader__top"><span>Pride and Prejudice</span><span>Chapter 1</span></p>
           <p class="reader__text">
-            It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want
-            of a wife. <mark>However little known the feelings or views of such a man may be on his first entering a
-            neighbourhood, this truth is so well fixed in the minds of the surrounding families,</mark> that he is
-            considered the rightful property of some one or other of their daughters.
+            {passage.map((phrase, k) => (
+              <>
+                <mark style={`--k: ${k}`}>{phrase}</mark>{' '}
+              </>
+            ))}
           </p>
           <p class="reader__audio"><b>▶</b><span><i></i></span><small>12:41 / 37:10</small></p>
         </div>
@@ -313,9 +332,20 @@ const sites = [
     border-radius: 50%;
   }
 
-  .ex.done::after {
-    border-color: var(--brand);
+  .phone__bar {
+    height: 6px;
+    margin-top: 12px;
+    border-radius: 9px;
+    background: #e3e7f0;
+  }
+
+  .phone__bar i {
+    display: block;
+    height: 100%;
+    border-radius: 9px;
     background: var(--brand);
+    transform-origin: 0 50%;
+    transform: scaleX(0.5);
   }
 
   /* Immerse: a page with the narrated sentence highlighted */
@@ -342,10 +372,15 @@ const sites = [
   }
 
   mark {
-    padding: 1px 2px;
+    padding: 1px 0;
     border-radius: 4px;
+    background: transparent;
+    color: inherit;
+  }
+
+  /* Without scroll-driven animation, one phrase stays highlighted */
+  mark:nth-child(4) {
     background: #cdeee9;
-    color: #1d2a29;
   }
 
   .reader__audio {
@@ -375,7 +410,9 @@ const sites = [
 
   .reader__audio i {
     display: block;
-    width: 34%;
+    transform-origin: 0 50%;
+    width: 100%;
+    transform: scaleX(0.34);
     height: 100%;
     border-radius: 9px;
     background: var(--brand);
@@ -384,6 +421,124 @@ const sites = [
   .reader__audio small {
     font: 12px var(--font-body);
     color: #8a8473;
+  }
+
+  /* Scroll choreography */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* SmartCompare starts tipped back in 3D and swings flat as it arrives */
+      .lead .win {
+        animation: swing-flat linear both;
+      }
+      .work .lead .win {
+        animation-timeline: view();
+        animation-range: entry 0% cover 42%;
+      }
+
+      /* The other cards are unveiled from the bottom up */
+      .card:not(.lead) {
+        animation: unveil linear both;
+      }
+      .work .card:not(.lead) {
+        animation-timeline: view();
+        animation-range: entry calc(var(--d) * 8%) entry calc(85% + var(--d) * 5%);
+      }
+
+      /* The workout ticks off set by set, and its bar fills */
+      .gym {
+        view-timeline: --gym block;
+      }
+      .ex::after {
+        animation: tick linear both;
+      }
+      .gym .ex::after {
+        animation-timeline: --gym;
+        animation-range: cover calc(30% + var(--k) * 9%) cover calc(34% + var(--k) * 9%);
+      }
+      .phone__bar i {
+        animation: fill-bar linear both;
+      }
+      .gym .phone__bar i {
+        animation-timeline: --gym;
+        animation-range: cover 30% cover 66%;
+      }
+
+      /* Immerse reads along: the highlight moves through the passage,
+         phrase by phrase, and the audio bar keeps pace */
+      .wide {
+        view-timeline: --read block;
+      }
+      mark {
+        animation: read-along linear both;
+      }
+      .wide mark {
+        animation-timeline: --read;
+        animation-range: cover calc(22% + var(--k) * 6%) cover calc(30% + var(--k) * 6%);
+      }
+      .wide mark:nth-child(4) {
+        background: transparent;
+      }
+      .reader__audio i {
+        animation: fill-bar linear both;
+      }
+      .wide .reader__audio i {
+        animation-timeline: --read;
+        animation-range: cover 22% cover 78%;
+      }
+    }
+  }
+
+  @keyframes swing-flat {
+    from {
+      transform: perspective(1400px) rotateX(28deg) scale(0.86) translateY(60px);
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes unveil {
+    from {
+      clip-path: inset(100% 0 0 0 round 20px);
+      transform: translateY(40px);
+    }
+    to {
+      clip-path: inset(0 0 0 0 round 20px);
+    }
+  }
+
+  @keyframes tick {
+    from {
+      border-color: #c7ccd8;
+      background: transparent;
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.35);
+    }
+    to {
+      border-color: var(--brand);
+      background: var(--brand);
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fill-bar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes read-along {
+    0%,
+    100% {
+      background: transparent;
+    }
+    20%,
+    80% {
+      background: #cdeee9;
+    }
   }
 
   @media (hover: hover) {

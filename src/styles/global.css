@@ -299,3 +299,78 @@ a {
     transform: translateY(-22%);
   }
 }
+
+/* ---------------------------------------------------------------------
+   Scroll choreography shared by the sections. Each effect is tied to
+   native scrolling (no scroll-jacking, nothing moves sideways) and only
+   runs where scroll-driven animations exist and motion is welcome; other
+   browsers show the finished state.
+   --------------------------------------------------------------------- */
+
+/* A thin line along the top that fills as you read down the page */
+.progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 200;
+  height: 2px;
+  background: var(--cyan);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+@supports not (animation-timeline: scroll()) {
+  .progress {
+    display: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .progress {
+      animation: grow-x linear both;
+    }
+    body .progress {
+      animation-timeline: scroll(root block);
+    }
+
+    /* Section headings rise out of a mask as they come up */
+    .section__heading.is-left .heading-text {
+      animation: mask-rise linear both;
+    }
+    main .section__heading.is-left .heading-text {
+      animation-timeline: view();
+      animation-range: entry 10% cover 30%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress {
+    display: none;
+  }
+}
+
+.section__heading.is-left {
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+@keyframes grow-x {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes mask-rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 28px));
+  }
+}

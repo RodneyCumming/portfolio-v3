@@ -96,12 +96,12 @@ const filters = ['All', ...groups.map((g) => g.id)];
 
     <div class="groups">
       {groups.map((g, i) => (
-        <div class="group px" data-group={g.id} style={i % 2 ? '--from: 30px; --to: -30px' : '--from: 110px; --to: -110px'}>
+        <div class="group" data-group={g.id} style={`--g: ${i}`}>
           <h3>{g.name}</h3>
           <p>{g.note}</p>
           <ul role="list">
-            {g.tools.map((t) => (
-              <li class:list={{ core: t.core }}>
+            {g.tools.map((t, j) => (
+              <li class:list={{ core: t.core }} style={`--j: ${j}`}>
                 <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={t.icon.path} /></svg>
                 {t.label}
                 {t.core && <small>Core</small>}
@@ -228,6 +228,52 @@ const filters = ['All', ...groups.map((g) => g.id)];
   .tech:has(input[value='Mobile']:checked) .group:not([data-group='Mobile']),
   .tech:has(input[value='Tools']:checked) .group:not([data-group='Tools']) {
     display: none;
+  }
+
+  /* Scroll choreography: the groups surface from depth one after another,
+     then their tools fill in from the top */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .groups {
+        view-timeline: --groups block;
+      }
+      .group {
+        animation: surface linear both;
+      }
+      .tech .group {
+        animation-timeline: --groups;
+        animation-range: entry calc(var(--g) * 12%) cover calc(28% + var(--g) * 6%);
+      }
+      li {
+        --rise: 12px;
+        animation: fade-rise linear both;
+      }
+      .group li {
+        animation-timeline: --groups;
+        animation-range: cover calc(18% + var(--g) * 6% + var(--j) * 3%) cover calc(30% + var(--g) * 6% + var(--j) * 3%);
+      }
+      li.core small {
+        animation: core-glow linear both;
+      }
+      .group li.core small {
+        animation-timeline: --groups;
+        animation-range: cover 35% cover 50%;
+      }
+    }
+  }
+
+  @keyframes surface {
+    from {
+      opacity: 0;
+      transform: perspective(900px) translateY(70px) rotateX(18deg) scale(0.92);
+    }
+  }
+
+  @keyframes core-glow {
+    from {
+      color: transparent;
+      letter-spacing: 0.4em;
+    }
   }
 
   @media (min-width: 600px) {

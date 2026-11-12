@@ -7,6 +7,10 @@ const now = [
   ['Learning', 'Swift and SwiftUI, for the Immerse reader'],
   ['Based', 'New Zealand'],
 ];
+// The intro lights up word by word as it scrolls through the view
+const intro =
+  "Hey, I'm Rodney, a senior frontend developer in New Zealand. I've spent more than ten years building fast, polished interfaces, and lately I've been designing, building and shipping my own products end to end.";
+const words = intro.split(' ');
 const steps = [
   ['Fast by default', 'Static where it can be, light on JavaScript, quick on a slow phone.'],
   ['Details that feel right', 'Spacing, motion and states that make an interface feel considered.'],
@@ -22,18 +26,21 @@ const steps = [
         <h2 id="about-heading" class="section__heading is-left"><span class="heading-text">ABOUT ME</span></h2>
         <p class="sub">Ten years building for the web, <em>mostly in React.</em></p>
         <p class="lede">
-          Hey, I'm Rodney, a senior frontend developer in New Zealand. I've spent more than ten years building fast,
-          polished interfaces, and lately I've been designing, building and shipping my own products end to end.
+          {words.map((w, i) => (
+            <>
+              <span class="w" style={`--a: ${Math.round((i / words.length) * 60)}%`}>{w}</span>{' '}
+            </>
+          ))}
         </p>
       </div>
 
-      <aside class="now px" aria-labelledby="now-heading">
+      <aside class="now" aria-labelledby="now-heading">
         <p class="now__head"><b id="now-heading">Now</b><span>{nowDate}</span></p>
         <dl>
-          {now.map(([term, text]) => (
+          {now.map(([term, text], i) => (
             <>
-              <dt>{term}</dt>
-              <dd>{text}</dd>
+              <dt style={`--i: ${i}`}>{term}</dt>
+              <dd style={`--i: ${i}`}>{text}</dd>
             </>
           ))}
         </dl>
@@ -42,8 +49,11 @@ const steps = [
 
     <ol class="steps" role="list">
       {steps.map(([title, text], i) => (
-        <li class="px" style={`--from: ${30 + i * 30}px; --to: -${30 + i * 30}px`}>
-          <b aria-hidden="true">{i + 1}</b>
+        <li style={`--i: ${i}`}>
+          <b aria-hidden="true">
+            <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" pathLength="1"></circle></svg>
+            {i + 1}
+          </b>
           <div>
             <h3>{title}</h3>
             <p>{text}</p>
@@ -65,11 +75,21 @@ const steps = [
   }
 
   .now {
-    --from: 60px;
-    --to: -60px;
+    position: relative;
     align-self: start;
-    border-left: 2px solid var(--cyan);
     padding: 6px 0 6px 28px;
+  }
+
+  /* The rule down the left, drawn as the panel comes up */
+  .now::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--cyan);
+    transform-origin: 50% 0;
   }
 
   .now__head {
@@ -127,15 +147,107 @@ const steps = [
   }
 
   .steps b {
+    position: relative;
     flex: none;
     display: grid;
     place-items: center;
     width: 46px;
     height: 46px;
-    border: 2px solid var(--accent);
-    border-radius: 50%;
     font: 700 17px var(--font-body);
     color: var(--accent);
+  }
+
+  .steps svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .steps circle {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-dasharray: 1;
+  }
+
+  /* Scroll choreography */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .lede {
+        view-timeline: --lede block;
+      }
+      .w {
+        animation: light-up linear both;
+      }
+      .about .w {
+        animation-timeline: --lede;
+        animation-range: cover calc(18% + var(--a)) cover calc(26% + var(--a));
+      }
+
+      .now::before {
+        animation: draw-y linear both;
+      }
+      .about .now::before {
+        animation-timeline: view();
+        animation-range: entry 20% cover 45%;
+      }
+      dt,
+      dd {
+        animation: fade-rise linear both;
+      }
+      .now dt,
+      .now dd {
+        animation-timeline: --now;
+        animation-range: entry calc(30% + var(--i) * 15%) cover calc(30% + var(--i) * 6%);
+      }
+      .now {
+        view-timeline: --now block;
+      }
+
+      .steps li {
+        animation: fade-rise linear both;
+      }
+      .steps circle {
+        animation: draw-ring linear both;
+      }
+      .about .steps li {
+        animation-timeline: view();
+        animation-range: entry calc(var(--i) * 15%) cover calc(25% + var(--i) * 5%);
+      }
+      .about .steps circle {
+        animation-timeline: --steps;
+        animation-range: cover calc(20% + var(--i) * 8%) cover calc(45% + var(--i) * 8%);
+      }
+      .steps {
+        view-timeline: --steps block;
+      }
+    }
+  }
+
+  @keyframes light-up {
+    from {
+      color: rgb(154 163 189 / 0.28);
+    }
+    to {
+      color: #c9cfe2;
+    }
+  }
+
+  @keyframes draw-y {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes draw-ring {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
   }
 
   h3 {
