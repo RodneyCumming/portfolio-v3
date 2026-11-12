@@ -89,7 +89,7 @@
     // The low-poly ridge along the top of a section (Ridge.astro): a point on
     // it at any x, and the polyline between two x positions.
     function ridgeOf(sel) {
-      var el = document.querySelector(sel + ' > .ridge');
+      var el = document.querySelector(sel + ' > .ridge .ridge__line');
       var b = box(el);
       if (!b) return null;
       var pts = el.dataset.ridge.split(' ').map(function (s) {
