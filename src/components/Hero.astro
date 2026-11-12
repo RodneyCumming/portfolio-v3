@@ -23,22 +23,57 @@ import mountainsBack from '../assets/mountains-back.png';
     </div>
   </div>
 
-  <Picture
-    class="layer range range--1"
-    style="--lag: 0.6"
-    src={mountainsBack}
-    formats={['avif', 'webp']}
-    width={3000}
-    height={455}
-    alt=""
-    loading="eager"
-    fetchpriority="high"
-    sizes="3000px"
-  />
-  <img class="layer range range--2" style="--lag: 0.5" src="/images/mountains-2.svg" alt="" width="3000" height="455" />
-  <img class="layer range range--3" style="--lag: 0.333" src="/images/mountains-3.svg" alt="" width="3000" height="455" />
-  <img class="range--4" src="/images/mountains-4.svg" alt="" width="3000" height="200" />
+  <!-- Each layer is a wrapper (parallax) around its art (intro), so the two
+       animations never fight over the same element -->
+  <div class="layer range range--1" style="--lag: 0.6; --i: 1">
+    <Picture
+      class="art"
+      src={mountainsBack}
+      formats={['avif', 'webp']}
+      width={3000}
+      height={455}
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      sizes="3000px"
+    />
+  </div>
+  <div class="layer range range--2" style="--lag: 0.5; --i: 2">
+    <img class="art" src="/images/mountains-2.svg" alt="" width="3000" height="455" fetchpriority="high" />
+  </div>
+  <div class="layer range range--3" style="--lag: 0.333; --i: 3">
+    <img class="art" src="/images/mountains-3.svg" alt="" width="3000" height="455" fetchpriority="high" />
+  </div>
+  <div class="range--4" style="--i: 4">
+    <img class="art" src="/images/mountains-4.svg" alt="" width="3000" height="200" fetchpriority="high" />
+  </div>
 </section>
+
+<!--
+  Intro: the scene stays hidden only until its images and fonts are decoded
+  (or 1.2 s, whichever comes first), then comes in back to front in one smooth
+  pass. That avoids the old pop-in where layers arrived one by one. It plays
+  once per visit; later page views show the hero straight away.
+-->
+<script is:inline>
+  (function () {
+    var d = document.documentElement;
+    if (!d.classList.contains('intro')) return;
+    var go = function () {
+      if (d.classList.contains('intro-go')) return;
+      requestAnimationFrame(function () {
+        d.classList.add('intro-go');
+      });
+    };
+    var imgs = [].slice.call(document.querySelectorAll('.hero img'));
+    var ready = imgs.map(function (img) {
+      return img.decode ? img.decode().catch(function () {}) : Promise.resolve();
+    });
+    if (document.fonts) ready.push(document.fonts.ready);
+    Promise.all(ready).then(go);
+    setTimeout(go, 1200);
+  })();
+</script>
 
 <style>
   .hero {
@@ -191,39 +226,84 @@ import mountainsBack from '../assets/mountains-back.png';
     }
   }
 
-  /* Gentle entrance: clouds drift in, the name fades up. Short, never blocking. */
-  @media (prefers-reduced-motion: no-preference) {
-    .cloud--right {
-      animation: drift-left 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  .art {
+    display: block;
+    width: 3000px;
+    height: 100%;
+  }
+
+  /* Intro, back to front. Hidden only while html has .intro but not yet
+     .intro-go; with no JavaScript neither class is set, so it simply shows. */
+  :global(html.intro:not(.intro-go)) .art,
+  :global(html.intro:not(.intro-go)) .name,
+  :global(html.intro:not(.intro-go)) .role,
+  :global(html.intro:not(.intro-go)) .cloud {
+    opacity: 0;
+  }
+
+  :global(html.intro-go) .art {
+    animation: intro-rise 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 1) * 90ms);
+  }
+  .range--1 .art {
+    --rise: 30px;
+  }
+  .range--2 .art {
+    --rise: 50px;
+  }
+  .range--3 .art {
+    --rise: 70px;
+  }
+  .range--4 .art {
+    --rise: 90px;
+  }
+
+  :global(html.intro-go) .name {
+    animation: intro-focus 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+  }
+  :global(html.intro-go) .role {
+    animation: intro-fade 1s ease-out 0.7s both;
+  }
+  :global(html.intro-go) .cloud--right {
+    animation: intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+    --from: 120px;
+  }
+  :global(html.intro-go) .cloud--left {
+    animation: intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+    --from: -120px;
+  }
+
+  @keyframes intro-fade {
+    from {
+      opacity: 0;
     }
-    .cloud--left {
-      animation: drift-right 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes intro-rise {
+    from {
+      opacity: 0;
+      translate: 0 var(--rise, 40px);
     }
-    .name,
-    .role {
-      animation: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes intro-focus {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+      scale: 0.97;
     }
-    .role {
-      animation-delay: 0.1s;
+  }
+  @keyframes intro-drift {
+    from {
+      opacity: 0;
+      translate: var(--from) 0;
     }
   }
 
-  @keyframes drift-left {
-    from {
-      translate: 100px 0;
-      opacity: 0;
-    }
-  }
-  @keyframes drift-right {
-    from {
-      translate: -100px 0;
-      opacity: 0;
-    }
-  }
-  @keyframes fade-up {
-    from {
-      translate: 0 12px;
-      opacity: 0;
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.intro-go) .art,
+    :global(html.intro-go) .name,
+    :global(html.intro-go) .role,
+    :global(html.intro-go) .cloud {
+      animation: intro-fade 0.4s ease-out both;
     }
   }
 </style>

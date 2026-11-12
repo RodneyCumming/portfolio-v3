@@ -6,7 +6,8 @@
   font-family: 'HN Condensed';
   src: url('/fonts/hn-condensed-bold.woff2') format('woff2');
   font-weight: 700;
-  font-display: swap;
+  /* Preloaded and 8 KB: wait for it rather than flash a fallback name */
+  font-display: block;
 }
 
 :root {

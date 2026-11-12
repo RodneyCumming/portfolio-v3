@@ -37,6 +37,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         "prerender": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }]
       }
     </script>
+    <!-- Home hero intro: once per visit, set before first paint so nothing flashes -->
+    <script is:inline>
+      try {
+        if (location.pathname === '/' && !sessionStorage.getItem('intro-seen')) {
+          document.documentElement.classList.add('intro');
+          sessionStorage.setItem('intro-seen', '1');
+        }
+      } catch (e) {}
+    </script>
     <!-- Old links used #/portfolio and #/contact: send them to the real pages -->
     <script is:inline>
       if (location.hash.startsWith('#/')) {
