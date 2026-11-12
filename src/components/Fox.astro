@@ -85,6 +85,39 @@
       return pt(b.left + best * b.sc, b.top + ridgeAt(best) * b.sc + 2);
     }
 
+    // The low-poly ridge along the top of a section (Ridge.astro): a point on
+    // it at any x, and the polyline between two x positions.
+    function ridgeOf(sel) {
+      var el = document.querySelector(sel + ' > .ridge');
+      var b = box(el);
+      if (!b) return null;
+      var pts = el.dataset.ridge.split(' ').map(function (s) {
+        var v = s.split(',');
+        return pt(b.left + parseFloat(v[0]) * b.w, b.top + parseFloat(v[1]));
+      });
+      function at(x) {
+        for (var i = 0; i < pts.length - 1; i++) {
+          if (x <= pts[i + 1].x) {
+            var k = (x - pts[i].x) / (pts[i + 1].x - pts[i].x || 1);
+            return pt(x, pts[i].y + (pts[i + 1].y - pts[i].y) * Math.max(0, Math.min(1, k)) + 1);
+          }
+        }
+        return pt(x, pts[pts.length - 1].y + 1);
+      }
+      function path(x1, x2) {
+        var out = [at(x1)];
+        var lo = Math.min(x1, x2), hi = Math.max(x1, x2);
+        var mid = pts.filter(function (p) {
+          return p.x > lo && p.x < hi;
+        }).map(function (p) {
+          return pt(p.x, p.y + 1);
+        });
+        if (x2 < x1) mid.reverse();
+        return out.concat(mid, [at(x2)]);
+      }
+      return { at: at, path: path };
+    }
+
     // Perch on top of a heading's last letter
     function onHeading(el) {
       var b = box(el);
@@ -158,10 +191,12 @@
           moves.push({ kind: 'hop', from: last, to: p });
           last = p;
         });
-        var edgeIn = pt(last.x + (desktop ? 50 : 30), skills.top);
-        var edgeOut = pt(tech.x + (tech.x < edgeIn.x ? 60 : -60), skills.top);
+        var rg = ridgeOf('.skills');
+        var x1 = last.x + (desktop ? 50 : 30), x2 = tech.x + (tech.x < x1 ? 60 : -60);
+        var edgeIn = rg ? rg.at(x1) : pt(x1, skills.top);
+        var edgeOut = rg ? rg.at(x2) : pt(x2, skills.top);
         moves.push({ kind: 'leap', from: last, to: edgeIn });
-        moves.push({ kind: 'run', from: edgeIn, to: edgeOut });
+        moves.push({ kind: 'run', from: edgeIn, to: edgeOut, path: rg && rg.path(x1, x2) });
         moves.push({ kind: 'leap', from: edgeOut, to: tech });
         addLeg(moves, tech);
       }
@@ -195,10 +230,12 @@
           mv.push({ kind: 'hop', from: cur, to: p });
           cur = p;
         });
-        var e1 = pt(cur.x + (port.x > cur.x ? 40 : -40), teaser.top);
-        var e2 = pt(port.x + (port.x > e1.x ? -60 : 60), teaser.top);
+        var rt = ridgeOf('.teaser');
+        var ex1 = cur.x + (port.x > cur.x ? 40 : -40), ex2 = port.x + (port.x > ex1 ? -60 : 60);
+        var e1 = rt ? rt.at(ex1) : pt(ex1, teaser.top);
+        var e2 = rt ? rt.at(ex2) : pt(ex2, teaser.top);
         mv.push({ kind: 'leap', from: cur, to: e1 });
-        mv.push({ kind: 'run', from: e1, to: e2 });
+        mv.push({ kind: 'run', from: e1, to: e2, path: rt && rt.path(ex1, ex2) });
         mv.push({ kind: 'leap', from: e2, to: port });
         addLeg(mv, port);
       }
@@ -217,10 +254,12 @@
           m5.push({ kind: 'leap', from: c, to: btn });
           c = btn;
         }
-        var f1 = pt(c.x + (cHead.x > c.x ? 40 : -40), contact.top);
-        var f2 = pt(cHead.x + (cHead.x > f1.x ? -60 : 60), contact.top);
+        var rc = ridgeOf('.contact');
+        var fx1 = c.x + (cHead.x > c.x ? 40 : -40), fx2 = cHead.x + (cHead.x > fx1 ? -60 : 60);
+        var f1 = rc ? rc.at(fx1) : pt(fx1, contact.top);
+        var f2 = rc ? rc.at(fx2) : pt(fx2, contact.top);
         m5.push({ kind: 'leap', from: c, to: f1 });
-        m5.push({ kind: 'run', from: f1, to: f2 });
+        m5.push({ kind: 'run', from: f1, to: f2, path: rc && rc.path(fx1, fx2) });
         m5.push({ kind: 'leap', from: f2, to: cHead });
         m5.push({ kind: 'leap', from: cHead, to: bed });
         addLeg(m5, bed, SLEEP);
@@ -240,7 +279,12 @@
       legs.forEach(function (moves) {
         var sum = 0;
         moves.forEach(function (m) {
-          m.len = dist(m.from, m.to);
+          if (m.path && m.path.length > 1) {
+            m.len = 0;
+            for (var j = 1; j < m.path.length; j++) m.len += dist(m.path[j - 1], m.path[j]);
+          } else {
+            m.len = dist(m.from, m.to);
+          }
           m.cost = m.kind === 'run' ? m.len : m.len * 1.3 + (m.kind === 'hop' ? 30 : 60);
           sum += m.cost;
         });
@@ -265,6 +309,16 @@
       fox.style.transform = 'translate3d(' + (p.x - W / 2) + 'px,' + (p.y - H) + 'px,0)';
       sprite.style.transform = facing < 0 ? 'scaleX(-1)' : '';
       show(f);
+    }
+
+    // A point a distance d along a polyline
+    function along(path, d) {
+      for (var j = 1; j < path.length; j++) {
+        var seg = dist(path[j - 1], path[j]);
+        if (d <= seg) return lerp(path[j - 1], path[j], seg ? d / seg : 0);
+        d -= seg;
+      }
+      return path[path.length - 1];
     }
 
     function jumpFrame(t) {
@@ -297,7 +351,7 @@
           if (mv.kind === 'run') {
             var d = t * mv.len;
             var f = m === 0 && t < 0.03 ? STAND : m === 0 && d < 8 ? CROUCH : GALLOP + (Math.floor(d / STRIDE) % 16);
-            return place(lerp(mv.from, mv.to, t), f);
+            return place(mv.path ? along(mv.path, d) : lerp(mv.from, mv.to, t), f);
           }
           var arc = mv.kind === 'hop' ? 16 + mv.len * 0.12 : 30 + mv.len * 0.1;
           var climb = Math.max(0, mv.from.y - mv.to.y);

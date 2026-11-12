@@ -1,9 +1,11 @@
 ---
+import Ridge from './Ridge.astro';
 import { categories, skills } from '../data/skills';
 const filters = ['All', ...categories];
 ---
 
 <section class="section skills" aria-labelledby="skills-heading">
+  <Ridge color="var(--bluewood)" seed={11} />
   <div class="section__inner">
     <div class="reveal">
       <h2 id="skills-heading" class="section__heading"><span class="heading-text">TECHNOLOGY</span></h2>

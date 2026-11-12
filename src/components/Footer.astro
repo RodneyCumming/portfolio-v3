@@ -1,8 +1,10 @@
 ---
+import Ridge from './Ridge.astro';
 const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
+  <Ridge color="var(--dark-mirage)" seed={51} height={56} />
   <div class="footer__inner">
     <a href="/" aria-label="Rodney Cumming, home">
       <img src="/images/logo.svg" alt="" width="33" height="33" />

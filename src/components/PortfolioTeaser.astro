@@ -1,9 +1,11 @@
 ---
 import { Image } from 'astro:assets';
 import stack from '../assets/portfolioImage.png';
+import Ridge from './Ridge.astro';
 ---
 
 <section class="section teaser" aria-labelledby="teaser-heading">
+  <Ridge color="var(--ebony-clay)" seed={23} />
   <div class="section__inner teaser__inner">
     <div class="teaser__image reveal">
       <Image src={stack} alt="" width={200} loading="lazy" />

@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import phone from '../assets/phone.png';
 import email from '../assets/email.png';
+import Ridge from './Ridge.astro';
 
 interface Props {
   heading: string;
@@ -12,6 +13,7 @@ const { heading, body, background = 'var(--bluewood)' } = Astro.props;
 ---
 
 <section class="section contact" style={`background: ${background}`} aria-labelledby="contact-heading" id="call-or-email">
+  <Ridge color={background} seed={37} />
   <div class="section__inner">
     <div class="reveal">
       <h2 id="contact-heading" class="section__heading"><span class="heading-text">{heading}</span></h2>
