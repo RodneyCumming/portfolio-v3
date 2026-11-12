@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Rodney Cumming - Developer',
+  description = 'Rodney Cumming is a developer in New Zealand who designs, builds and runs his own web products.',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#203244" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preload" href="/fonts/hn-condensed-bold.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <slot name="head" />
+    <!-- Prerender a page as soon as a link to it is hovered, so clicks are instant -->
+    <script type="speculationrules" is:inline>
+      {
+        "prerender": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }]
+      }
+    </script>
+    <!-- Old links used #/portfolio and #/contact: send them to the real pages -->
+    <script is:inline>
+      if (location.hash.startsWith('#/')) {
+        var p = location.hash.slice(1);
+        if (p === '/portfolio' || p === '/contact') location.replace(p);
+      }
+    </script>
+  </head>
+  <body>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

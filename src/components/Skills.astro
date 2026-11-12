@@ -1,0 +1,127 @@
+---
+import { categories, skills } from '../data/skills';
+const filters = ['All', ...categories];
+---
+
+<section class="section skills" aria-labelledby="skills-heading">
+  <div class="section__inner">
+    <div class="reveal">
+      <h2 id="skills-heading" class="section__heading">TECHNOLOGY</h2>
+      <p class="section__body">
+        Below are some of the technologies I've learnt to use. My core strengths are CSS, JavaScript and React.
+      </p>
+    </div>
+
+    <!-- The filter is plain radio buttons styled as pills; CSS :has() does the
+         filtering, so it works with no JavaScript at all. -->
+    <fieldset class="filters reveal">
+      <legend class="visually-hidden">Show technologies for</legend>
+      {filters.map((f, i) => (
+        <label class="filter">
+          <input type="radio" name="skill-filter" value={f} checked={i === 0} />
+          <span>{f}</span>
+        </label>
+      ))}
+    </fieldset>
+
+    <ul class="grid reveal" role="list">
+      {skills.map((s) => (
+        <li class="skill" data-category={s.category}>
+          <img src={`/images/icons/${s.icon}.svg`} alt="" width="40" height="40" loading="lazy" />
+          <span>{s.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .skills {
+    background: var(--bluewood);
+  }
+
+  .section__body {
+    margin-bottom: 40px;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px 20px;
+    margin: 0 0 30px;
+    padding: 0;
+    border: 0;
+  }
+
+  .filter input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .filter span {
+    display: inline-block;
+    padding: 8px 20px;
+    border: 1px solid #9ba4c4;
+    border-radius: 20px;
+    color: #a3acca;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .filter:hover span,
+  .filter input:checked + span {
+    border-color: #bbc8f3;
+    color: #bbc8f3;
+  }
+
+  .filter input:focus-visible + span {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .skill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 15px;
+    color: #fff;
+    font-size: 15px;
+  }
+
+  @media (min-width: 768px) {
+    .skill {
+      padding: 20px;
+    }
+  }
+
+  .skill img {
+    height: 30px;
+    width: auto;
+    filter: saturate(0) brightness(1.5);
+  }
+
+  @media (min-width: 768px) {
+    .skill img {
+      height: 40px;
+    }
+  }
+
+  .skills:has(input[value='Frontend']:checked) .skill:not([data-category='Frontend']),
+  .skills:has(input[value='Backend']:checked) .skill:not([data-category='Backend']),
+  .skills:has(input[value='Tools']:checked) .skill:not([data-category='Tools']) {
+    display: none;
+  }
+</style>

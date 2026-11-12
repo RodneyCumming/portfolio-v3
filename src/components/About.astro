@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import cup from '../assets/cup.png';
+---
+
+<section class="section about" aria-labelledby="about-heading">
+  <div class="section__inner about__inner">
+    <div class="about__text reveal">
+      <h2 id="about-heading" class="section__heading">ABOUT ME</h2>
+      <p class="section__body">
+        Hey there, I'm Rodney. I'm passionate about modern web development. I love learning about the latest
+        technologies and applying them to my projects.
+      </p>
+    </div>
+    <div class="about__cups reveal" aria-hidden="true">
+      {Array.from({ length: 9 }, () => <Image src={cup} alt="" width={71} height={75} loading="lazy" />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    background: var(--ebony-clay);
+  }
+
+  .about__inner {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .about__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .about__cups {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    gap: 30px;
+    margin-top: 4rem;
+  }
+
+  .about__cups img {
+    height: 40px;
+    width: auto;
+  }
+
+  @media (min-width: 481px) {
+    .about__cups img {
+      height: 60px;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .about__text,
+    .about__cups {
+      flex: 1 1 0;
+    }
+    .about__inner {
+      flex-direction: row;
+      gap: 10vw;
+      align-items: center;
+    }
+    .about__text .section__heading,
+    .about__text .section__body {
+      text-align: left;
+    }
+    .about__cups {
+      margin-top: 0;
+      align-content: center;
+    }
+    .about__cups img {
+      height: 70px;
+    }
+  }
+</style>

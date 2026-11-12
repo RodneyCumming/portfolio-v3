@@ -1,0 +1,89 @@
+---
+interface Props {
+  heading: string;
+  body: string;
+  button: { label: string; href: string };
+  background: string;
+  buttonColour: string;
+  buttonHover: string;
+}
+const { heading, body, button, background, buttonColour, buttonHover } = Astro.props;
+const external = button.href.startsWith('http');
+---
+
+<section class="header" style={`--bg: ${background}; --btn: ${buttonColour}; --btn-hover: ${buttonHover}`}>
+  <div class="header__inner">
+    <h1 class="faceted">{heading}</h1>
+    <p>{body}</p>
+    <a class="cta" href={button.href} {...(external ? { rel: 'noopener' } : {})}>{button.label}</a>
+  </div>
+</section>
+
+<style>
+  .header {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 150px 20px 100px;
+  }
+
+  @media (min-width: 1025px) {
+    .header {
+      min-height: min(100svh, 1000px);
+      padding: 100px 20px;
+    }
+  }
+
+  .header__inner {
+    max-width: 1200px;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0 0 20px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(64px, 18vw, 150px);
+    line-height: 1;
+    letter-spacing: 3px;
+  }
+
+  p {
+    color: var(--nobel);
+    font-size: 22px;
+    line-height: 1.6em;
+  }
+
+  .cta {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 15px 100px;
+    border-radius: 10px;
+    background: var(--btn);
+    color: #fff;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .cta:hover {
+    background: var(--btn-hover) url('/images/button-bg.svg') center / cover;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    h1 {
+      animation: unblur 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+  }
+
+  /* The 2020 site brought these headings in from a blur */
+  @keyframes unblur {
+    from {
+      filter: blur(20px);
+      opacity: 0;
+    }
+  }
+</style>

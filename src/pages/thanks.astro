@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+
+<Base title="Message sent - Rodney Cumming">
+  <meta slot="head" name="robots" content="noindex" />
+  <PageHeader
+    heading="THANKS"
+    body="Your message is on its way. I'll get back to you as soon as possible."
+    button={{ label: 'BACK HOME', href: '/' }}
+    background="var(--light-mirage)"
+    buttonColour="var(--calypso)"
+    buttonHover="var(--curious-blue)"
+  />
+</Base>

@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ContactDetails from '../components/ContactDetails.astro';
+---
+
+<Base title="Contact - Rodney Cumming" description="Get in touch with Rodney Cumming by message, phone or email.">
+  <PageHeader
+    heading="CONTACT"
+    body="If you think we could work together in some capacity, or just want to reach out, get in touch and I will get back to you as soon as possible."
+    button={{ label: 'EMAIL', href: '#message' }}
+    background="var(--light-mirage)"
+    buttonColour="#1d6a72"
+    buttonHover="#23858f"
+  />
+  <ContactForm />
+  <ContactDetails heading="CALL OR EMAIL" background="var(--bluewood)" />
+</Base>

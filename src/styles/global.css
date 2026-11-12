@@ -1,0 +1,179 @@
+@import '@fontsource/lato/latin-400.css';
+@import '@fontsource/lato/latin-700.css';
+
+/* The condensed face is subset to the characters the site uses (8 KB) */
+@font-face {
+  font-family: 'HN Condensed';
+  src: url('/fonts/hn-condensed-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* Colours carried over from the 2020 site */
+  --cloud-burst: #203244;
+  --light-mirage: #192835;
+  --mirage: #1a2835;
+  --dark-mirage: #1a212f;
+  --ebony-clay: #222838;
+  --bluewood: #2c344e;
+  --calypso: #2c5f88;
+  --curious-blue: #3495d9;
+  --east-bay: #3b4873;
+  --kashmir-blue: #495c9a;
+  --jagged-ice: #cbe0ec;
+  --blue-haze: #bbc3da;
+  --pigeon-post: #b4c4d8;
+  --fountain-blue: #67a6be;
+  --nobel: #b5b5b5;
+  --alto: #d3d3d3;
+  --cyan: #00d7ff;
+
+  --font-display: 'HN Condensed', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: Lato, 'Helvetica Neue', Arial, sans-serif;
+  --nav-height: 60px;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ebony-clay);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ebony-clay);
+  color: var(--alto);
+  font-family: var(--font-body);
+  /* Layers 3000px wide hang off both sides; clip without making a scroller */
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+img,
+svg {
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* Native cross-page transitions: no router script needed */
+@view-transition {
+  navigation: auto;
+}
+
+/* Shared section layout, as in the old styled-components */
+.section {
+  position: relative;
+  z-index: 1;
+}
+
+.section__inner {
+  /* 70% of the width, as before, but never narrower than the phone allows */
+  width: min(1100px, max(70vw, 100% - 48px));
+  margin: auto;
+  padding: 100px 0;
+}
+
+@media (min-width: 1025px) {
+  .section__inner {
+    padding: 200px 0;
+  }
+}
+
+.section__heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 12vw, 70px);
+  line-height: 1;
+  color: var(--blue-haze);
+  text-align: center;
+}
+
+@media (min-width: 1025px) {
+  .section__heading {
+    font-size: 100px;
+  }
+}
+
+.section__body {
+  margin-top: 30px;
+  font-size: 18px;
+  line-height: 2em;
+  color: var(--nobel);
+  text-align: center;
+}
+
+.button {
+  display: inline-block;
+  padding: 16px 50px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: #fff;
+  text-decoration: none;
+  background: var(--east-bay);
+  transition: background 0.2s;
+}
+
+.button:hover {
+  background: var(--kashmir-blue);
+}
+
+/* Faceted headings use the low-poly texture clipped to the letters */
+.faceted {
+  background-image: url('/images/text-bg.svg');
+  background-size: cover;
+  background-position: center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Content rises in as it enters the viewport. Where scroll-driven animation
+   is unsupported, or motion is reduced, everything simply shows. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

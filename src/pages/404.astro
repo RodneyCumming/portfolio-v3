@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+
+<Base title="Page not found - Rodney Cumming">
+  <meta slot="head" name="robots" content="noindex" />
+  <PageHeader
+    heading="LOST?"
+    body="That page doesn't exist. The way back is below."
+    button={{ label: 'HOME', href: '/' }}
+    background="var(--mirage)"
+    buttonColour="var(--calypso)"
+    buttonHover="var(--curious-blue)"
+  />
+</Base>

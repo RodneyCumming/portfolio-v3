@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import stack from '../assets/portfolioImage.png';
+---
+
+<section class="section teaser" aria-labelledby="teaser-heading">
+  <div class="section__inner teaser__inner">
+    <div class="teaser__image reveal">
+      <Image src={stack} alt="" width={200} loading="lazy" />
+    </div>
+    <div class="teaser__text reveal">
+      <h2 id="teaser-heading" class="section__heading">PORTFOLIO</h2>
+      <p class="section__body">Check out my portfolio to see some of the projects I have built.</p>
+      <a class="button" href="/portfolio">PORTFOLIO</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .teaser {
+    background: var(--ebony-clay);
+  }
+
+  .teaser__inner {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .teaser__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .teaser__image img {
+    width: 70%;
+    max-width: 200px;
+    height: auto;
+  }
+
+  .teaser__text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button {
+    margin-top: 40px;
+  }
+
+  @media (min-width: 1025px) {
+    .teaser__inner {
+      flex-direction: row;
+      gap: 10vw;
+    }
+    .teaser__image {
+      width: 35%;
+      margin-top: 0;
+    }
+    .teaser__text {
+      width: 65%;
+      align-items: flex-start;
+    }
+    .teaser__text .section__heading,
+    .teaser__text .section__body {
+      text-align: left;
+    }
+  }
+</style>
