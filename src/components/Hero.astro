@@ -16,7 +16,7 @@ import mountainsBack from '../assets/mountains-back.png';
     <div class="sky__box">
       <div class="heading">
         <img class="cloud cloud--right" src="/images/cloud.svg" alt="" width="222" height="55" />
-        <div class="name-wrap"><h1 id="hero-name" class="name">RODNEY CUMMING</h1></div>
+        <div class="name-wrap"><h1 id="hero-name" class="name" data-text="RODNEY CUMMING">RODNEY CUMMING</h1></div>
         <p class="role">Developer</p>
         <img class="cloud cloud--left" src="/images/cloud.svg" alt="" width="222" height="55" />
       </div>
@@ -139,6 +139,35 @@ import mountainsBack from '../assets/mountains-back.png';
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    position: relative;
+  }
+
+  /* Two more copies of the facet pattern, clipped to the same letters at other
+     scales and blend modes. As they move against each other the triangles
+     merge and re-form, so the pattern changes instead of just sliding. */
+  .name::before,
+  .name::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/hero-text-bg-static.svg');
+    background-position: center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    pointer-events: none;
+  }
+
+  .name::before {
+    background-size: 340px;
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+  }
+
+  .name::after {
+    background-size: 760px;
+    mix-blend-mode: screen;
+    opacity: 0.45;
   }
 
   .role {
@@ -220,24 +249,79 @@ import mountainsBack from '../assets/mountains-back.png';
     }
   }
 
-  /* The facets inside the name slide diagonally as you scroll, as if the light
-     is moving across them. Scroll-driven, so it tracks the scrollbar exactly. */
+  /* Each facet layer wanders its own zig-zag path and changes scale as you
+     scroll, tied to the scrollbar, so the pattern shifts unpredictably. */
   @supports (animation-timeline: scroll()) {
     @media (prefers-reduced-motion: no-preference) {
       .name {
-        animation: facets linear both;
+        animation: facets-a linear both;
       }
-      /* Separate rule so the minifier can't fold the timeline into the shorthand */
-      .heading .name {
+      .name::before {
+        animation: facets-b linear both;
+      }
+      .name::after {
+        animation: facets-c linear both;
+      }
+      /* Separate rules so the minifier can't fold the timeline into the shorthand */
+      .heading .name,
+      .heading .name::before,
+      .heading .name::after {
         animation-timeline: scroll(root block);
         animation-range: 0 700px;
       }
     }
   }
 
-  @keyframes facets {
-    to {
-      background-position: calc(50% - 320px) calc(50% + 140px);
+  @keyframes facets-a {
+    25% {
+      background-position: calc(50% - 120px) calc(50% + 40px);
+      background-size: 540px;
+    }
+    55% {
+      background-position: calc(50% + 70px) calc(50% + 110px);
+      background-size: 470px;
+    }
+    80% {
+      background-position: calc(50% - 200px) calc(50% + 30px);
+      background-size: 560px;
+    }
+    100% {
+      background-position: calc(50% - 90px) calc(50% + 160px);
+      background-size: 500px;
+    }
+  }
+
+  @keyframes facets-b {
+    20% {
+      background-position: calc(50% + 150px) calc(50% - 60px);
+      background-size: 400px;
+    }
+    50% {
+      background-position: calc(50% - 80px) calc(50% + 90px);
+      background-size: 300px;
+    }
+    75% {
+      background-position: calc(50% + 210px) calc(50% + 20px);
+      background-size: 380px;
+    }
+    100% {
+      background-position: calc(50% + 40px) calc(50% - 140px);
+      background-size: 330px;
+    }
+  }
+
+  @keyframes facets-c {
+    30% {
+      background-position: calc(50% - 60px) calc(50% - 120px);
+      background-size: 680px;
+    }
+    60% {
+      background-position: calc(50% + 180px) calc(50% + 60px);
+      background-size: 820px;
+    }
+    100% {
+      background-position: calc(50% - 150px) calc(50% + 200px);
+      background-size: 720px;
     }
   }
 
