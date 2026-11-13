@@ -9,6 +9,11 @@ Cells are 80x56, paws on the floor. Frame order (Fox.astro relies on it):
     2  sit, tail flick 6-21 gallop x16   24 land                27 sleep, breathe in
     3  sit, ear twitch
 
+    (indices since grown: see the comments where cells are appended; 38
+    settle, 39 look up, 40-44 curled up awake: head up, blink, look back,
+    look up, half up; 45-54 in-betweens for the nap; 55-63 in-betweens for
+    the backflip)
+
 The sitting fox follows Rodney's reference (big clean facets, cream chest,
 plum shadows). Moving poses reuse the same head on a rigged body: a shoulder
 and hip that move per frame so the back gathers and stretches, two-segment
@@ -237,8 +242,11 @@ def moving(F, R, head_dy, tail_deg, legs, head_tilt=0, blink=False, lift_max=10,
 
 
 # ---------------------------------------------------------------- sleeping fox
-def sleep_frame(breathe=0.0):
-    """Curled up nose-to-tail. breathe 0..1 swells the body slightly."""
+def sleep_frame(breathe=0.0, head=None):
+    """Curled up nose-to-tail. breathe 0..1 swells the body slightly.
+    head None rests it on the tail, asleep; otherwise a dict lifts it:
+    up 0..1 (how far), tilt (degrees), blink, turn (1 looking ahead, -1
+    looking back over the tail; in between the head swings round)."""
     cx, cy = 400, 318
     rx, ry = 220, 92 + 7 * breathe
     out = []
@@ -264,9 +272,26 @@ def sleep_frame(breathe=0.0):
         poly([(cx - 210, cy + 62), (cx - 250, cy + 38), (cx - 130, cy + 36)], '#fbe6c4'),
         poly([(cx - 210, cy + 62), (cx - 250, cy + 38), (cx - 262, cy + 64)], '#f1caa0'),
     ]
-    # head resting on the tail, eyes closed, tipped down
-    head = sit_head((cx - 70, cy + 14), 0.74, tilt=14, blink=True)
-    out += [poly(p, c) for p, c in head]
+    if head is None:
+        # head resting on the tail, eyes closed, tipped down
+        hd = sit_head((cx - 70, cy + 14), 0.74, tilt=14, blink=True)
+    else:
+        # head lifted off the tail on its neck, awake
+        up = head.get('up', 1)
+        anchor = (cx - 70 + 26 * up, cy + 14 - 74 * up)
+        tilt = 14 + (head.get('tilt', -4) - 14) * up
+        hd = sit_head(anchor, 0.74, tilt=tilt, blink=head.get('blink', False))
+        turn = head.get('turn', 1)
+        if turn != 1:
+            # turning to look back over the tail: the head narrows as it swings
+            # round, then the same head faces the other way (mirrored)
+            pivot = anchor[0] + 30
+            hd = [([(pivot + (x - pivot) * turn, y) for x, y in pts], c) for pts, c in hd]
+        # the neck, so the head isn't floating
+        out.append(poly([(cx - 96, cy + 20), (anchor[0] - 10, anchor[1] + 6), (anchor[0] + 52, anchor[1] + 24),
+                         (cx + 6, cy + 10)], '#f08a2e'))
+        out.append(poly([(cx - 96, cy + 20), (anchor[0] - 10, anchor[1] + 6), (cx - 60, cy + 36)], '#fbe6c4'))
+    out += [poly(p, c) for p, c in hd]
     return out
 
 
@@ -328,6 +353,67 @@ settle = moving((250, 246), (492, 300), -14, 8, dict(fn=(2, -2), ff=(6, 2), hn=(
 cells.append(run_cell(len(cells), *settle))
 # Look: sitting, head tipped up (watching the birds)
 cells.append(sit_cell(len(cells), sit_frame(look=-14)))
+# Curled up but awake (40-44): head up, blink, looking back over the tail,
+# looking up, and half up (lifting or lowering it)
+cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=1))))
+cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=1, blink=True))))
+cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=1, turn=-1))))
+cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=1, tilt=-16))))
+cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=0.45, blink=True))))
+# In-betweens for a smooth nap (45-54): lifting the head (45, 46 eyes still
+# shut; 47, 48 open), swinging it round to look back (49, 50), tipping it up
+# (51, 52), and two more breaths between sleep and breathe-in (53, 54)
+for up, blink in ((0.15, True), (0.3, True), (0.65, False), (0.85, False)):
+    cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=up, blink=blink))))
+for turn in (0.45, -0.45):
+    cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=1, turn=turn))))
+for tilt in (-8, -12):
+    cells.append(run_cell(len(cells), 0, sleep_frame(0, dict(up=1, tilt=tilt))))
+for b in (0.33, 0.66):
+    cells.append(run_cell(len(cells), 0, sleep_frame(b)))
+
+# In-betweens for the backflip (55-63), blended from the jump poses above so
+# the body moves smoothly between them: stand>crouch (55), crouch>push (56),
+# push>leap (57), leap>tuck (58, 59), tuck>reach (60, 61), reach>land (62),
+# land>stand (63)
+JUMP = dict(
+    stand=(dict(F=(248, 252), R=(508, 250), head_dy=-10, tail_deg=-10,
+                legs=dict(fn=(2, -2), ff=(6, 2), hn=(-6, -40), hf=(-2, -36)), head_tilt=-4), 0),
+    crouch=(dict(F=(262, 290), R=(488, 286), head_dy=10, tail_deg=-2,
+                 legs=dict(fn=(-6, -4), ff=(4, 2), hn=(-30, -64), hf=(-24, -60))), 0),
+    push=(dict(F=(238, 256), R=(514, 266), head_dy=-8, tail_deg=-10,
+               legs=dict(fn=(-40, 20), ff=(-34, 30), hn=(38, 30), hf=(30, 22)), head_tilt=-8, lift_max=0), -8),
+    leap=(dict(F=(222, 250), R=(540, 250), head_dy=-6, tail_deg=-14,
+               legs=dict(fn=(-62, -70), ff=(-50, -56), hn=(62, 40), hf=(54, 30)), head_tilt=-6), -30),
+    tuck=(dict(F=(246, 250), R=(500, 250), head_dy=-4, tail_deg=-18,
+               legs=dict(fn=(34, 96), ff=(42, 104), hn=(-34, -96), hf=(-26, -88)), lift_max=0), -28),
+    reach=(dict(F=(236, 262), R=(510, 246), head_dy=4, tail_deg=-12,
+                legs=dict(fn=(-24, -16), ff=(-14, -6), hn=(-20, -70), hf=(-12, -62)), head_tilt=4, lift_max=0), -10),
+    land=(dict(F=(244, 272), R=(514, 250), head_dy=12, tail_deg=-4,
+               legs=dict(fn=(-14, -10), ff=(-4, -2), hn=(40, 4), hf=(30, -6)), head_tilt=8), 0),
+)
+
+
+def blend(a, b, k):
+    """A pose part way (k) from jump pose a to b."""
+    (pa, da), (pb, db) = JUMP[a], JUMP[b]
+    mix = lambda x, y: x + (y - x) * k
+    out = dict(
+        F=(mix(pa['F'][0], pb['F'][0]), mix(pa['F'][1], pb['F'][1])),
+        R=(mix(pa['R'][0], pb['R'][0]), mix(pa['R'][1], pb['R'][1])),
+        head_dy=mix(pa['head_dy'], pb['head_dy']), tail_deg=mix(pa['tail_deg'], pb['tail_deg']),
+        legs={key: (mix(pa['legs'][key][0], pb['legs'][key][0]), mix(pa['legs'][key][1], pb['legs'][key][1]))
+              for key in pa['legs']},
+        head_tilt=mix(pa.get('head_tilt', 0), pb.get('head_tilt', 0)),
+        lift_max=mix(pa.get('lift_max', 10), pb.get('lift_max', 10)))
+    dy, parts = moving(**out)
+    return dy + mix(da, db), parts
+
+
+for a, b, k in (('stand', 'crouch', 0.5), ('crouch', 'push', 0.5), ('push', 'leap', 0.5),
+                ('leap', 'tuck', 0.33), ('leap', 'tuck', 0.66), ('tuck', 'reach', 0.33), ('tuck', 'reach', 0.66),
+                ('reach', 'land', 0.5), ('land', 'stand', 0.5)):
+    cells.append(run_cell(len(cells), *blend(a, b, k)))
 
 N = len(cells)
 W = CELL_W * N

@@ -20,3 +20,19 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+# The site is one page now: old pages go to their sections
+[[redirects]]
+  from = "/portfolio"
+  to = "/#portfolio"
+  status = 301
+
+[[redirects]]
+  from = "/contact"
+  to = "/#contact"
+  status = 301
+
+[[redirects]]
+  from = "/thanks"
+  to = "/"
+  status = 301

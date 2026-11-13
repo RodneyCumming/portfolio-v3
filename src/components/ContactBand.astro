@@ -3,20 +3,14 @@ import Odo from './Odo.astro';
 import { siGithub } from 'simple-icons';
 const email = 'rodneycumming@gmail.com';
 const github = 'https://github.com/RodneyCumming';
-interface Props {
-  /** Section number shown in the eyebrow (the home page numbers its sections) */
-  number?: string;
-  heading?: string;
-}
-const { number = '04', heading = 'CONTACT' } = Astro.props;
 ---
 
 <section class="section contact" aria-labelledby="contact-heading" id="contact">
   <div class="section__inner">
     <div class="band" data-live>
       <div class="band__main">
-        <p class="eyebrow" data-live>{number && <><Odo value={number} />&nbsp; </>}Contact</p>
-        <h2 id="contact-heading" class="section__heading is-left"><span class="heading-text">{heading}</span></h2>
+        <p class="eyebrow" data-live><Odo value="04" />&nbsp; Contact</p>
+        <h2 id="contact-heading" class="section__heading is-left"><span class="heading-text">CONTACT</span></h2>
         <p class="sub">Working on something interesting? <em>Let's talk.</em></p>
         <div class="mail">
           <svg class="mail__icon draw" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="--dd: 0.4s"><rect x="2" y="4" width="20" height="16" rx="2" pathLength="1"></rect><path d="m22 6-10 7L2 6" pathLength="1"></path></svg>

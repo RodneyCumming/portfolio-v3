@@ -1,6 +1,15 @@
 ---
 import { Picture } from 'astro:assets';
 import mountainsBack from '../assets/mountains-back.png';
+
+// Three gulls crossing the sky: a pair, and one further off on its own.
+// --c is the length of one flap-and-glide cycle; the negative delays keep
+// them out of step with each other.
+const gulls = [
+  { y: 112, d: 38, delay: -6, s: 0.9, c: 3.4, cd: -0.2 },
+  { y: 142, d: 40, delay: -8, s: 0.72, c: 3.9, cd: -1.7 },
+  { y: 196, d: 58, delay: -30, s: 0.55, c: 4.6, cd: -2.9 },
+];
 ---
 
 <!--
@@ -14,11 +23,42 @@ import mountainsBack from '../assets/mountains-back.png';
 <section class="hero" aria-labelledby="hero-name">
   <div class="layer sky" style="--lag: 0.75">
     <div class="sky__box">
-      <!-- A few birds crossing the sky: a pair, and one on its own -->
-      <div class="birds" aria-hidden="true">
-        <span class="bird" style="--y: 118px; --d: 34s; --delay: -6s; --s: 0.9; --flap: 0.55s"><i></i></span>
-        <span class="bird" style="--y: 146px; --d: 36s; --delay: -8s; --s: 0.7; --flap: 0.48s"><i></i></span>
-        <span class="bird" style="--y: 196px; --d: 52s; --delay: -30s; --s: 0.55; --flap: 0.44s"><i></i></span>
+      <!-- Gulls crossing the sky, side on, in the original faceted style.
+           Two animated numbers drive the wings: --a lifts the inner wing
+           (shoulder to wrist), --b the outer wing, a beat behind. Each
+           moving facet is the same triangle as the old sprite frames, placed
+           by a transform built from those numbers, so the wingbeat is smooth
+           at the screen's refresh rate instead of stepping through frames. -->
+      <div class="birds" aria-hidden="true" data-live>
+        {gulls.map((g) => (
+          <span class="bird" style={`--y: ${g.y}px; --d: ${g.d}s; --delay: ${g.delay}s; --s: ${g.s}`}>
+            <svg class="gull loop" viewBox="0 0 48 44" width="48" height="44" style={`--c: ${g.c}s; --cd: ${g.cd}s`}>
+              <g class="gull__body">
+                <!-- far wing: a greyer, shorter echo behind the body -->
+                <g transform="translate(21 22)">
+                  <polygon class="f-in" points="0,0 3,-8 7,0" fill="#b3bec8" />
+                  <polygon class="f-trail" points="0,0 1,0 0,1" fill="#b3bec8" />
+                </g>
+                <!-- beak, head, back, belly, tail -->
+                <polygon points="3,23 8,21 8,24" fill="#aab6c1" />
+                <polygon points="8,21 14,19 15,24 8,24" fill="#ffffff" />
+                <polygon points="14,19 30,21 15,24" fill="#f3f6f8" />
+                <polygon points="15,24 30,21 28,25" fill="#dfe6eb" />
+                <polygon points="28,21 42,18 39,23 29,25" fill="#eaeff2" />
+                <!-- near wing: trailing edge, inner panel, then the outer
+                     panel riding on the wrist -->
+                <g transform="translate(21 22)">
+                  <polygon class="w-trail" points="0,0 1,0 0,1" fill="#c9d2da" />
+                  <polygon class="w-in" points="0,0 3,-10 8,0" fill="#dbe2e8" />
+                  <g class="w-out">
+                    <polygon points="0,0 8,-11 11,-2" fill="#c3ccd4" />
+                    <polygon points="5.6,-7.7 8,-11 8.9,-6.9" fill="#949fa9" />
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </span>
+        ))}
       </div>
       <div class="heading">
         <img class="cloud cloud--right" src="/images/cloud.svg" alt="" width="222" height="55" />
@@ -152,11 +192,39 @@ import mountainsBack from '../assets/mountains-back.png';
     translate: calc(101vw + 60px) 0;
   }
 
-  .bird i {
+  .gull {
     display: block;
-    width: 100%;
-    height: 100%;
-    background: url('/images/bird-sprite.svg') 0 0 / 384px 44px no-repeat;
+    overflow: visible;
+    --a: -0.3;
+    --b: -0.4;
+  }
+
+  /* Inner wing: the wrist sits 10 up from the shoulder at --a 1, 10 down
+     at -1 (the same geometry as the old sprite, narrower and swept back). The outer wing hangs off the wrist and scales by --b. The
+     trailing facets join moving points, so each is a unit triangle mapped
+     onto its three corners with a matrix. */
+  .w-in {
+    transform: scaleY(var(--a));
+  }
+
+  .w-out {
+    transform: translate(3px, calc(var(--a) * -10px)) scaleY(var(--b));
+  }
+
+  .w-trail {
+    transform: matrix(11, calc(var(--b) * -2), 5, calc(var(--a) * 10), 3, calc(var(--a) * -10));
+  }
+
+  .f-in {
+    transform: scaleY(var(--a));
+  }
+
+  .f-trail {
+    transform: matrix(3, calc(var(--b) * -8), 4, calc(var(--a) * 8), 3, calc(var(--a) * -8));
+  }
+
+  .gull__body {
+    transform-origin: 22px 22px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -165,8 +233,13 @@ import mountainsBack from '../assets/mountains-back.png';
         fly var(--d) linear var(--delay) infinite,
         glide 5s ease-in-out var(--delay) infinite alternate;
     }
-    .bird i {
-      animation: flap var(--flap) steps(8) infinite;
+    .gull {
+      animation:
+        wing-in var(--c) ease-in-out var(--cd) infinite,
+        wing-out var(--c) ease-in-out var(--cd) infinite;
+    }
+    .gull__body {
+      animation: gull-bob var(--c) ease-in-out var(--cd) infinite;
     }
   }
 
@@ -192,10 +265,57 @@ import mountainsBack from '../assets/mountains-back.png';
     }
   }
 
-  @keyframes flap {
-    to {
-      background-position: -384px 0;
-    }
+  @property --a {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: -0.3;
+  }
+
+  @property --b {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: -0.4;
+  }
+
+  /* One cycle: three slow, deep beats, then a long glide with the wings
+     held out, a little below the body (seen from below). 1 is fully up, -1 fully down. The outer wing runs
+     a beat behind the inner one, so the wing bends and whips. The easing
+     applies to each step. */
+  @keyframes wing-in {
+    0%, 100% { --a: -0.3; }
+    6% { --a: 1; }
+    13% { --a: -0.85; }
+    20% { --a: 1; }
+    27% { --a: -0.85; }
+    34% { --a: 1; }
+    41% { --a: -0.85; }
+    50% { --a: -0.3; }
+    75% { --a: -0.24; }
+  }
+
+  @keyframes wing-out {
+    0%, 100% { --b: -0.4; }
+    3% { --b: -0.45; }
+    9% { --b: 1; }
+    16% { --b: -0.7; }
+    23% { --b: 1; }
+    30% { --b: -0.7; }
+    37% { --b: 1; }
+    44% { --b: -0.7; }
+    54% { --b: -0.45; }
+    78% { --b: -0.34; }
+  }
+
+  /* The body lifts on each downstroke; in the glide it sinks a little and
+     noses down, until the next beats lift it again */
+  @keyframes gull-bob {
+    0%, 100% { transform: translateY(1.6px) rotate(-3deg); }
+    9.5% { transform: translateY(-0.6px) rotate(0deg); }
+    16.5% { transform: translateY(1px) rotate(0deg); }
+    23.5% { transform: translateY(-1.2px) rotate(0deg); }
+    30.5% { transform: translateY(0.4px) rotate(0deg); }
+    37.5% { transform: translateY(-1.6px) rotate(0deg); }
+    50% { transform: translateY(-1.2px) rotate(0deg); }
   }
 
   .heading {

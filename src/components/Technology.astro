@@ -27,7 +27,7 @@ const groups: { id: string; name: string; note: string; tools: Tool[] }[] = [
   {
     id: 'Frontend',
     name: 'Frontend',
-    note: "What I've worked with most.",
+    note: 'What I use most.',
     tools: [
       { label: 'React', icon: siReact, core: true },
       { label: 'Next.js', icon: siNextdotjs, core: true },
@@ -40,7 +40,7 @@ const groups: { id: string; name: string; note: string; tools: Tool[] }[] = [
   {
     id: 'Backend',
     name: 'Backend & data',
-    note: 'The server side of my products.',
+    note: 'For my own projects.',
     tools: [
       { label: 'Node.js', icon: siNodedotjs },
       { label: 'Supabase', icon: siSupabase },
@@ -52,7 +52,7 @@ const groups: { id: string; name: string; note: string; tools: Tool[] }[] = [
   {
     id: 'Mobile',
     name: 'Mobile',
-    note: 'React on phones, and native.',
+    note: 'For apps on phones.',
     tools: [
       { label: 'Capacitor', icon: siCapacitor },
       { label: 'Ionic', icon: siIonic },
@@ -63,7 +63,7 @@ const groups: { id: string; name: string; note: string; tools: Tool[] }[] = [
   {
     id: 'Tools',
     name: 'Tools',
-    note: 'Building, testing and shipping.',
+    note: 'Everything else.',
     tools: [
       { label: 'Vite', icon: siVite },
       { label: 'Jest', icon: siJest },
@@ -79,9 +79,9 @@ const filters = ['All', ...groups.map((g) => g.id)];
   <div class="section__inner">
     <div class="head-row">
       <div>
-        <p class="eyebrow" data-live><Odo value="02" />&nbsp; Technology</p>
+        <p class="eyebrow" data-live><Odo value="03" />&nbsp; Technology</p>
         <h2 id="tech-heading" class="section__heading is-left"><span class="heading-text">TECHNOLOGY</span></h2>
-        <p class="sub">React at the centre, <em>everything around it.</em></p>
+        <p class="sub">What I use, <em>day to day.</em></p>
       </div>
       <!-- Plain radio buttons; CSS :has() does the filtering, no JavaScript -->
       <fieldset class="seg">
@@ -140,7 +140,7 @@ const filters = ['All', ...groups.map((g) => g.id)];
 
 <style>
   .tech {
-    background: var(--bluewood);
+    background: var(--ebony-clay);
   }
 
   .seg {

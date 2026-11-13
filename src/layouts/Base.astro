@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css';
-import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props {
@@ -10,9 +9,10 @@ interface Props {
 
 const {
   title = 'Rodney Cumming - Developer',
-  description = 'Rodney Cumming is a developer in New Zealand who designs, builds and runs his own web products.',
+  description = "I'm Rodney Cumming, a frontend developer in New Zealand. This is my personal site, with a few things I've made.",
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+// The build writes index.html and 404.html; the live URLs have no .html
+const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), Astro.site);
 ---
 
 <!doctype html>
@@ -46,17 +46,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         }
       } catch (e) {}
     </script>
-    <!-- Old links used #/portfolio and #/contact: send them to the real pages -->
+    <!-- Old links used #/portfolio and #/contact: send them to those sections -->
     <script is:inline>
       if (location.hash.startsWith('#/')) {
         var p = location.hash.slice(1);
-        if (p === '/portfolio' || p === '/contact') location.replace(p);
+        if (p === '/portfolio' || p === '/contact') location.replace('/#' + p.slice(1));
       }
     </script>
   </head>
   <body>
     <div class="progress" aria-hidden="true"></div>
-    <Nav />
     <main>
       <slot />
     </main>

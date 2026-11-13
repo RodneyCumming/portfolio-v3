@@ -341,6 +341,10 @@ a {
     main .section__heading.is-left .heading-text {
       animation-timeline: view();
       animation-range: entry 10% cover 30%;
+      /* Its own layer, drawn once and slid: without it the letters were
+         redrawn at a new subpixel offset each frame inside the heading's
+         blur, and fine shapes like the M's inner V shimmered on scroll */
+      will-change: transform;
     }
   }
 }

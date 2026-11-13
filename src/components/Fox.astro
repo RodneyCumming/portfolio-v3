@@ -5,8 +5,14 @@
   and as you scroll he runs and leaps from one to the next, only ever moving
   along real surfaces: the ground at the foot of the mountains, the tops of
   headings, coffee cups, filter pills and icons, and the edges between
-  sections. He rests on each perch (blinking, flicking his tail) and ends the
-  page curled up asleep on the email icon.
+  sections. He rests on each perch (blinking, flicking his tail).
+
+  In Technology he sits on top of the filter bar and every few seconds does a
+  backflip (now and then a double).
+
+  In Contact he's curled up asleep on top of the email box. Every so often he
+  lifts his head, looks around (ahead, back over his tail, up), blinks and
+  goes back to sleep.
 
   Frames come from public/images/fox-sprite.svg (order listed in
   scripts/fox/fox.py). Running frames advance with the distance he covers, so
@@ -28,6 +34,18 @@
     var SIT = 0, BLINK = 1, FLICK = 2, EAR = 3, STAND = 4, CROUCH = 5, GALLOP = 6;
     var GALLOP_N = 24, PUSH = 30, LEAP = 31, TUCK = 32, REACH = 33, LAND = 34, LIE = 35, SLEEP = 36, BREATHE = 37;
     var SETTLE = 38, LOOK = 39;
+    var CURL_UP = 40, CURL_BLINK = 41, CURL_BACK = 42, CURL_SKY = 43, CURL_HALF = 44;
+    // In-betweens: lifting the head (eyes shut, then open), turning it,
+    // tipping it up, and breathing
+    var LIFT = [45, 46, 44, 47, 48], TURN = [49, 50], TIP = [51, 52], BREATH = [36, 53, 54, 37];
+    // In-betweens for the backflip, blended from the jump poses
+    var STAND_CROUCH = 55, CROUCH_PUSH = 56, PUSH_LEAP = 57, LEAP_TUCK = [58, 59], TUCK_REACH = [60, 61];
+    var REACH_LAND = 62, LAND_STAND = 63;
+    // The body's poses through the air, in step with the turn: [until t, frame]
+    var AIR = [
+      [0.06, PUSH], [0.12, PUSH_LEAP], [0.2, LEAP], [0.26, LEAP_TUCK[0]], [0.32, LEAP_TUCK[1]],
+      [0.66, TUCK], [0.72, TUCK_REACH[0]], [0.78, TUCK_REACH[1]], [0.92, REACH], [1.01, REACH_LAND]
+    ];
     var STRIDE = 4.7; // px per gallop frame; 24 frames make a ~112px stride
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -101,6 +119,24 @@
       a run (along a surface), a hop (short jump) or a leap (long jump).
     */
     var legs, perches, stops;
+    // Spots further down the page where he stays put and does something:
+    // backflips in Technology, a nap in Contact. inSpot names the one he's at.
+    var spots = {}, inSpot = '';
+    function steps(frames, ms) {
+      return frames.map(function (f) {
+        return [f, ms];
+      });
+    }
+    function back(frames) {
+      return frames.slice().reverse();
+    }
+    var NAP = [].concat(
+      steps(LIFT, 85), [[CURL_UP, 1200]],
+      steps(TURN, 70), [[CURL_BACK, 1400]], steps(back(TURN), 70), [[CURL_UP, 450]],
+      [[CURL_BLINK, 130]], [[CURL_UP, 550]],
+      steps(TIP, 75), [[CURL_SKY, 1100]], steps(back(TIP), 75), [[CURL_UP, 400]],
+      steps(back(LIFT), 95)
+    );
 
     function build() {
       var h = box(hero);
@@ -133,8 +169,28 @@
         { kind: 'leap', from: launch, to: about }
       ], about);
 
-      // The sections below the hero were redesigned (no cups, ridges or icon
-      // rows to run along), so for now his route ends on ABOUT ME.
+      // The other sections have spots instead of a route. Each takes over
+      // just before its surface scrolls into view, so he's already there
+      // when it does.
+      spots = {};
+      var maxS = document.documentElement.scrollHeight - innerHeight - 10;
+      // Technology: on top of the filter bar, towards its right end
+      var seg = box(q('.tech .seg'));
+      if (seg) {
+        spots.tricks = {
+          at: pt(seg.right - (desktop ? 70 : 50), seg.top + 1),
+          start: seg.top - innerHeight - 40
+        };
+      }
+      // Contact: on top of the email box (the right end, by the Copy button)
+      var mail = box(q('.contact .mail'));
+      if (mail) {
+        var sEnd = Math.min(maxS, mail.top - innerHeight * 0.4);
+        spots.nap = {
+          at: pt(mail.right - (desktop ? 80 : 56), mail.top + 1),
+          start: Math.min(mail.top - innerHeight - 40, sEnd - 300)
+        };
+      }
 
       var maxScroll = document.documentElement.scrollHeight - innerHeight;
       stops = perches.map(function (p, i) {
@@ -172,15 +228,19 @@
       sprite.style.backgroundPosition = -f * W + 'px 0';
     }
 
-    function place(p, f, lift) {
+    // spin turns him about the middle of his body (a backflip), leaving the
+    // shadow on the ground
+    var PIVOT = 22;
+    function place(p, f, lift, spin) {
       fox.style.setProperty('--lift', (lift || 0).toFixed(1));
       if (lastX !== null && Math.abs(p.x - lastX) > 0.4) facing = p.x < lastX ? 1 : -1;
       lastX = p.x;
       lastP = p;
       fox.style.transform = 'translate3d(' + (p.x - W / 2) + 'px,' + (p.y - H) + 'px,0)';
-      sprite.style.transform = facing < 0 ? 'scaleX(-1)' : '';
+      sprite.style.transform = (facing < 0 ? 'scaleX(-1) ' : '') +
+        (spin ? 'translateY(-' + PIVOT + 'px) rotate(' + spin.toFixed(1) + 'deg) translateY(' + PIVOT + 'px)' : '');
       show(f);
-      fox.classList.toggle('is-asleep', f === SLEEP || f === BREATHE);
+      fox.classList.toggle('is-asleep', BREATH.indexOf(f) !== -1);
       fox.classList.toggle('is-flipped', facing < 0);
     }
 
@@ -208,6 +268,20 @@
       if (!legs || !legs.length) return;
       if (reduce) return place(perches[1].at, SIT);
       var y = scrollY;
+      var nowSpot = spots.nap && y >= spots.nap.start ? 'nap' : spots.tricks && y >= spots.tricks.start ? 'tricks' : '';
+      if (nowSpot !== inSpot) {
+        // Changing places: fade in at the new one
+        inSpot = nowSpot;
+        fox.classList.remove('is-popping');
+        void fox.offsetWidth;
+        fox.classList.add('is-popping');
+        lastX = null;
+      }
+      if (nowSpot === 'nap') {
+        facing = 1;
+        return place(spots.nap.at, napFrame);
+      }
+      if (nowSpot === 'tricks') return trickShow();
       var i = 0;
       while (i < stops.length - 1 && y >= stops[i + 1]) i++;
       if (i >= legs.length) return place(perches[i].at, resting(i));
@@ -246,6 +320,8 @@
     // Asleep: breathe slowly.
     setInterval(function () {
       if (reduce || !legs) return;
+      // The nap and the flips run him themselves
+      if (inSpot === 'nap' || flipping) return;
       if ((frame >= STAND && frame <= LIE) || frame === SETTLE) {
         still = 0;
         idle = null;
@@ -270,6 +346,100 @@
         show(idle);
       }
     }, 220);
+
+    // The nap in Contact: breathe slowly for a while, then lift his head and
+    // look around before settling back down. Only runs while he's there.
+    var napFrame = SLEEP;
+    function napShow(f) {
+      napFrame = f;
+      if (inSpot !== 'nap') return;
+      show(f);
+      fox.classList.toggle('is-asleep', BREATH.indexOf(f) !== -1);
+    }
+    // Slow breaths: in over four frames, out over the same four
+    function sleepFor(ms) {
+      var BREATH_CYCLE = BREATH.concat(back(BREATH).slice(1, -1));
+      var n = 0, ticks = Math.round(ms / 380);
+      (function breathe() {
+        if (n >= ticks && n % BREATH_CYCLE.length === 0) return wake(0);
+        napShow(BREATH_CYCLE[n++ % BREATH_CYCLE.length]);
+        setTimeout(breathe, 380);
+      })();
+    }
+    function wake(j) {
+      if (j >= NAP.length) {
+        napShow(SLEEP);
+        return sleepFor(6000 + Math.random() * 5000);
+      }
+      napShow(NAP[j][0]);
+      setTimeout(function () {
+        wake(j + 1);
+      }, NAP[j][1]);
+    }
+    if (!reduce) sleepFor(4500);
+
+    // Technology: sit a few seconds, then a backflip (sometimes a double).
+    // The jump frames (crouch, push off, tuck, reach for the ground, land)
+    // play over a real rotation, a frame at a time, so it turns smoothly.
+    var trick = { frame: SIT, lift: 0, spin: 0 }, flipping = false;
+    function trickShow() {
+      if (inSpot !== 'tricks') return;
+      facing = 1;
+      var f = trick.frame === SIT && idle !== null ? idle : trick.frame;
+      var at = spots.tricks.at;
+      place(pt(at.x, at.y - trick.lift), f, trick.lift, trick.spin);
+    }
+    function pose(f, ms, next) {
+      trick.frame = f;
+      trick.lift = 0;
+      trick.spin = 0;
+      trickShow();
+      setTimeout(next, ms);
+    }
+    function flip(turns, done) {
+      flipping = true;
+      idle = null;
+      var dur = turns > 1 ? 1000 : 640, high = turns > 1 ? 64 : 44;
+      pose(STAND, 180, function () {
+        pose(STAND_CROUCH, 70, function () {
+        pose(CROUCH, 140, function () {
+        pose(CROUCH_PUSH, 60, function () {
+          var t0 = performance.now();
+          (function air(now) {
+            var t = Math.min(1, (now - t0) / dur);
+            var e = t * t * (3 - 2 * t);
+            for (var j = 0; t >= AIR[j][0]; j++);
+            trick.frame = AIR[j][1];
+            trick.lift = Math.sin(t * Math.PI) * high;
+            trick.spin = 360 * turns * e;
+            trickShow();
+            if (t < 1) return requestAnimationFrame(air);
+            pose(LAND, 110, function () {
+              pose(LAND_STAND, 80, function () {
+                pose(STAND, 160, function () {
+                  pose(SETTLE, 150, function () {
+                    pose(SIT, 0, function () {
+                      flipping = false;
+                      done();
+                    });
+                  });
+                });
+              });
+            });
+          })(t0);
+        });
+        });
+        });
+      });
+    }
+    function tricks() {
+      setTimeout(function () {
+        // Only when he's there and the tab is showing
+        if (inSpot !== 'tricks' || document.hidden) return tricks();
+        flip(Math.random() < 0.25 ? 2 : 1, tricks);
+      }, 2600 + Math.random() * 2400);
+    }
+    if (!reduce) tricks();
 
     // Sitting, he notices the pointer coming close and turns to face it
     var looking = false;
@@ -334,6 +504,17 @@
     visibility: visible;
   }
 
+  /* Moving between the About perch and the Contact nap: he fades in */
+  .fox.is-popping .fox__sprite {
+    animation: fox-pop 0.35s ease-out;
+  }
+
+  @keyframes fox-pop {
+    from {
+      opacity: 0;
+    }
+  }
+
   /* A soft contact shadow that stays on the surface while he jumps */
   .fox__shadow {
     --l: calc(var(--lift, 0) * 1px);
@@ -353,7 +534,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    background: url('/images/fox-sprite.svg') 0 0 / 3200px 56px no-repeat;
+    background: url('/images/fox-sprite.svg') 0 0 / 5120px 56px no-repeat;
     transform-origin: 50% 100%;
   }
 

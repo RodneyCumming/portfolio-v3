@@ -3,19 +3,19 @@ import Odo from './Odo.astro';
 // What Rodney is doing now. Update it when it changes.
 const nowDate = 'November 2026';
 const now = [
-  ['Building', 'SmartCompare, so New Zealanders stop overpaying for their mobile plan', 'blocks'],
-  ['Shipping', 'Whole-site audits for SEO Lamp', 'parcel'],
-  ['Learning', 'Swift and SwiftUI, for the Immerse reader', 'sprout'],
+  ['Building', 'SmartCompare, a site comparing NZ mobile plans', 'blocks'],
+  ['Working on', 'Site audits for SEO Lamp', 'parcel'],
+  ['Learning', 'Swift, for an audiobook reader app', 'sprout'],
   ['Based', 'New Zealand', 'drop'],
 ];
 // The intro lights up word by word as it scrolls through the view
 const intro =
-  "Hey, I'm Rodney, a senior frontend developer in New Zealand. I've spent more than ten years building fast, polished interfaces, and lately I've been designing, building and shipping my own products end to end.";
+  "Hi, I'm Rodney. I'm a frontend developer in New Zealand and I've been doing it for a bit over ten years. In my spare time I make small sites and apps of my own, and a few of them are further down.";
 const words = intro.split(' ');
 const steps = [
-  ['Fast by default', 'Static where it can be, light on JavaScript, quick on a slow phone.'],
-  ['Details that feel right', 'Spacing, motion and states that make an interface feel considered.'],
-  ['Shipped end to end', 'From first sketch to production, including the parts nobody sees.'],
+  ['Quick to load', "I keep sites light so they're fast, even on a slow phone."],
+  ['The small details', 'I like getting the spacing, motion and little states right.'],
+  ['All of it', 'I enjoy doing the whole thing, from the first sketch to putting it live.'],
 ];
 ---
 
@@ -25,7 +25,7 @@ const steps = [
       <div>
         <p class="eyebrow" data-live><Odo value="01" />&nbsp; About</p>
         <h2 id="about-heading" class="section__heading is-left"><span class="heading-text">ABOUT ME</span></h2>
-        <p class="sub">Ten years building for the web, <em>mostly in React.</em></p>
+        <p class="sub">I build websites, <em>mostly with React.</em></p>
         <p class="lede">
           {words.map((w, i) => (
             <>
@@ -469,7 +469,7 @@ const steps = [
       font-size: 64px;
     }
     dl {
-      grid-template-columns: 110px 1fr;
+      grid-template-columns: 126px 1fr;
     }
     dd {
       font-size: 19px;
