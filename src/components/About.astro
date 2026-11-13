@@ -2,10 +2,10 @@
 // What Rodney is doing now. Update it when it changes.
 const nowDate = 'November 2026';
 const now = [
-  ['Building', 'SmartCompare, so New Zealanders stop overpaying for their mobile plan'],
-  ['Shipping', 'Whole-site audits for SEO Lamp'],
-  ['Learning', 'Swift and SwiftUI, for the Immerse reader'],
-  ['Based', 'New Zealand'],
+  ['Building', 'SmartCompare, so New Zealanders stop overpaying for their mobile plan', 'stack'],
+  ['Shipping', 'Whole-site audits for SEO Lamp', 'score'],
+  ['Learning', 'Swift and SwiftUI, for the Immerse reader', 'pen'],
+  ['Based', 'New Zealand', 'pin'],
 ];
 // The intro lights up word by word as it scrolls through the view
 const intro =
@@ -22,7 +22,7 @@ const steps = [
   <div class="section__inner">
     <div class="about__grid">
       <div>
-        <p class="eyebrow">01&nbsp; About</p>
+        <p class="eyebrow"><span class="num" style="--to: 1" aria-hidden="true"></span>&nbsp; About</p>
         <h2 id="about-heading" class="section__heading is-left"><span class="heading-text">ABOUT ME</span></h2>
         <p class="sub">Ten years building for the web, <em>mostly in React.</em></p>
         <p class="lede">
@@ -34,20 +34,28 @@ const steps = [
         </p>
       </div>
 
-      <aside class="now" aria-labelledby="now-heading">
+      <aside class="now" aria-labelledby="now-heading" data-live>
         <p class="now__head"><b id="now-heading">Now</b><span>{nowDate}</span></p>
         <dl>
-          {now.map(([term, text], i) => (
+          {now.map(([term, text, icon], i) => (
             <>
               <dt style={`--i: ${i}`}>{term}</dt>
-              <dd style={`--i: ${i}`}>{text}</dd>
+              <dd style={`--i: ${i}`}>
+                <span class:list={['ico', 'loop', `ico--${icon}`]} aria-hidden="true">
+                  {icon === 'stack' && <><i></i><i></i><i></i></>}
+                  {icon === 'score' && <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" pathLength="1"></circle><circle cx="10" cy="10" r="8" pathLength="1"></circle><path d="M6.5 10.3l2.3 2.3 4.7-4.9" pathLength="1"></path></svg>}
+                  {icon === 'pen' && <svg viewBox="0 0 20 20"><path d="M2 14c3-6 5-9 7-6s-2 7 1 7 5-9 8-10" pathLength="1"></path></svg>}
+                  {icon === 'pin' && <><i></i><i></i></>}
+                </span>
+                <span>{text}</span>
+              </dd>
             </>
           ))}
         </dl>
       </aside>
     </div>
 
-    <ol class="steps" role="list">
+    <ol class="steps" role="list" data-live>
       {steps.map(([title, text], i) => (
         <li style={`--i: ${i}`}>
           <b aria-hidden="true">
@@ -57,6 +65,9 @@ const steps = [
           <div>
             <h3>{title}</h3>
             <p>{text}</p>
+            {i === 0 && <p class="mini loop mini--fast" aria-hidden="true"><span><i></i></span><small>0.4s</small></p>}
+            {i === 1 && <p class="mini loop mini--grid" aria-hidden="true"><i></i><i></i><i></i><i></i></p>}
+            {i === 2 && <p class="mini loop mini--ship" aria-hidden="true"><span>Sketch</span><span>Code</span><span>Live</span></p>}
           </div>
         </li>
       ))}
@@ -126,10 +137,273 @@ const steps = [
   }
 
   dd {
+    display: flex;
+    gap: 12px;
     margin: 0;
     font-size: 18px;
     line-height: 1.5;
     color: var(--ink);
+  }
+
+  /* Tiny live icons, one per row */
+  .ico {
+    position: relative;
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin-top: 4px;
+  }
+
+  .ico svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Building: blocks stack up and settle */
+  .ico--stack i {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    height: 5px;
+    border-radius: 2px;
+    background: var(--accent);
+    animation: stack 3.2s cubic-bezier(0.3, 1.4, 0.5, 1) infinite;
+  }
+  .ico--stack i:nth-child(1) {
+    bottom: 1px;
+    opacity: 0.45;
+  }
+  .ico--stack i:nth-child(2) {
+    bottom: 7px;
+    left: 4px;
+    right: 4px;
+    opacity: 0.7;
+    animation-delay: 0.25s;
+  }
+  .ico--stack i:nth-child(3) {
+    bottom: 13px;
+    left: 6px;
+    right: 6px;
+    animation-delay: 0.5s;
+  }
+
+  @keyframes stack {
+    0% {
+      transform: translateY(-14px);
+      opacity: 0;
+    }
+    18%,
+    85% {
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Shipping: a score ring fills, then a tick */
+  .ico--score circle {
+    fill: none;
+    stroke-width: 2;
+    stroke: rgb(127 220 245 / 0.2);
+  }
+  .ico--score circle + circle,
+  .ico--score path {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    animation: score 3.6s ease-out infinite;
+  }
+  .ico--score circle + circle {
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+  .ico--score path {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    animation-name: tick;
+  }
+
+  @keyframes score {
+    0% {
+      stroke-dashoffset: 1;
+    }
+    45%,
+    100% {
+      stroke-dashoffset: 0.02;
+    }
+  }
+
+  @keyframes tick {
+    0%,
+    45% {
+      stroke-dashoffset: 1;
+    }
+    60%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Learning: a pen line writes itself */
+  .ico--pen path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    animation: write 4s ease-in-out infinite;
+  }
+
+  @keyframes write {
+    0% {
+      stroke-dashoffset: 1;
+    }
+    55%,
+    80% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: -1;
+    }
+  }
+
+  /* Based: a location dot with a ripple */
+  .ico--pin i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .ico--pin i + i {
+    background: none;
+    border: 1.5px solid var(--accent);
+    animation: ripple 2.4s ease-out infinite;
+  }
+
+  @keyframes ripple {
+    from {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  /* Principle demos */
+  .mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 22px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #8792b3;
+  }
+
+  /* Fast: a load bar races to full */
+  .mini--fast span {
+    flex: 1;
+    max-width: 160px;
+    height: 4px;
+    border-radius: 4px;
+    background: rgb(255 255 255 / 0.08);
+    overflow: hidden;
+  }
+  .mini--fast i {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+    background: var(--accent);
+    transform-origin: 0 50%;
+    animation: race 3s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  }
+
+  @keyframes race {
+    0% {
+      transform: scaleX(0);
+    }
+    30%,
+    90% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleX(1);
+      opacity: 0;
+    }
+  }
+
+  /* Details: loose blocks snap into a tidy row */
+  .mini--grid i {
+    width: 22px;
+    height: 12px;
+    border-radius: 3px;
+    border: 1px solid rgb(127 220 245 / 0.55);
+    animation: snap 3.4s cubic-bezier(0.3, 1.5, 0.5, 1) infinite;
+  }
+  .mini--grid i:nth-child(1) {
+    --dx: -3px;
+    --dy: 4px;
+  }
+  .mini--grid i:nth-child(2) {
+    --dx: 4px;
+    --dy: -5px;
+    animation-delay: 0.08s;
+  }
+  .mini--grid i:nth-child(3) {
+    --dx: -2px;
+    --dy: 6px;
+    animation-delay: 0.16s;
+  }
+  .mini--grid i:nth-child(4) {
+    --dx: 5px;
+    --dy: -3px;
+    animation-delay: 0.24s;
+  }
+
+  @keyframes snap {
+    0%,
+    20% {
+      transform: translate(var(--dx), var(--dy)) rotate(4deg);
+    }
+    45%,
+    100% {
+      transform: none;
+    }
+  }
+
+  /* Shipped: a highlight walks from sketch to code to live */
+  .mini--ship span {
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    animation: step 4.5s steps(1) infinite;
+  }
+  .mini--ship span:nth-child(2) {
+    animation-delay: 1.5s;
+  }
+  .mini--ship span:nth-child(3) {
+    animation-delay: 3s;
+  }
+
+  @keyframes step {
+    0% {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    33% {
+      border-color: rgb(255 255 255 / 0.1);
+      color: #8792b3;
+    }
   }
 
   .steps {

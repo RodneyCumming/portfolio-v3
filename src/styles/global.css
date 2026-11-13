@@ -374,3 +374,60 @@ a {
     transform: translateY(var(--rise, 28px));
   }
 }
+
+/* Ambient loops (.loop) pause while their [data-live] block is off screen
+   (it gets .is-live in view, see Base.astro) and stop with reduced motion */
+[data-live]:not(.is-live) .loop,
+[data-live]:not(.is-live) .loop *,
+[data-live]:not(.is-live) .loop *::before,
+[data-live]:not(.is-live) .loop *::after {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loop,
+  .loop *,
+  .loop *::before,
+  .loop *::after {
+    animation: none !important;
+  }
+}
+
+/* Section numbers count up as the section arrives: 00 -> 01 */
+@property --num {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.eyebrow .num {
+  display: inline-block;
+  min-width: 2ch;
+  counter-reset: n var(--num);
+  --num: var(--to);
+}
+
+.eyebrow .num::before {
+  content: counter(n, decimal-leading-zero);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .eyebrow .num {
+      animation: count-up linear both;
+    }
+    main .eyebrow .num {
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@keyframes count-up {
+  from {
+    --num: 0;
+  }
+  to {
+    --num: var(--to);
+  }
+}

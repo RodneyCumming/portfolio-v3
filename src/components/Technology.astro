@@ -78,12 +78,13 @@ const filters = ['All', ...groups.map((g) => g.id)];
   <div class="section__inner">
     <div class="head-row">
       <div>
-        <p class="eyebrow">02&nbsp; Technology</p>
+        <p class="eyebrow"><span class="num" style="--to: 2" aria-hidden="true"></span>&nbsp; Technology</p>
         <h2 id="tech-heading" class="section__heading is-left"><span class="heading-text">TECHNOLOGY</span></h2>
         <p class="sub">React at the centre, <em>everything around it.</em></p>
       </div>
       <!-- Plain radio buttons; CSS :has() does the filtering, no JavaScript -->
       <fieldset class="seg">
+        <span class="seg__pill" aria-hidden="true"></span>
         <legend class="visually-hidden">Show</legend>
         {filters.map((f, i) => (
           <label>
@@ -94,7 +95,7 @@ const filters = ['All', ...groups.map((g) => g.id)];
       </fieldset>
     </div>
 
-    <div class="groups">
+    <div class="groups" data-live>
       {groups.map((g, i) => (
         <div class="group" data-group={g.id} style={`--g: ${i}`}>
           <h3>{g.name}</h3>
@@ -102,8 +103,8 @@ const filters = ['All', ...groups.map((g) => g.id)];
           <ul role="list">
             {g.tools.map((t, j) => (
               <li class:list={{ core: t.core }} style={`--j: ${j}`}>
-                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={t.icon.path} /></svg>
-                {t.label}
+                <svg class:list={{ loop: t.label === 'React', spin: t.label === 'React' }} viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={t.icon.path} /></svg>
+                {t.label === 'TypeScript' ? <span class="typed" style={`--n: ${t.label.length}`}>{t.label}</span> : t.label}
                 {t.core && <small>Core</small>}
               </li>
             ))}
@@ -113,6 +114,28 @@ const filters = ['All', ...groups.map((g) => g.id)];
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // The selected filter has a pill that slides between the options
+  (function () {
+    var seg = document.querySelector('.tech .seg');
+    var pill = seg && seg.querySelector('.seg__pill');
+    if (!pill) return;
+    function move() {
+      var on = seg.querySelector('input:checked + span');
+      if (!on) return;
+      var a = on.getBoundingClientRect(), b = seg.getBoundingClientRect();
+      pill.style.width = a.width + 'px';
+      pill.style.height = a.height + 'px';
+      pill.style.transform = 'translate(' + (a.left - b.left - seg.clientLeft) + 'px,' + (a.top - b.top - seg.clientTop) + 'px)';
+    }
+    seg.classList.add('has-pill');
+    move();
+    seg.addEventListener('change', move);
+    addEventListener('resize', move);
+    document.fonts && document.fonts.ready.then(move);
+  })();
+</script>
 
 <style>
   .tech {
@@ -154,6 +177,70 @@ const filters = ['All', ...groups.map((g) => g.id)];
   .seg input:checked + span {
     background: var(--ink);
     color: #1b2234;
+  }
+
+  .seg {
+    position: relative;
+  }
+
+  .seg label {
+    position: relative;
+    z-index: 1;
+  }
+
+  .seg__pill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 999px;
+    background: var(--ink);
+    opacity: 0;
+    transition:
+      transform 0.45s cubic-bezier(0.3, 1.25, 0.5, 1),
+      width 0.45s cubic-bezier(0.3, 1.25, 0.5, 1);
+  }
+
+  .seg.has-pill .seg__pill {
+    opacity: 1;
+  }
+
+  .seg.has-pill input:checked + span {
+    background: transparent;
+    transition: color 0.3s 0.1s;
+  }
+
+  /* React's atom turns slowly */
+  .spin {
+    animation: spin 16s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* TypeScript types itself out the first time the groups are seen */
+  .typed {
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.live-ready) .groups:not(.was-seen) .typed {
+      clip-path: inset(0 100% 0 0);
+    }
+    .groups.was-seen .typed {
+      animation: type 1.1s steps(var(--n)) 0.8s backwards;
+    }
+  }
+
+  @keyframes type {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
   }
 
   .seg input:focus-visible + span {

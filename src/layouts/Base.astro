@@ -61,5 +61,26 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer />
+    <!-- Small ambient animations run only while their element is on screen:
+         [data-live] gets .is-live in view (CSS pauses the rest) and .was-seen
+         once, for one-off moments like typing -->
+    <script is:inline>
+      (function () {
+        if (!window.IntersectionObserver) return;
+        document.documentElement.classList.add('live-ready');
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            e.target.classList.toggle('is-live', e.isIntersecting);
+            if (e.isIntersecting && !e.target.classList.contains('was-seen')) {
+              e.target.classList.add('was-seen');
+              e.target.dispatchEvent(new CustomEvent('seen'));
+            }
+          });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('[data-live]').forEach(function (el) {
+          io.observe(el);
+        });
+      })();
+    </script>
   </body>
 </html>
