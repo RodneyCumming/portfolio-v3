@@ -1,10 +1,10 @@
 ---
+import Odo from './Odo.astro';
 import { Image } from 'astro:assets';
 import smartcompare from '../assets/projects/smartcompare.png';
 import stoicism from '../assets/projects/stoicism-now-phone.png';
 import seoLamp from '../assets/projects/seo-lamp.png';
 import habits from '../assets/projects/quantified-habits.png';
-import ProjectDemo from './ProjectDemo.astro';
 
 // Immerse: the passage is read along as you scroll, phrase by phrase
 const passage = [
@@ -35,7 +35,6 @@ const sites = [
     image: smartcompare,
     brand: '#2fae78',
     size: 'lead',
-    demo: 'plans' as const,
   },
   {
     n: '02',
@@ -47,7 +46,6 @@ const sites = [
     image: stoicism,
     brand: '#7f8cff',
     size: 'tall',
-    demo: 'quote' as const,
   },
   {
     n: '03',
@@ -58,7 +56,6 @@ const sites = [
     host: 'seolamp.vercel.app',
     image: seoLamp,
     brand: '#e8b84a',
-    demo: 'audit' as const,
   },
   {
     n: '04',
@@ -69,7 +66,6 @@ const sites = [
     host: 'quantifiedhabits.vercel.app',
     image: habits,
     brand: '#ff7a4d',
-    demo: 'board' as const,
   },
 ];
 ---
@@ -78,7 +74,7 @@ const sites = [
   <div class="section__inner">
     <div class="head-row">
       <div>
-        <p class="eyebrow"><span class="num" style="--to: 3" aria-hidden="true"></span>&nbsp; Portfolio</p>
+        <p class="eyebrow" data-live><Odo value="03" />&nbsp; Portfolio</p>
         <h2 id="work-heading" class="section__heading is-left"><span class="heading-text">PORTFOLIO</span></h2>
         <p class="sub">Products I've built, <em>start to finish.</em></p>
       </div>
@@ -88,15 +84,12 @@ const sites = [
     <div class="bento">
       {sites.map((p, i) => (
         <article class:list={['card', p.size]} style={`--brand: ${p.brand}; --d: ${[0, 1, 0, 1][i]}`}>
-          <div class="stage">
-            <a class="win" href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
-              <span class="win__bar"><i></i><i></i><i></i><span>{p.host}</span></span>
-              <span class="win__view">
-                <Image class="px-pan" src={p.image} alt="" widths={[600, 900, 1200]} sizes="(min-width: 1025px) 760px, 92vw" loading="lazy" />
-              </span>
-            </a>
-            <ProjectDemo kind={p.demo} />
-          </div>
+          <a class="win" href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
+            <span class="win__bar"><i></i><i></i><i></i><span>{p.host}</span></span>
+            <span class="win__view">
+              <Image class="px-pan" src={p.image} alt="" widths={[600, 900, 1200]} sizes="(min-width: 1025px) 760px, 92vw" loading="lazy" />
+            </span>
+          </a>
           <div class="meta">
             <span class="n">{p.n}</span>
             <h3>{p.name}</h3>
@@ -116,10 +109,6 @@ const sites = [
           {sets.map(([name, detail], k) => (
             <p class="ex" style={`--k: ${k}`}><b>{name}</b><span>{detail}</span></p>
           ))}
-          <p class="rest" data-rest="45">
-            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" pathLength="1"></circle><circle cx="10" cy="10" r="8" pathLength="1"></circle></svg>
-            Rest <b>0:45</b>
-          </p>
         </div>
         <div class="meta">
           <span class="n">05</span>
@@ -146,168 +135,12 @@ const sites = [
               </>
             ))}
           </p>
-          <p class="wave" aria-hidden="true">
-            {Array.from({ length: 36 }, (_, k) => (
-              <i style={`--h: ${(0.35 + 0.65 * Math.abs(Math.sin(k * 1.7) * Math.cos(k * 0.45))).toFixed(2)}; --k: ${k}`}></i>
-            ))}
-          </p>
           <p class="reader__audio"><b>▶</b><span><i></i></span><small>12:41 / 37:10</small></p>
         </div>
       </article>
     </div>
   </div>
 </section>
-
-<script is:inline>
-  (function () {
-    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var loops = [];
-
-    // Each loop runs only while its element is on screen
-    function live(el, start) {
-      if (!el || reduce) return;
-      var timer = null;
-      var io = new IntersectionObserver(function (e) {
-        var on = e[0].isIntersecting;
-        el.classList.toggle('is-live', on);
-        if (on && !timer) timer = start();
-        if (!on && timer) {
-          timer.stop();
-          timer = null;
-        }
-      }, { threshold: 0.35 });
-      io.observe(el);
-      loops.push(io);
-    }
-
-    function every(ms, fn) {
-      fn();
-      var id = setInterval(fn, ms);
-      return { stop: function () { clearInterval(id); } };
-    }
-
-    // SmartCompare: shuffle the plans, then sort them cheapest first
-    live(document.querySelector('[data-demo="plans"]'), function () {
-      var el = document.querySelector('[data-demo="plans"]');
-      var rows = [].slice.call(el.querySelectorAll('li'));
-      var step = 0;
-      function place(order) {
-        order.forEach(function (row, i) {
-          row.style.setProperty('--y', i);
-          row.classList.toggle('best', i === 0 && step % 2 === 1);
-        });
-      }
-      return every(2600, function () {
-        step++;
-        var order = rows.slice();
-        if (step % 2) {
-          order.sort(function (a, b) {
-            return a.dataset.price - b.dataset.price;
-          });
-        } else {
-          order.sort(function () {
-            return Math.random() - 0.5;
-          });
-        }
-        place(order);
-      });
-    });
-
-    // Stoicism Now: decode a quote from scrambled letters, then the next
-    live(document.querySelector('[data-demo="quote"]'), function () {
-      var el = document.querySelector('[data-demo="quote"]');
-      var q = el.querySelector('.quote');
-      var by = el.querySelector('.quote__by');
-      var quotes = JSON.parse(q.dataset.quotes);
-      var n = 0;
-      var raf = null;
-      var glyphs = 'abcdefghijklmnopqrstuvwxyz';
-      function decode(text) {
-        var t0 = performance.now();
-        el.classList.add('is-scrambling');
-        cancelAnimationFrame(raf);
-        (function frame(t) {
-          var p = Math.min(1, (t - t0) / 1400);
-          var shown = Math.floor(p * text.length);
-          var out = text.slice(0, shown);
-          for (var i = shown; i < text.length; i++) {
-            out += text[i] === ' ' ? ' ' : glyphs[(Math.random() * 26) | 0];
-          }
-          q.textContent = out;
-          if (p < 1) raf = requestAnimationFrame(frame);
-          else el.classList.remove('is-scrambling');
-        })(t0);
-      }
-      var timer = every(6500, function () {
-        var item = quotes[n++ % quotes.length];
-        by.textContent = item[1];
-        decode(item[0]);
-      });
-      return { stop: function () { timer.stop(); cancelAnimationFrame(raf); } };
-    });
-
-    // SEO Lamp: reset, then the scores sweep up and the checks pass
-    live(document.querySelector('[data-demo="audit"]'), function () {
-      var el = document.querySelector('[data-demo="audit"]');
-      var nums = [].slice.call(el.querySelectorAll('[data-to]'));
-      var checks = [].slice.call(el.querySelectorAll('.checks li'));
-      var timers = [];
-      function run() {
-        el.classList.add('is-reset');
-        nums.forEach(function (b) { b.textContent = '0'; });
-        timers.push(setTimeout(function () {
-          el.classList.remove('is-reset');
-          var t0 = performance.now();
-          (function count(t) {
-            var p = Math.min(1, (t - t0) / 1600);
-            var e = 1 - Math.pow(1 - p, 3);
-            nums.forEach(function (b) { b.textContent = Math.round(e * b.dataset.to); });
-            if (p < 1) requestAnimationFrame(count);
-          })(t0);
-        }, 400));
-        // Checks fail first, then pass one after another
-        checks.forEach(function (c, i) {
-          c.classList.add('fail');
-          timers.push(setTimeout(function () { c.classList.remove('fail'); }, 1500 + i * 650));
-        });
-      }
-      var timer = every(7000, run);
-      return { stop: function () { timer.stop(); timers.forEach(clearTimeout); } };
-    });
-
-    // Quantified Habits: the run card crosses the board, then starts again
-    live(document.querySelector('[data-demo="board"]'), function () {
-      var card = document.querySelector('[data-demo="board"] .task--move');
-      var col = 0;
-      return every(1700, function () {
-        col = (col + 1) % 4;
-        var c = col === 3 ? 0 : col;
-        card.classList.remove('is-lifting');
-        void card.offsetWidth;
-        if (c !== 0) card.classList.add('is-lifting');
-        card.style.setProperty('--col', c);
-      });
-    });
-
-    // Gym: the rest timer counts down, then the next set
-    live(document.querySelector('.rest'), function () {
-      var el = document.querySelector('.rest');
-      var b = el.querySelector('b');
-      var total = +el.dataset.rest;
-      var left = total;
-      return every(1000, function () {
-        left = left <= 0 ? total : left - 1;
-        b.textContent = '0:' + String(left).padStart(2, '0');
-        el.style.setProperty('--rest', (1 - left / total).toFixed(3));
-      });
-    });
-
-    // Immerse: the waveform breathes while the page is on screen
-    live(document.querySelector('.wave'), function () {
-      return { stop: function () {} };
-    });
-  })();
-</script>
 
 <style>
   .work {
@@ -341,9 +174,6 @@ const sites = [
     background: var(--panel);
   }
 
-  .stage {
-    position: relative;
-  }
 
   .win {
     display: block;
@@ -503,44 +333,6 @@ const sites = [
   }
 
 
-  /* Gym: a rest timer counting down between sets */
-  .rest {
-    width: max-content;
-    margin: 10px auto 0;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 6px 12px 6px 8px;
-    border-radius: 999px;
-    background: #1b2234;
-    color: #fff;
-    font: 700 11px var(--font-body);
-    white-space: nowrap;
-  }
-
-  .rest b {
-    font-variant-numeric: tabular-nums;
-  }
-
-  .rest svg {
-    width: 18px;
-    height: 18px;
-    transform: rotate(-90deg);
-  }
-
-  .rest circle {
-    fill: none;
-    stroke-width: 2.6;
-    stroke: rgb(255 255 255 / 0.2);
-  }
-
-  .rest circle + circle {
-    stroke: var(--brand);
-    stroke-dasharray: 1;
-    stroke-dashoffset: var(--rest, 0);
-    transition: stroke-dashoffset 1s linear;
-  }
-
   /* Immerse: a page with the narrated sentence highlighted */
   .reader {
     margin-top: 18px;
@@ -574,34 +366,6 @@ const sites = [
   /* Without scroll-driven animation, one phrase stays highlighted */
   mark:nth-child(4) {
     background: #cdeee9;
-  }
-
-  .wave {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    height: 28px;
-    margin-top: 14px;
-  }
-
-  .wave i {
-    flex: 1;
-    height: calc(var(--h) * 100%);
-    border-radius: 2px;
-    background: #d9d2c0;
-    transform-origin: 50% 50%;
-  }
-
-  .wave.is-live i {
-    animation: breathe 1.4s ease-in-out infinite alternate;
-    animation-delay: calc(var(--k) * -0.11s);
-    background: color-mix(in srgb, var(--brand) 55%, #d9d2c0);
-  }
-
-  @keyframes breathe {
-    from {
-      transform: scaleY(0.45);
-    }
   }
 
   .reader__audio {

@@ -1,4 +1,5 @@
 ---
+import Odo from './Odo.astro';
 import {
   siReact,
   siNextdotjs,
@@ -78,7 +79,7 @@ const filters = ['All', ...groups.map((g) => g.id)];
   <div class="section__inner">
     <div class="head-row">
       <div>
-        <p class="eyebrow"><span class="num" style="--to: 2" aria-hidden="true"></span>&nbsp; Technology</p>
+        <p class="eyebrow" data-live><Odo value="02" />&nbsp; Technology</p>
         <h2 id="tech-heading" class="section__heading is-left"><span class="heading-text">TECHNOLOGY</span></h2>
         <p class="sub">React at the centre, <em>everything around it.</em></p>
       </div>
@@ -103,8 +104,8 @@ const filters = ['All', ...groups.map((g) => g.id)];
           <ul role="list">
             {g.tools.map((t, j) => (
               <li class:list={{ core: t.core }} style={`--j: ${j}`}>
-                <svg class:list={{ loop: t.label === 'React', spin: t.label === 'React' }} viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={t.icon.path} /></svg>
-                {t.label === 'TypeScript' ? <span class="typed" style={`--n: ${t.label.length}`}>{t.label}</span> : t.label}
+                <svg class="trace" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style={`--dd: ${(0.3 + i * 0.25 + j * 0.12).toFixed(2)}s`}><path d={t.icon.path} pathLength="1" /></svg>
+                {t.label}
                 {t.core && <small>Core</small>}
               </li>
             ))}
@@ -209,39 +210,6 @@ const filters = ['All', ...groups.map((g) => g.id)];
     transition: color 0.3s 0.1s;
   }
 
-  /* React's atom turns slowly */
-  .spin {
-    animation: spin 16s linear infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(1turn);
-    }
-  }
-
-  /* TypeScript types itself out the first time the groups are seen */
-  .typed {
-    display: inline-block;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    :global(html.live-ready) .groups:not(.was-seen) .typed {
-      clip-path: inset(0 100% 0 0);
-    }
-    .groups.was-seen .typed {
-      animation: type 1.1s steps(var(--n)) 0.8s backwards;
-    }
-  }
-
-  @keyframes type {
-    from {
-      clip-path: inset(0 100% 0 0);
-    }
-    to {
-      clip-path: inset(0 0 0 0);
-    }
-  }
 
   .seg input:focus-visible + span {
     outline: 2px solid var(--cyan);
@@ -292,6 +260,8 @@ const filters = ['All', ...groups.map((g) => g.id)];
   li svg {
     flex: none;
     fill: #aeb7cf;
+    color: #aeb7cf;
+    overflow: visible;
   }
 
   li.core {
@@ -300,6 +270,7 @@ const filters = ['All', ...groups.map((g) => g.id)];
 
   li.core svg {
     fill: var(--accent);
+    color: var(--accent);
   }
 
   small {
