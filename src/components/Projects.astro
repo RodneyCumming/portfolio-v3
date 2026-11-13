@@ -3,69 +3,29 @@ import Odo from './Odo.astro';
 import { Image } from 'astro:assets';
 import smartcompare from '../assets/projects/smartcompare.png';
 import stoicism from '../assets/projects/stoicism-now-phone.png';
-import seoLamp from '../assets/projects/seo-lamp.png';
-import habits from '../assets/projects/quantified-habits.png';
 
-// Immerse: the passage is read along as you scroll, phrase by phrase
-const passage = [
-  'It is a truth universally acknowledged,',
-  'that a single man in possession of a good fortune,',
-  'must be in want of a wife.',
-  'However little known the feelings or views of such a man may be',
-  'on his first entering a neighbourhood,',
-  'this truth is so well fixed in the minds of the surrounding families,',
-  'that he is considered the rightful property',
-  'of some one or other of their daughters.',
-];
-const sets = [
-  ['Bench press', '4 × 8 · 70 kg'],
-  ['Overhead press', '3 × 10 · 40 kg'],
-  ['Incline dumbbell', '3 × 12 · 22 kg'],
-  ['Triceps dips', '3 × 15'],
-];
-
-const sites = [
+// A taste of the portfolio: three products, then on to the full page
+const picks = [
   {
-    n: '01',
     name: 'SmartCompare',
-    text: 'Compares 113 NZ mobile plans from 16 providers, so you can find a better deal in under a minute. Every page is static for speed; filters, a plan finder and calculators run on top.',
-    stack: 'Next.js · React · CSS Modules',
-    url: 'https://smartcompare.co.nz',
-    host: 'smartcompare.co.nz',
-    image: smartcompare,
-    brand: '#2fae78',
-    size: 'lead',
+    text: 'Every NZ mobile plan on one page.',
+    where: 'Web',
+    href: 'https://smartcompare.co.nz',
+    shot: 'site',
   },
   {
-    n: '02',
     name: 'Stoicism Now',
-    text: 'Stoic quotes with exact sources, the full texts, and guides to the ideas.',
-    stack: 'Next.js · Postgres',
-    url: 'https://stoicismnow.com',
-    host: 'stoicismnow.com',
-    image: stoicism,
-    brand: '#7f8cff',
-    size: 'tall',
+    text: 'Stoic quotes with exact sources.',
+    where: 'Web',
+    href: 'https://stoicismnow.com',
+    shot: 'phone',
   },
   {
-    n: '03',
-    name: 'SEO Lamp',
-    text: 'Free SEO tools and whole-site audits, ranked by what to fix first.',
-    stack: 'Next.js · Supabase · Stripe',
-    url: 'https://seolamp.vercel.app',
-    host: 'seolamp.vercel.app',
-    image: seoLamp,
-    brand: '#e8b84a',
-  },
-  {
-    n: '04',
-    name: 'Quantified Habits',
-    text: "Habits, tasks and todos on one board, with the numbers that show it's working.",
-    stack: 'Next.js · MUI · Supabase',
-    url: 'https://quantifiedhabits.vercel.app',
-    host: 'quantifiedhabits.vercel.app',
-    image: habits,
-    brand: '#ff7a4d',
+    name: 'Immerse',
+    text: 'Read along with the audiobook.',
+    where: 'Apps',
+    href: '/portfolio',
+    shot: 'reader',
   },
 ];
 ---
@@ -78,67 +38,38 @@ const sites = [
         <h2 id="work-heading" class="section__heading is-left"><span class="heading-text">PORTFOLIO</span></h2>
         <p class="sub">Products I've built, <em>start to finish.</em></p>
       </div>
-      <a class="more" href="/portfolio">All projects →</a>
+      <a class="all" href="/portfolio">See all 6 projects <span aria-hidden="true">→</span></a>
     </div>
 
-    <div class="bento">
-      {sites.map((p, i) => (
-        <article class:list={['card', p.size]} style={`--brand: ${p.brand}; --d: ${[0, 1, 0, 1][i]}`}>
-          <a class="win" href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
-            <span class="win__bar"><i></i><i></i><i></i><span>{p.host}</span></span>
-            <span class="win__view">
-              <Image class="px-pan" src={p.image} alt="" widths={[600, 900, 1200]} sizes="(min-width: 1025px) 760px, 92vw" loading="lazy" />
+    <ul class="picks" role="list">
+      {picks.map((p, i) => (
+        <li style={`--i: ${i}`}>
+          <a href={p.href} rel={p.href.startsWith('http') ? 'noopener' : undefined}>
+            <span class:list={['shot', `shot--${p.shot}`]} aria-hidden="true">
+              {p.shot === 'site' && (
+                <Image src={smartcompare} alt="" widths={[400, 800]} sizes="(min-width: 900px) 380px, 92vw" loading="lazy" />
+              )}
+              {p.shot === 'phone' && (
+                <Image class="px" src={stoicism} alt="" widths={[200, 400]} sizes="150px" loading="lazy" style="--from: 18px; --to: -18px" />
+              )}
+              {p.shot === 'reader' && (
+                <span class="page">
+                  <span class="page__top"><span>Pride and Prejudice</span><span>Chapter 1</span></span>
+                  It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in
+                  want of a wife. <mark>However little known the feelings or views of such a man may be on his first
+                  entering a neighbourhood,</mark> this truth is so well fixed in the minds of the surrounding families.
+                </span>
+              )}
             </span>
+            <span class="cap">
+              <span class="name">{p.name}</span>
+              <span class="where">{p.where}</span>
+            </span>
+            <span class="text">{p.text}</span>
           </a>
-          <div class="meta">
-            <span class="n">{p.n}</span>
-            <h3>{p.name}</h3>
-            <p>{p.text}</p>
-            <div class="foot">
-              <span>{p.stack}</span>
-              <a href={p.url} rel="noopener">Visit<span class="visually-hidden"> {p.name}</span> →</a>
-            </div>
-          </div>
-        </article>
+        </li>
       ))}
-
-      <!-- Quantified Gym: no site; a drawing of a workout in the app -->
-      <article class="card gym" style="--brand: #6f9bff; --d: 2">
-        <div class="phone" aria-hidden="true">
-          <p class="phone__top">Today · Push</p>
-          {sets.map(([name, detail], k) => (
-            <p class="ex" style={`--k: ${k}`}><b>{name}</b><span>{detail}</span></p>
-          ))}
-        </div>
-        <div class="meta">
-          <span class="n">05</span>
-          <h3>Quantified Gym</h3>
-          <p>A workout app for Android, built with React and Capacitor, that works fully offline.</p>
-          <div class="foot"><span>React · Ionic · Capacitor</span><span class="where">Android</span></div>
-        </div>
-      </article>
-
-      <!-- Immerse: a page being read along with the audiobook -->
-      <article class="card wide" style="--brand: #37c2b4; --d: 0">
-        <div class="meta">
-          <span class="n">06</span>
-          <h3>Immerse</h3>
-          <p>An Apple Books-style reader that highlights each sentence as the audiobook narrates it, on Mac, iPad and Android.</p>
-          <div class="foot"><span>JavaScript · Swift · Kotlin</span><span class="where">Mac · iPad · Android</span></div>
-        </div>
-        <div class="reader" aria-hidden="true">
-          <p class="reader__top"><span>Pride and Prejudice</span><span>Chapter 1</span></p>
-          <p class="reader__text">
-            {passage.map((phrase, k) => (
-              <>
-                <mark style={`--k: ${k}`}>{phrase}</mark>{' '}
-              </>
-            ))}
-          </p>
-          <p class="reader__audio"><b>▶</b><span><i></i></span><small>12:41 / 37:10</small></p>
-        </div>
-      </article>
-    </div>
+    </ul>
   </div>
 </section>
 
@@ -147,438 +78,199 @@ const sites = [
     background: var(--ebony-clay);
   }
 
-  .more {
+  /* The way through to the full portfolio */
+  .all {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    border: 1.5px solid #3c4565;
+    border-radius: 999px;
     font: 700 15px var(--font-body);
-    color: var(--accent);
+    color: var(--ink);
     text-decoration: none;
     white-space: nowrap;
+    transition: border-color 0.2s;
   }
 
-  .more:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+  .all span {
+    color: var(--muted);
+    transition: transform 0.25s, color 0.2s;
   }
 
-  .bento {
+  .all:hover {
+    border-color: var(--accent);
+  }
+
+  .all:hover span {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  .picks {
     display: grid;
-    gap: 22px;
-    margin-top: 56px;
+    gap: 40px 28px;
+    margin: 56px 0 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .card {
-    display: flex;
-    flex-direction: column;
-    padding: 14px;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--panel);
-  }
-
-
-  .win {
+  .picks a {
     display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Every product gets the same frame: the work is the picture */
+  .shot {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
     overflow: hidden;
-    border-radius: 12px;
-    background: #fff;
+    border-radius: 8px;
+    background: #2b3349;
+    container-type: inline-size;
   }
 
-  .win__bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 12px;
-    background: #e9ecf2;
-  }
-
-  .win__bar i {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #c7ccd8;
-  }
-
-  .win__bar span {
-    min-width: 40%;
-    margin: 0 auto;
-    padding: 3px 14px;
-    border-radius: 6px;
-    background: #fff;
-    font: 12px var(--font-body);
-    color: #5b647d;
-    text-align: center;
-  }
-
-  .win__view {
+  .shot :global(img) {
     display: block;
-    height: 200px;
-    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .win__view :global(img) {
-    display: block;
+  .shot--site :global(img) {
     width: 100%;
-    height: 150%;
+    height: 100%;
     object-fit: cover;
     object-position: top;
-    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
-  .meta {
+  .picks a:hover .shot--site :global(img) {
+    transform: scale(1.025);
+  }
+
+  .shot--phone {
     display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 20px 8px 6px;
+    justify-content: center;
+    background: #e9ebf6;
   }
 
-  .n {
-    font: 700 13px var(--font-body);
-    letter-spacing: 0.2em;
-    color: var(--brand);
+  .shot--phone :global(img) {
+    width: 38%;
+    height: auto;
+    margin-top: 7%;
+    border-radius: 4.5cqw 4.5cqw 0 0;
   }
 
-  h3 {
-    margin-top: 6px;
-    font: 700 38px/1 var(--font-display);
-    letter-spacing: 0.4px;
-    color: var(--ink);
-  }
-
-  .meta p {
-    margin-top: 12px;
-    font-size: 15.5px;
-    line-height: 1.6;
-    color: var(--muted);
-  }
-
-  .foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-    font-size: 13px;
-    color: #aeb6cd;
-  }
-
-  .meta p + .foot {
-    margin-top: 18px;
-  }
-
-  .foot a {
-    font: 700 14px var(--font-body);
-    color: var(--accent);
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .foot a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  .where {
-    white-space: nowrap;
-  }
-
-  /* Quantified Gym: a drawn phone */
-  .phone {
-    align-self: center;
-    width: 230px;
-    overflow: hidden;
-    padding: 18px 14px;
-    border: 7px solid #1b2133;
-    border-radius: 30px;
-    background: #f4f6fb;
-  }
-
-  .phone__top {
-    margin-bottom: 12px;
-    font: 700 15px var(--font-body);
-    color: #1b2234;
-  }
-
-  .ex {
-    position: relative;
+  .shot--reader {
     display: grid;
-    gap: 2px;
-    margin-bottom: 8px;
-    padding: 9px 36px 9px 10px;
-    border: 1px solid #e3e7f0;
-    border-radius: 10px;
-    background: #fff;
+    place-items: center;
+    background: #e8e2d4;
   }
 
-  .ex b {
-    font-size: 13px;
-    color: #1b2234;
+  .page {
+    display: block;
+    width: 80%;
+    padding: 4.7cqw 5.8cqw;
+    border-radius: 1.6cqw;
+    background: #f6f1e7;
+    font: 3.7cqw/1.7 Georgia, 'Times New Roman', serif;
+    color: #3b3a36;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .ex span {
-    font-size: 11px;
-    color: #6b7390;
+  .picks a:hover .page {
+    transform: translateY(-1.5cqw);
   }
 
-  .ex::after {
-    content: '';
-    position: absolute;
-    right: 11px;
-    top: 50%;
-    width: 14px;
-    height: 14px;
-    margin-top: -9px;
-    border: 2px solid #c7ccd8;
-    border-radius: 50%;
-  }
-
-
-  /* Immerse: a page with the narrated sentence highlighted */
-  .reader {
-    margin-top: 18px;
-    padding: 22px 24px;
-    border-radius: 14px;
-    background: #f7f3ea;
-    color: #2b2a27;
-  }
-
-  .reader__top {
+  .page__top {
     display: flex;
     justify-content: space-between;
-    font: 12px var(--font-body);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #8a8473;
+    margin-bottom: 2cqw;
+    font: 2.6cqw var(--font-body);
+    color: #8b867b;
   }
 
-  .reader__text {
-    margin-top: 14px;
-    font: 16px/1.75 Georgia, 'Times New Roman', serif;
-  }
-
+  /* The phrase being narrated. The highlight is a background strip so it
+     can sweep along the phrase, line by line. */
   mark {
-    padding: 1px 0;
-    border-radius: 4px;
-    background: transparent;
+    border-radius: 2px;
+    background: linear-gradient(rgb(55 194 180 / 0.3), rgb(55 194 180 / 0.3)) 0 0 / 100% 100% no-repeat;
     color: inherit;
   }
 
-  /* Without scroll-driven animation, one phrase stays highlighted */
-  mark:nth-child(4) {
-    background: #cdeee9;
-  }
-
-  .reader__audio {
+  .cap {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 14px;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-top: 16px;
   }
 
-  .reader__audio b {
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: var(--brand);
-    color: #fff;
-    font-size: 11px;
+  .name {
+    font: 700 19px var(--font-body);
+    color: var(--ink);
+    transition: color 0.2s;
   }
 
-  .reader__audio > span {
-    flex: 1;
-    height: 4px;
-    border-radius: 9px;
-    background: #e2dccd;
+  .picks a:hover .name {
+    color: var(--accent);
   }
 
-  .reader__audio i {
+  .where {
+    font: 700 11px var(--font-body);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .text {
     display: block;
-    transform-origin: 0 50%;
-    width: 100%;
-    transform: scaleX(0.34);
-    height: 100%;
-    border-radius: 9px;
-    background: var(--brand);
+    margin-top: 4px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--muted);
   }
 
-  .reader__audio small {
-    font: 12px var(--font-body);
-    color: #8a8473;
-  }
-
-  /* Scroll choreography */
+  /* Scroll choreography: the three rise in one after another, and the
+     reader's highlight sweeps along its phrase */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      /* SmartCompare starts tipped back in 3D and swings flat as it arrives */
-      .lead .win {
-        animation: swing-flat linear both;
+      .picks {
+        view-timeline: --picks block;
       }
-      .work .lead .win {
-        animation-timeline: view();
-        animation-range: entry 0% cover 42%;
+      .picks li {
+        --rise: 40px;
+        animation: fade-rise linear both;
       }
-
-      /* The other cards are unveiled from the bottom up */
-      .card:not(.lead) {
-        animation: unveil linear both;
-      }
-      .work .card:not(.lead) {
-        animation-timeline: view();
-        animation-range: entry calc(var(--d) * 8%) entry calc(85% + var(--d) * 5%);
-      }
-
-      /* The workout ticks off set by set, and its bar fills */
-      .gym {
-        view-timeline: --gym block;
-      }
-      .ex::after {
-        animation: tick linear both;
-      }
-      .gym .ex::after {
-        animation-timeline: --gym;
-        animation-range: cover calc(30% + var(--k) * 9%) cover calc(34% + var(--k) * 9%);
-      }
-
-      /* Immerse reads along: the highlight moves through the passage,
-         phrase by phrase, and the audio bar keeps pace */
-      .wide {
-        view-timeline: --read block;
+      .work .picks li {
+        animation-timeline: --picks;
+        animation-range: entry calc(var(--i) * 12%) cover calc(30% + var(--i) * 6%);
       }
       mark {
-        animation: read-along linear both;
+        animation: sweep linear both;
       }
-      .wide mark {
-        animation-timeline: --read;
-        animation-range: cover calc(22% + var(--k) * 6%) cover calc(30% + var(--k) * 6%);
-      }
-      .wide mark:nth-child(4) {
-        background: transparent;
-      }
-      .reader__audio i {
-        animation: fill-bar linear both;
-      }
-      .wide .reader__audio i {
-        animation-timeline: --read;
-        animation-range: cover 22% cover 78%;
+      .work mark {
+        animation-timeline: --picks;
+        animation-range: cover 30% cover 55%;
       }
     }
   }
 
-  @keyframes swing-flat {
+  @keyframes sweep {
     from {
-      transform: perspective(1400px) rotateX(28deg) scale(0.86) translateY(60px);
-      opacity: 0.4;
+      background-size: 0 100%;
     }
   }
 
-  @keyframes unveil {
-    from {
-      clip-path: inset(100% 0 0 0 round 20px);
-      transform: translateY(40px);
-    }
-    to {
-      clip-path: inset(0 0 0 0 round 20px);
+  @media (min-width: 640px) and (max-width: 899px) {
+    .picks {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @keyframes tick {
-    from {
-      border-color: #c7ccd8;
-      background: transparent;
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.35);
-    }
-    to {
-      border-color: var(--brand);
-      background: var(--brand);
-      transform: scale(1);
-    }
-  }
-
-  @keyframes fill-bar {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  @keyframes read-along {
-    0%,
-    100% {
-      background: transparent;
-    }
-    20%,
-    80% {
-      background: #cdeee9;
-    }
-  }
-
-  @media (hover: hover) {
-    .card:hover .win__view :global(img) {
-      transform: translateY(-4%);
-    }
-  }
-
-  @media (min-width: 700px) {
-    .bento {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .lead,
-    .wide {
-      grid-column: span 2;
-    }
-    .wide {
-      flex-direction: row;
-      align-items: center;
-      gap: 26px;
-      padding: 22px;
-    }
-    .wide .meta {
-      flex: 1;
-    }
-    .wide .reader {
-      flex: 1.15;
-      margin-top: 0;
-    }
-  }
-
-  @media (min-width: 1025px) {
-    .bento {
-      grid-template-columns: repeat(6, 1fr);
-    }
-    .card {
-      grid-column: span 2;
-    }
-    .lead {
-      grid-column: span 4;
-    }
-    .wide {
-      grid-column: span 6;
-    }
-    .lead .win__view {
-      height: 380px;
-    }
-    .tall .win__view {
-      height: 470px;
-    }
-    .lead h3 {
-      font-size: 54px;
-    }
-    .lead .meta p {
-      max-width: 640px;
-      font-size: 17px;
-    }
-    .win__view {
-      height: 220px;
-    }
-    .reader__text {
-      font-size: 17px;
+  @media (min-width: 900px) {
+    .picks {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 </style>
