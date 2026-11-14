@@ -176,8 +176,10 @@ a {
    headings do (blur and fade only, so nothing moves under the fox) */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* Backwards only: once in focus the filter goes away entirely, so
+       the letters aren't redrawn through a blur(0) as they move */
     .section__heading {
-      animation: focus-in linear both;
+      animation: focus-in linear backwards;
     }
     main .section__heading {
       animation-timeline: view();
@@ -314,6 +316,7 @@ a {
   z-index: 200;
   height: 2px;
   background: var(--cyan);
+  transition: background-color 0.4s linear;
   transform-origin: 0 50%;
   transform: scaleX(0);
   pointer-events: none;
@@ -334,16 +337,16 @@ a {
       animation-timeline: scroll(root block);
     }
 
-    /* Section headings rise out of a mask as they come up */
-    .section__heading.is-left .heading-text {
+    /* Section headings rise out of a mask as they come up: the script
+       in Base drives it in whole pixels; this is the fallback without it */
+    :root:not(.rise-js) .section__heading.is-left .heading-text {
       animation: mask-rise linear both;
     }
-    main .section__heading.is-left .heading-text {
+    :root:not(.rise-js) main .section__heading.is-left .heading-text {
       animation-timeline: view();
       animation-range: entry 10% cover 30%;
-      /* Its own layer, drawn once and slid: without it the letters were
-         redrawn at a new subpixel offset each frame inside the heading's
-         blur, and fine shapes like the M's inner V shimmered on scroll */
+    }
+    .section__heading.is-left .heading-text {
       will-change: transform;
     }
   }
@@ -355,8 +358,11 @@ a {
   }
 }
 
+/* The mask the heading text rises out of. clip, not hidden: hidden makes
+   the heading a scroll container, so the text's rise would be timed against
+   the heading instead of the page and never play */
 .section__heading.is-left {
-  overflow: hidden;
+  overflow: clip;
   padding-bottom: 0.06em;
 }
 
@@ -472,5 +478,105 @@ html.live-ready [data-live]:not(.was-seen) .trace path {
   html.live-ready [data-live]:not(.was-seen) .trace path {
     stroke-dashoffset: 0;
     fill-opacity: 1;
+  }
+}
+
+/*
+  [data-ripple]: Material-style buttons and links. A fill spreads from where
+  the pointer comes in and drains away where it leaves, a ripple grows from
+  a press (held, it keeps growing; let go, it fades) or from the centre for
+  the keyboard, and keyboard focus pulses a soft circle. The script in Base
+  adds the layer; each button sets --fill and --ripple.
+*/
+[data-ripple] {
+  position: relative;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rfx {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.rfx__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background: var(--fill, rgb(0 0 0 / 0.08));
+  transform: scale(0);
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rfx__dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--ripple, rgb(255 255 255 / 0.3));
+  animation: rfx-in 550ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.rfx__dot.is-out {
+  animation:
+    rfx-in 550ms cubic-bezier(0.4, 0, 0.2, 1) both,
+    rfx-out 550ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes rfx-in {
+  from {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rfx-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Keyboard focus: a soft circle in the middle that breathes */
+[data-ripple]:focus-visible > .rfx::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 84%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--ripple, rgb(255 255 255 / 0.3));
+  translate: -50% -50%;
+  opacity: 0.45;
+  animation:
+    rfx-focus-in 550ms cubic-bezier(0.4, 0, 0.2, 1) both,
+    rfx-pulsate 2500ms ease-in-out 550ms infinite;
+}
+
+@keyframes rfx-focus-in {
+  from {
+    transform: scale(0);
+  }
+}
+
+@keyframes rfx-pulsate {
+  50% {
+    transform: scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-ripple]:focus-visible > .rfx::after {
+    animation: none;
   }
 }

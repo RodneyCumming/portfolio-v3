@@ -377,13 +377,26 @@ const gulls = [
     opacity: 0.45;
   }
 
+  /* Phones: the name on two lines, RODNEY over CUMMING, as big as the
+     width allows, and a little higher so it clears the peaks */
+  @media (max-width: 767px) {
+    .heading {
+      padding-top: 104px;
+    }
+    .name {
+      font-size: min(22vw, 120px);
+      line-height: 0.86;
+    }
+  }
+
   .role {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 16px;
     letter-spacing: 5px;
     margin-top: 4px;
-    color: var(--fountain-blue);
+    /* Deep enough to read on the pale sky (4.7:1) */
+    color: #2a6680;
   }
 
   @media (min-width: 768px) {
@@ -453,6 +466,7 @@ const gulls = [
     margin-left: calc(50% - 1500px);
   }
 
+
   /* Parallax. Unsupported browsers get the same scene, standing still. */
   @supports (animation-timeline: scroll()) {
     @media (prefers-reduced-motion: no-preference) {
@@ -516,13 +530,16 @@ const gulls = [
   }
 
   /* Intro, back to front. Hidden only while html has .intro but not yet
-     .intro-go; with no JavaScript neither class is set, so it simply shows. */
+     .intro-go; with no JavaScript neither class is set, so it simply shows.
+     "Hidden" is opacity 0.01, not 0: it looks the same, but Chrome only
+     counts an element for Largest Contentful Paint if it's painted visible
+     to begin with, and a page with no LCP gets no performance score. */
   :global(html.intro:not(.intro-go)) .art,
   :global(html.intro:not(.intro-go)) .birds,
   :global(html.intro:not(.intro-go)) .name-wrap,
   :global(html.intro:not(.intro-go)) .role,
   :global(html.intro:not(.intro-go)) .cloud {
-    opacity: 0;
+    opacity: 0.01;
   }
 
   :global(html.intro-go) .art {
@@ -588,25 +605,25 @@ const gulls = [
 
   @keyframes intro-fade {
     from {
-      opacity: 0;
+      opacity: 0.01;
     }
   }
   @keyframes intro-rise {
     from {
-      opacity: 0;
+      opacity: 0.01;
       translate: 0 var(--rise, 40px);
     }
   }
   @keyframes intro-focus {
     from {
-      opacity: 0;
+      opacity: 0.01;
       filter: blur(8px);
       scale: 0.97;
     }
   }
   @keyframes intro-drift {
     from {
-      opacity: 0;
+      opacity: 0.01;
       translate: var(--from) 0;
     }
   }

@@ -81,5 +81,160 @@ const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), Ast
         });
       })();
     </script>
+    <!-- [data-ripple] buttons and links (styles in global.css): hover fill
+         from the entry point, press ripple, keyboard ripple -->
+    <script is:inline>
+      (function () {
+        var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.querySelectorAll('[data-ripple]').forEach(function (b) {
+          var fx = document.createElement('span');
+          fx.className = 'rfx';
+          fx.setAttribute('aria-hidden', 'true');
+          fx.innerHTML = '<i class="rfx__fill"></i>';
+          b.prepend(fx);
+          var fill = fx.firstChild, live = null;
+          function local(e) {
+            var r = b.getBoundingClientRect();
+            return { x: e.clientX - r.left, y: e.clientY - r.top, w: r.width, h: r.height };
+          }
+          // A circle centred on (x, y) big enough to reach the far corner
+          function circle(el, p) {
+            var size = 2 * Math.hypot(Math.max(p.x, p.w - p.x), Math.max(p.y, p.h - p.y));
+            el.style.left = p.x - size / 2 + 'px';
+            el.style.top = p.y - size / 2 + 'px';
+            el.style.width = el.style.height = size + 'px';
+          }
+          b.addEventListener('pointerenter', function (e) {
+            if (e.pointerType !== 'mouse' || calm) return;
+            fill.style.transition = 'none';
+            circle(fill, local(e));
+            fill.style.transformOrigin = '50% 50%';
+            fill.style.transform = 'scale(0)';
+            void fill.offsetWidth;
+            fill.style.transition = '';
+            fill.style.transform = 'scale(1)';
+          });
+          b.addEventListener('pointerleave', function (e) {
+            if (e.pointerType !== 'mouse' || calm) return;
+            var p = local(e);
+            // Drain away into the point where it left
+            fill.style.transformOrigin = p.x - parseFloat(fill.style.left) + 'px ' + (p.y - parseFloat(fill.style.top)) + 'px';
+            fill.style.transform = 'scale(0)';
+          });
+          function ripple(p) {
+            if (calm) return null;
+            var dot = document.createElement('i');
+            dot.className = 'rfx__dot';
+            circle(dot, p);
+            fx.appendChild(dot);
+            return dot;
+          }
+          function release(dot) {
+            if (!dot) return;
+            dot.classList.add('is-out');
+            setTimeout(function () {
+              dot.remove();
+            }, 1100);
+          }
+          b.addEventListener('pointerdown', function (e) {
+            if (e.button) return;
+            release(live);
+            live = ripple(local(e));
+          });
+          ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (t) {
+            b.addEventListener(t, function () {
+              release(live);
+              live = null;
+            });
+          });
+          b.addEventListener('keydown', function (e) {
+            if (e.repeat || !(e.key === 'Enter' || (e.key === ' ' && b.tagName === 'BUTTON'))) return;
+            var r = b.getBoundingClientRect();
+            release(ripple({ x: r.width / 2, y: r.height / 2, w: r.width, h: r.height }));
+          });
+        });
+      })();
+    </script>
+    <!-- The scroll progress bar takes a bright version of the colour of
+         the section under it (in Portfolio that's each card's colour, as
+         the background shifts between them) -->
+    <script is:inline>
+      (function () {
+        var bar = document.querySelector('.progress');
+        if (!bar) return;
+        var parts = [].slice.call(document.querySelectorAll('main > *, body > .footer'));
+        function rgb(el) {
+          var m = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
+          if (!m || (m.length > 3 && +m[3] === 0)) {
+            // A see-through section (the hero): use its sky
+            var sky = el.querySelector('.sky__box');
+            return sky && sky !== el ? rgb(sky) : null;
+          }
+          return m.slice(0, 3).map(Number);
+        }
+        // Same hue, made vivid and mid-light so it shows on any section
+        function bright(c) {
+          var r = c[0] / 255, g = c[1] / 255, b = c[2] / 255;
+          var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, h = 0;
+          var l = (mx + mn) / 2, s = d ? d / (1 - Math.abs(2 * l - 1)) : 0;
+          if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+          h = (h * 60 + 360) % 360;
+          s = Math.min(0.85, Math.max(0.6, s * 2.4));
+          return 'hsl(' + h.toFixed(0) + ' ' + (s * 100).toFixed(0) + '% 64%)';
+        }
+        var ticking = false, last = '';
+        function frame() {
+          ticking = false;
+          for (var i = 0; i < parts.length; i++) {
+            var r = parts[i].getBoundingClientRect();
+            if (r.top <= 2 && r.bottom > 2) break;
+          }
+          var c = parts[i] && rgb(parts[i]);
+          var col = c ? bright(c) : '';
+          if (col !== last) bar.style.backgroundColor = last = col;
+        }
+        addEventListener('scroll', function () {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(frame);
+        }, { passive: true });
+        frame();
+      })();
+    </script>
+    <!-- Section headings rise out of a mask as they come up. Driven here
+         rather than by a CSS scroll timeline so the text only ever moves in
+         whole screen pixels: at in-between offsets fine shapes like the M's
+         inner V were drawn differently each frame and seemed to wobble -->
+    <script is:inline>
+      (function () {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var els = [].slice.call(document.querySelectorAll('main .section__heading.is-left .heading-text'));
+        if (!els.length) return;
+        var dpr = window.devicePixelRatio || 1, ticking = false;
+        function frame() {
+          ticking = false;
+          var V = innerHeight;
+          els.forEach(function (el) {
+            // Where it sits without the rise, and its height
+            var h = el.offsetHeight, top = el.getBoundingClientRect().top - (el._y || 0);
+            // From 10% into view until it's 30% through the screen
+            var a = V - 0.1 * h, b = V - 0.3 * (V + h);
+            var k = Math.min(1, Math.max(0, (a - top) / (a - b)));
+            var y = Math.round((1 - k) * 1.05 * h * dpr) / dpr;
+            if (y === el._y) return;
+            el._y = y;
+            el.style.transform = y ? 'translate3d(0,' + y + 'px,0)' : '';
+          });
+        }
+        document.documentElement.classList.add('rise-js');
+        addEventListener('scroll', function () {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(frame);
+        }, { passive: true });
+        addEventListener('resize', frame);
+        frame();
+      })();
+    </script>
   </body>
 </html>

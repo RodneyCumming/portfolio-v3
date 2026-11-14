@@ -1,44 +1,149 @@
 ---
+import { siGithub } from 'simple-icons';
 const year = new Date().getFullYear();
+const email = 'rodneycumming@gmail.com';
+const github = 'https://github.com/RodneyCumming';
 ---
 
 <footer class="footer">
   <div class="footer__inner">
-    <a href="/" aria-label="Rodney Cumming, home">
-      <img src="/images/logo.svg" alt="" width="33" height="33" />
-    </a>
-    <p>Made by Rodney Cumming, {year}</p>
+    <div class="footer__row">
+      <a class="brand" href="/">
+        <img src="/images/logo.svg" alt="" width="30" height="30" />
+        <span>© {year} Rodney Cumming</span>
+      </a>
+      <nav class="links" aria-label="Footer">
+        <a class="pill" href={github} rel="noopener" data-ripple>
+          <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d={siGithub.path}></path></svg>
+          GitHub
+        </a>
+        <a class="pill" href={`mailto:${email}`} data-ripple>
+          <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" class="line"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 6-10 7L2 6"></path></svg>
+          Email
+        </a>
+        <a class="pill pill--line" href="#" data-top data-ripple>
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" class="line"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+          Back to top
+        </a>
+      </nav>
+    </div>
+    <div class="footer__note">
+      <p>Built with <b>Astro</b> · Hosted on <b>Vercel</b> · No cookies, no trackers</p>
+    </div>
   </div>
 </footer>
+
+<script is:inline>
+  (function () {
+    // Back to top: a smooth scroll, or a jump for those who'd rather not
+    var top = document.querySelector('[data-top]');
+    if (!top) return;
+    top.addEventListener('click', function (e) {
+      e.preventDefault();
+      var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+    });
+  })();
+</script>
 
 <style>
   .footer {
     position: relative;
     z-index: 1;
     background: var(--dark-mirage);
+    border-top: 1px solid rgb(255 255 255 / 0.05);
   }
 
   .footer__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+  }
+
+  .footer__row {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
-    padding: 50px;
+    justify-content: space-between;
+    gap: 22px 24px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: #c9cfe2;
+    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Pills with the same hover fill and ripple as Copy email */
+  .pill {
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --fill: #232a40;
+    --ripple: #3b4873;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--bluewood);
+    color: #dfe5f5;
+    font: 700 14px var(--font-body);
+    text-decoration: none;
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+    transition: outline-color 250ms var(--ease);
+  }
+
+  .pill--line {
+    --fill: #222a42;
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px #3b4873;
+  }
+
+  .pill:focus-visible {
+    outline-color: var(--curious-blue);
+  }
+
+  .pill svg {
+    flex: none;
+  }
+
+  .line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .footer__note {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 24px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid rgb(255 255 255 / 0.06);
+    font-size: 13px;
+    line-height: 1.6;
+    color: #7d86a3;
+  }
+
+  .footer__note b {
+    color: #9aa3bd;
   }
 
   @media (min-width: 768px) {
     .footer__inner {
-      flex-direction: row;
-      gap: 30px;
-      padding: 100px;
+      padding: 56px 24px 40px;
     }
-  }
-
-  p {
-    color: var(--alto);
-    font-size: 16px;
-    line-height: 2rem;
-    text-align: center;
   }
 </style>

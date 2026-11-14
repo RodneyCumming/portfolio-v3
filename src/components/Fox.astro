@@ -7,12 +7,13 @@
   headings, coffee cups, filter pills and icons, and the edges between
   sections. He rests on each perch (blinking, flicking his tail).
 
-  In Technology he sits on top of the filter bar and every few seconds does a
-  backflip (now and then a double).
+  In Contact he's curled up asleep on top of the email box. Scrolling down to
+  the bottom of the page, he lifts his head, looks around (ahead, back over
+  his tail, up), blinks and goes back to sleep.
 
-  In Contact he's curled up asleep on top of the email box. Every so often he
-  lifts his head, looks around (ahead, back over his tail, up), blinks and
-  goes back to sleep.
+  Everything he does is set by the scroll position, not by time: stop
+  scrolling and he holds still; scroll back and it plays in reverse. Even his
+  blinks and tail flicks happen at set points as you scroll.
 
   Frames come from public/images/fox-sprite.svg (order listed in
   scripts/fox/fox.py). Running frames advance with the distance he covers, so
@@ -46,6 +47,9 @@
       [0.06, PUSH], [0.12, PUSH_LEAP], [0.2, LEAP], [0.26, LEAP_TUCK[0]], [0.32, LEAP_TUCK[1]],
       [0.66, TUCK], [0.72, TUCK_REACH[0]], [0.78, TUCK_REACH[1]], [0.92, REACH], [1.01, REACH_LAND]
     ];
+    // Before and after the jump: [share of the run-up or landing, frame]
+    var RUN_UP = [[0.25, STAND], [0.45, STAND_CROUCH], [0.85, CROUCH], [1.01, CROUCH_PUSH]];
+    var TOUCH = [[0.25, LAND], [0.45, LAND_STAND], [0.7, STAND], [1.01, SETTLE]];
     var STRIDE = 4.7; // px per gallop frame; 24 frames make a ~112px stride
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -101,6 +105,69 @@
       return pt(x, b.top + ridgeAt(sx) * b.sc + drop);
     }
 
+    // The front range's hills (mountains-4.svg), back to front, each as
+    // [peak, right shoulder, right foot, left foot, left shoulder]
+    var HILLS = [
+      [[2683,32],[3214,203],[3710,296],[1724,296],[2404,127]],
+      [[1655,61],[2416,213],[3127,296],[281,296],[1256,145]],
+      [[2520,6],[2837,189],[3133,289],[1947,289],[2353,108]],
+      [[2560,6],[2877,189],[3173,289],[1987,289],[2393,108]],
+      [[2307,38],[2625,203],[2922,293],[1734,293],[2141,130]],
+      [[3231,41],[3756,200],[4247,287],[2283,287],[2956,129]],
+      [[3632,44],[3950,209],[4247,299],[3059,299],[3466,136]],
+      [[3776,49],[4094,214],[4391,304],[3203,304],[3610,141]],
+      [[1741,79],[2084,213],[2422,299],[1325,299],[1701,151]],
+      [[2104,84],[2299,216],[2480,289],[1754,289],[2003,158]],
+      [[1048,0],[1398,189],[1724,292],[417,292],[865,105]],
+      [[1196,49],[1539,220],[1860,313],[576,313],[1016,144]],
+      [[228,6],[783,195],[1302,298],[-775,298],[-63,111]],
+      [[463,55],[1008,226],[1518,319],[-522,319],[177,150]]
+    ];
+    function onScreen(hill) {
+      var b = ridgeBox();
+      return hill.map(function (v) {
+        return pt(b.left + v[0] * b.sc, b.top + v[1] * b.sc);
+      });
+    }
+    function inHill(h, p) {
+      for (var c = false, i = 0, j = h.length - 1; i < h.length; j = i++) {
+        if ((h[i].y > p.y) !== (h[j].y > p.y) && p.x < h[i].x + ((p.y - h[i].y) * (h[j].x - h[i].x)) / (h[j].y - h[i].y)) c = !c;
+      }
+      return c;
+    }
+    // The hill's top edge at x (peak, shoulders, feet), or null off it
+    function hillTop(h, x) {
+      var line = [h[3], h[4], h[0], h[1], h[2]];
+      for (var i = 1; i < line.length; i++) {
+        var a = line[i - 1], b = line[i];
+        if (x >= a.x && x <= b.x) return a.y + ((b.y - a.y) * (x - a.x)) / (b.x - a.x);
+      }
+      return null;
+    }
+    // The hill he starts behind: the one he sits on when its peak and a
+    // good run of its right slope are on screen, else the nearest one that
+    // has them
+    function pickHill(near) {
+      var hills = HILLS.map(onScreen), ok = function (h) {
+        return h[0].x > innerWidth * 0.25 && h[0].x < innerWidth - 70 && h[1].x - h[0].x > 90;
+      };
+      for (var i = hills.length - 1; i >= 0; i--) if (inHill(hills[i], near)) break;
+      if (i >= 0 && ok(hills[i])) return hills[i];
+      for (i = hills.length - 1; i >= 0; i--) if (ok(hills[i])) return hills[i];
+      return null;
+    }
+    // Clip him to above the hill's edge while he's behind it
+    var hill = null, clipHill = false;
+    function behindHill(p) {
+      var left = p.x - W / 2, top = p.y - H, pts = ['-20px -80px'];
+      for (var lx = -20; lx <= W + 20; lx += 6) {
+        var e = hillTop(hill, left + lx);
+        pts.push(lx + 'px ' + (e === null ? H + 40 : e - top).toFixed(1) + 'px');
+      }
+      pts.push(W + 20 + 'px -80px');
+      fox.style.clipPath = 'polygon(' + pts.join(',') + ')';
+    }
+
     // Perch on top of a heading's last letter
     function onHeading(el) {
       var b = box(el);
@@ -120,7 +187,9 @@
     */
     var legs, perches, stops;
     // Spots further down the page where he stays put and does something:
-    // backflips in Technology, a nap in Contact. inSpot names the one he's at.
+    // backflips in the corner of the screen through Portfolio, a nap in
+    // Contact. inSpot names the
+    // one he's at.
     var spots = {}, inSpot = '';
     function steps(frames, ms) {
       return frames.map(function (f) {
@@ -130,13 +199,6 @@
     function back(frames) {
       return frames.slice().reverse();
     }
-    var NAP = [].concat(
-      steps(LIFT, 85), [[CURL_UP, 1200]],
-      steps(TURN, 70), [[CURL_BACK, 1400]], steps(back(TURN), 70), [[CURL_UP, 450]],
-      [[CURL_BLINK, 130]], [[CURL_UP, 550]],
-      steps(TIP, 75), [[CURL_SKY, 1100]], steps(back(TIP), 75), [[CURL_UP, 400]],
-      steps(back(LIFT), 95)
-    );
 
     function build() {
       var h = box(hero);
@@ -144,12 +206,26 @@
       var desktop = innerWidth >= 768;
       var ground = h.bottom - (desktop ? 34 : 26);
       var start = ridgeStart(h);
+      // Behind the hill: out of sight to begin with, then a run
+      // to the right down behind its slope, coming up until he's out on it
+      var behind = null;
+      hill = reduce ? null : pickHill(start);
+      if (hill) {
+        var sc = desktop ? 0.78 : 0.64, deep = 52 * sc;
+        var x0 = hill[0].x + 10, x1 = Math.min(innerWidth - 50, hill[0].x + Math.max(110, (hill[1].x - hill[0].x) * 0.8));
+        behind = [];
+        for (var bx = x0; bx <= x1 + 0.1; bx += (x1 - x0) / 16) {
+          var k0 = (bx - x0) / (x1 - x0);
+          behind.push(pt(bx, hillTop(hill, bx) + deep * (1 - k0) * (1 - k0 * 0.3)));
+        }
+        start = behind[0];
+      }
       perches = [{ at: start, pose: SIT }];
       legs = [];
 
       function addLeg(moves, at, pose) {
         moves = moves.filter(function (m) {
-          return m.from && m.to;
+          return m && m.from && m.to;
         });
         if (!moves.length || !at) return false;
         legs.push(moves);
@@ -163,8 +239,10 @@
       var foot = pt(h.left + h.w * 0.66, ground);
       var launch = pt(Math.max(about.x + 70, Math.min(foot.x - 40, about.x + 160)), ground);
       if (launch.x > foot.x) launch.x = foot.x;
+      var out = behind ? behind[behind.length - 1] : start;
       addLeg([
-        { kind: 'run', from: start, to: foot },
+        behind && { kind: 'run', from: start, to: out, path: behind, behind: true },
+        { kind: 'run', from: out, to: foot },
         { kind: 'run', from: foot, to: launch },
         { kind: 'leap', from: launch, to: about }
       ], about);
@@ -174,22 +252,38 @@
       // when it does.
       spots = {};
       var maxS = document.documentElement.scrollHeight - innerHeight - 10;
-      // Technology: on top of the filter bar, towards its right end
-      var seg = box(q('.tech .seg'));
-      if (seg) {
-        spots.tricks = {
-          at: pt(seg.right - (desktop ? 70 : 50), seg.top + 1),
-          start: seg.top - innerHeight - 40
+      // Portfolio: pinned to the bottom right corner of the screen, standing
+      // on its bottom edge, from when
+      // the first card comes up until Contact. Not on phones, where the
+      // cards fill the width and he'd sit on top of them.
+      var stack = box(q('#portfolio .stack'));
+      if (stack && desktop) {
+        spots.flip = {
+          at: pt(innerWidth - (desktop ? 84 : 46), innerHeight - 1),
+          start: stack.top - innerHeight * 0.6
         };
       }
+
       // Contact: on top of the email box (the right end, by the Copy button)
       var mail = box(q('.contact .mail'));
       if (mail) {
         var sEnd = Math.min(maxS, mail.top - innerHeight * 0.4);
         spots.nap = {
+          el: q('.contact .mail'),
           at: pt(mail.right - (desktop ? 80 : 56), mail.top + 1),
           start: Math.min(mail.top - innerHeight - 40, sEnd - 300)
         };
+        // The nap plays from when the box comes into view to the page's end
+        spots.nap.a = spots.nap.start;
+        spots.nap.b = Math.max(spots.nap.a + 200, maxS);
+      }
+      // He runs off as the last card settles, before the end of the section
+      // scrolls into view
+      if (spots.flip) {
+        var last = box(q('#portfolio .slot:last-child'));
+        var work = box(q('#portfolio'));
+        spots.flip.end = Math.min(last ? last.top - innerHeight * 0.15 : Infinity, work.bottom - innerHeight * 1.05);
+        if (spots.nap) spots.flip.end = Math.min(spots.flip.end, spots.nap.start);
       }
 
       var maxScroll = document.documentElement.scrollHeight - innerHeight;
@@ -211,6 +305,8 @@
             m.len = dist(m.from, m.to);
           }
           m.cost = m.kind === 'run' ? m.len : m.len * 1.3 + (m.kind === 'hop' ? 30 : 60);
+          // Coming out from behind the hill takes its time
+          if (m.behind) m.cost *= 3;
           sum += m.cost;
         });
         moves.forEach(function (m) {
@@ -221,7 +317,7 @@
       update();
     }
 
-    var lastP = null, facing = 1, lastX = null, frame = SIT, still = 0, idle = null, hold = 0;
+    var lastP = null, facing = 1, lastX = null, frame = SIT;
 
     function show(f) {
       frame = f;
@@ -240,6 +336,9 @@
       sprite.style.transform = (facing < 0 ? 'scaleX(-1) ' : '') +
         (spin ? 'translateY(-' + PIVOT + 'px) rotate(' + spin.toFixed(1) + 'deg) translateY(' + PIVOT + 'px)' : '');
       show(f);
+      if (clipHill && hill) behindHill(p);
+      else if (fox.style.clipPath) fox.style.clipPath = '';
+      clipHill = false;
       fox.classList.toggle('is-asleep', BREATH.indexOf(f) !== -1);
       fox.classList.toggle('is-flipped', facing < 0);
     }
@@ -258,37 +357,167 @@
       return t < 0.08 ? CROUCH : t < 0.18 ? PUSH : t < 0.46 ? LEAP : t < 0.7 ? TUCK : t < 0.86 ? REACH : LAND;
     }
 
-    function resting(i) {
-      var pose = perches[i].pose;
-      if (pose === SLEEP) return frame === BREATHE ? BREATHE : SLEEP;
-      return idle !== null ? idle : SIT;
+    // Sitting: a blink, a tail flick and an ear twitch at set points in every
+    // 720px of scroll
+    function sitPose(y) {
+      var c = ((y % 720) + 720) % 720;
+      return c >= 300 && c < 318 ? BLINK : c >= 470 && c < 510 ? FLICK : c >= 600 && c < 640 ? EAR : SIT;
     }
+    function resting(i) {
+      return sitPose(scrollY);
+    }
+
+    // Contact: asleep, a breath every ~190px of scroll
+    var BREATH_CYCLE = BREATH.concat(back(BREATH).slice(1, -1));
+    function napAt(y) {
+      var sp = spots.nap;
+      facing = 1;
+      // The box slides up as it fades in: he rides on where it is right
+      // now, not where it ends up, so he's never sitting on air
+      var live = sp.el.getBoundingClientRect();
+      sp.at = pt(sp.at.x, live.top + scrollY + 1);
+      // Just asleep, breathing as you scroll
+      place(sp.at, BREATH_CYCLE[Math.floor(y / 32) % BREATH_CYCLE.length]);
+    }
+
+    // Portfolio, by scroll: he sits, crouches, flips and lands, once for
+    // every ~600px. He's pinned to the screen here, so at is in screen
+    // coordinates.
+    function pick(table, t) {
+      for (var j = 0; t >= table[j][0]; j++);
+      return table[j][1];
+    }
+    function flipAt(y) {
+      var sp = spots.flip, WALK = 280;
+      var off = innerWidth + W, d0 = off - sp.at.x;
+      var into = y - sp.start, left = sp.end - y;
+      // Running in from the right edge of the screen, then out again before
+      // Contact. Which way he faces follows the way he's going.
+      if (into < WALK || left < WALK) {
+        var inbound = into < WALK;
+        var k = inbound ? into / WALK : 1 - left / WALK;
+        var d = inbound ? k * d0 : (1 - k) * d0;
+        var x = inbound ? off - d : sp.at.x + (d0 - d);
+        var f;
+        if (inbound) f = k > 0.94 ? SETTLE : GALLOP + (Math.floor(d / STRIDE) % GALLOP_N);
+        else f = k < 0.06 ? STAND : GALLOP + (Math.floor((d0 - d) / STRIDE) % GALLOP_N);
+        return place(pt(x, sp.at.y), f);
+      }
+      var span = Math.max(1, sp.end - sp.start - WALK * 2);
+      var n = Math.max(1, Math.round(span / 600));
+      var c = Math.min(n - 0.0001, Math.max(0, ((into - WALK) / span) * n));
+      var t = c - Math.floor(c);
+      // Each stretch of scroll he sits a moment, then does the next trick
+      facing = 1;
+      if (t < 0.3) return place(sp.at, sitPose(y));
+      TRICKS[Math.floor(c) % TRICKS.length](sp.at, (t - 0.3) / 0.7, y);
+    }
+
+    // The tricks: each takes the spot and how far through it is (0 to 1)
+    function backflip(at, k) {
+      if (k < 0.17) return place(at, pick(RUN_UP, k / 0.17));
+      if (k < 0.74) {
+        var a = (k - 0.17) / 0.57, e = a * a * (3 - 2 * a), lift = Math.sin(a * Math.PI) * 46;
+        return place(pt(at.x, at.y - lift), pick(AIR, a), lift, 360 * e);
+      }
+      place(at, pick(TOUCH, (k - 0.74) / 0.26));
+    }
+    // Mousing: a high hop straight up, then a nose-first dive into the ground
+    function pounce(at, k) {
+      if (k < 0.17) return place(at, pick(RUN_UP, k / 0.17));
+      if (k < 0.68) {
+        var a = (k - 0.17) / 0.51, lift = Math.sin(a * Math.PI) * 64;
+        // Nose tips down over the top of the hop
+        var tip = a < 0.4 ? 8 * (a / 0.4) : 8 - 78 * Math.min(1, (a - 0.4) / 0.5);
+        var f = a < 0.12 ? PUSH : a < 0.3 ? LEAP : a < 0.55 ? TUCK : REACH;
+        return place(pt(at.x - a * 10, at.y - lift), f, lift, tip);
+      }
+      // Nose in the snow, then up and back to the spot (still facing left)
+      lastX = null;
+      if (k < 0.8) return place(pt(at.x - 10, at.y), CROUCH);
+      var back = (k - 0.8) / 0.2;
+      place(pt(at.x - 10 * (1 - back), at.y), pick(TOUCH, back));
+    }
+    // Chasing his tail: three quick loops on the spot, then a dizzy look
+    function tailChase(at, k) {
+      if (k < 0.08) return place(at, STAND);
+      if (k < 0.8) {
+        var a = (k - 0.08) / 0.72, th = a * Math.PI * 6;
+        var d = a * 3 * 2 * Math.PI * 14;
+        return place(pt(at.x - 14 + Math.cos(th) * 14, at.y - Math.sin(th) * 3), GALLOP + (Math.floor(d / STRIDE) % GALLOP_N));
+      }
+      facing = 1;
+      lastX = null;
+      if (k < 0.86) return place(at, SETTLE);
+      place(at, k < 0.95 ? LOOK : SIT);
+    }
+    // Moving along the ground between two x positions, legs in step
+    function trot(at, x0, x1, a) {
+      var e = a * 0.7 + a * a * (3 - 2 * a) * 0.3;
+      var x = x0 + (x1 - x0) * e;
+      place(pt(x, at.y), GALLOP + (Math.floor(Math.abs(x - x0) / STRIDE) % GALLOP_N));
+    }
+    // Back on the spot facing the cards
+    function home(at, f) {
+      facing = 1;
+      lastX = null;
+      place(at, f);
+    }
+    // Zoomies: a dash to the left, a skid, and a dash back
+    function zoomies(at, k) {
+      var far = at.x - 120;
+      if (k < 0.08) return place(at, k < 0.04 ? STAND : CROUCH);
+      if (k < 0.46) return trot(at, at.x, far, (k - 0.08) / 0.38);
+      if (k < 0.56) return place(pt(far, at.y), k < 0.51 ? LAND : STAND);
+      if (k < 0.92) return trot(at, far, at.x, (k - 0.56) / 0.36);
+      home(at, k < 0.96 ? SETTLE : SIT);
+    }
+    // Watching: he trots over towards the cards, sits and looks up at the one
+    // coming in (an ear twitch, a blink, a tail flick), then trots back
+    function watch(at, k) {
+      var near = at.x - 56, by = pt(near, at.y);
+      if (k < 0.06) return place(at, STAND);
+      if (k < 0.22) return trot(at, at.x, near, (k - 0.06) / 0.16);
+      if (k < 0.27) return home(by, SETTLE);
+      if (k < 0.75) {
+        var w = (k - 0.27) / 0.48;
+        return home(by, w < 0.06 ? SIT : w < 0.3 ? LOOK : w < 0.38 ? EAR : w < 0.55 ? LOOK : w < 0.6 ? BLINK : w < 0.78 ? LOOK : w < 0.88 ? FLICK : SIT);
+      }
+      if (k < 0.79) return place(by, STAND);
+      if (k < 0.95) return trot(at, near, at.x, (k - 0.79) / 0.16);
+      home(at, SETTLE);
+    }
+    var TRICKS = [watch, pounce, backflip, tailChase, zoomies];
 
     function update() {
       if (!legs || !legs.length) return;
       if (reduce) return place(perches[1].at, SIT);
       var y = scrollY;
-      var nowSpot = spots.nap && y >= spots.nap.start ? 'nap' : spots.tricks && y >= spots.tricks.start ? 'tricks' : '';
+      var nowSpot = spots.nap && y >= spots.nap.start ? 'nap' : spots.flip && y >= spots.flip.start && y < spots.flip.end ? 'flip' : '';
       if (nowSpot !== inSpot) {
-        // Changing places: fade in at the new one
+        // Changing places: fade in at the new one (in Portfolio he runs in
+        // from the edge of the screen instead)
         inSpot = nowSpot;
         fox.classList.remove('is-popping');
         void fox.offsetWidth;
-        fox.classList.add('is-popping');
+        if (nowSpot !== 'flip') fox.classList.add('is-popping');
         lastX = null;
+        fox.classList.toggle('is-pinned', nowSpot === 'flip');
       }
-      if (nowSpot === 'nap') {
-        facing = 1;
-        return place(spots.nap.at, napFrame);
-      }
-      if (nowSpot === 'tricks') return trickShow();
+      if (nowSpot === 'nap') return napAt(y);
+      if (nowSpot === 'flip') return flipAt(y);
       var i = 0;
       while (i < stops.length - 1 && y >= stops[i + 1]) i++;
       if (i >= legs.length) return place(perches[i].at, resting(i));
       var a = stops[i], b = stops[i + 1];
       var p = (y - a) / (b - a);
-      var go = 0.28; // rest on the perch for a moment before setting off
-      if (p <= go) return place(perches[i].at, resting(i));
+      // Rest on the perch a moment before setting off (not from the start:
+      // the first scroll gets him going)
+      var go = i === 0 ? 0.02 : 0.28;
+      if (p <= go) {
+        clipHill = i === 0 && !!hill;
+        return place(perches[i].at, i === 0 ? SIT : resting(i));
+      }
       var k = (p - go) / (1 - go);
       var moves = legs[i], acc = 0;
       for (var m = 0; m < moves.length; m++) {
@@ -298,6 +527,7 @@
           if (mv.kind === 'run') {
             var d = t * mv.len;
             var f = m === 0 && t < 0.03 ? STAND : m === 0 && d < 8 ? CROUCH : GALLOP + (Math.floor(d / STRIDE) % GALLOP_N);
+            clipHill = !!mv.behind;
             return place(mv.path ? along(mv.path, d) : lerp(mv.from, mv.to, t), f);
           }
           var arc = mv.kind === 'hop' ? 16 + mv.len * 0.12 : 30 + mv.len * 0.1;
@@ -316,131 +546,6 @@
       }
     }
 
-    // Sitting still: now and then blink, flick the tail or twitch an ear.
-    // Asleep: breathe slowly.
-    setInterval(function () {
-      if (reduce || !legs) return;
-      // The nap and the flips run him themselves
-      if (inSpot === 'nap' || flipping) return;
-      if ((frame >= STAND && frame <= LIE) || frame === SETTLE) {
-        still = 0;
-        idle = null;
-        return;
-      }
-      still += 1;
-      if (frame === SLEEP || frame === BREATHE) {
-        if (still % 7 === 0) show(frame === SLEEP ? BREATHE : SLEEP);
-        return;
-      }
-      if (idle !== null) {
-        if (--hold > 0) return;
-        idle = null;
-        show(SIT);
-        return;
-      }
-      if (still > 4 && Math.random() < 0.16) {
-        var r = Math.random();
-        idle = r < 0.45 ? BLINK : r < 0.65 ? FLICK : r < 0.8 ? EAR : LOOK;
-        // A look up lasts a while; the rest are a flicker
-        hold = idle === LOOK ? 6 + Math.floor(Math.random() * 6) : 1;
-        show(idle);
-      }
-    }, 220);
-
-    // The nap in Contact: breathe slowly for a while, then lift his head and
-    // look around before settling back down. Only runs while he's there.
-    var napFrame = SLEEP;
-    function napShow(f) {
-      napFrame = f;
-      if (inSpot !== 'nap') return;
-      show(f);
-      fox.classList.toggle('is-asleep', BREATH.indexOf(f) !== -1);
-    }
-    // Slow breaths: in over four frames, out over the same four
-    function sleepFor(ms) {
-      var BREATH_CYCLE = BREATH.concat(back(BREATH).slice(1, -1));
-      var n = 0, ticks = Math.round(ms / 380);
-      (function breathe() {
-        if (n >= ticks && n % BREATH_CYCLE.length === 0) return wake(0);
-        napShow(BREATH_CYCLE[n++ % BREATH_CYCLE.length]);
-        setTimeout(breathe, 380);
-      })();
-    }
-    function wake(j) {
-      if (j >= NAP.length) {
-        napShow(SLEEP);
-        return sleepFor(6000 + Math.random() * 5000);
-      }
-      napShow(NAP[j][0]);
-      setTimeout(function () {
-        wake(j + 1);
-      }, NAP[j][1]);
-    }
-    if (!reduce) sleepFor(4500);
-
-    // Technology: sit a few seconds, then a backflip (sometimes a double).
-    // The jump frames (crouch, push off, tuck, reach for the ground, land)
-    // play over a real rotation, a frame at a time, so it turns smoothly.
-    var trick = { frame: SIT, lift: 0, spin: 0 }, flipping = false;
-    function trickShow() {
-      if (inSpot !== 'tricks') return;
-      facing = 1;
-      var f = trick.frame === SIT && idle !== null ? idle : trick.frame;
-      var at = spots.tricks.at;
-      place(pt(at.x, at.y - trick.lift), f, trick.lift, trick.spin);
-    }
-    function pose(f, ms, next) {
-      trick.frame = f;
-      trick.lift = 0;
-      trick.spin = 0;
-      trickShow();
-      setTimeout(next, ms);
-    }
-    function flip(turns, done) {
-      flipping = true;
-      idle = null;
-      var dur = turns > 1 ? 1000 : 640, high = turns > 1 ? 64 : 44;
-      pose(STAND, 180, function () {
-        pose(STAND_CROUCH, 70, function () {
-        pose(CROUCH, 140, function () {
-        pose(CROUCH_PUSH, 60, function () {
-          var t0 = performance.now();
-          (function air(now) {
-            var t = Math.min(1, (now - t0) / dur);
-            var e = t * t * (3 - 2 * t);
-            for (var j = 0; t >= AIR[j][0]; j++);
-            trick.frame = AIR[j][1];
-            trick.lift = Math.sin(t * Math.PI) * high;
-            trick.spin = 360 * turns * e;
-            trickShow();
-            if (t < 1) return requestAnimationFrame(air);
-            pose(LAND, 110, function () {
-              pose(LAND_STAND, 80, function () {
-                pose(STAND, 160, function () {
-                  pose(SETTLE, 150, function () {
-                    pose(SIT, 0, function () {
-                      flipping = false;
-                      done();
-                    });
-                  });
-                });
-              });
-            });
-          })(t0);
-        });
-        });
-        });
-      });
-    }
-    function tricks() {
-      setTimeout(function () {
-        // Only when he's there and the tab is showing
-        if (inSpot !== 'tricks' || document.hidden) return tricks();
-        flip(Math.random() < 0.25 ? 2 : 1, tricks);
-      }, 2600 + Math.random() * 2400);
-    }
-    if (!reduce) tricks();
-
     // Sitting, he notices the pointer coming close and turns to face it
     var looking = false;
     addEventListener(
@@ -452,7 +557,8 @@
           looking = false;
           var sitting = frame <= EAR || frame === LOOK;
           if (!sitting) return;
-          var mx = e.clientX + scrollX, my = e.clientY + scrollY;
+          var pinned = fox.classList.contains('is-pinned');
+          var mx = e.clientX + (pinned ? 0 : scrollX), my = e.clientY + (pinned ? 0 : scrollY);
           var dx = mx - lastP.x, dy = my - (lastP.y - H / 2);
           if (dx * dx + dy * dy > 170 * 170 || Math.abs(dx) < 12) return;
           var want = dx < 0 ? 1 : -1;
@@ -498,6 +604,10 @@
     pointer-events: none;
     visibility: hidden;
     will-change: transform;
+  }
+
+  .fox.is-pinned {
+    position: fixed;
   }
 
   .fox.is-ready {
@@ -608,7 +718,8 @@
     }
   }
 
-  /* During the home intro he waits until the mountains are in, then appears */
+  /* During the home intro he waits until the mountains are in, then fades in
+     (just the top of his head, over the hill he's behind) */
   :global(html.intro:not(.intro-go)) .fox {
     opacity: 0;
   }
@@ -624,4 +735,5 @@
       opacity: 0;
     }
   }
+
 </style>
