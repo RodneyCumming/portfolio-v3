@@ -236,5 +236,55 @@ const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), Ast
         frame();
       })();
     </script>
+    {import.meta.env.PROD && (
+      <>
+      <!-- Google Analytics (GA4), loaded once the page is idle so it never
+           holds up the first paint. In the EEA, UK and Switzerland analytics
+           cookies stay off by default (Consent Mode), so Google only gets
+           cookieless pings there. Contact clicks are sent as events, which
+           Observatory counts as conversions. -->
+      <script is:inline>
+        (function () {
+          var GA_ID = 'G-X61YXEG8RH';
+          var CONSENT_REGIONS = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH'];
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          window.gtag = gtag;
+          gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', region: CONSENT_REGIONS });
+          gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'granted' });
+          gtag('js', new Date());
+          gtag('config', GA_ID);
+
+          function load() {
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+            document.head.appendChild(s);
+          }
+          var idle = window.requestIdleCallback || function (f) { setTimeout(f, 1); };
+          if (document.readyState === 'complete') idle(load);
+          else addEventListener('load', function () { idle(load); });
+
+          // Contact clicks: copying the address, opening an email, and the
+          // Visit buttons on the project cards
+          document.addEventListener('click', function (e) {
+            var el = e.target.closest && e.target.closest('a, button');
+            if (!el) return;
+            if (el.matches('[data-copy]')) gtag('event', 'copy_email');
+            else if ((el.getAttribute('href') || '').indexOf('mailto:') === 0) gtag('event', 'email_click');
+            else if (el.classList.contains('visit')) {
+              var host = '';
+              try {
+                host = new URL(el.href).hostname.replace(/^www\./, '');
+              } catch (err) {}
+              gtag('event', 'project_visit', { project: host });
+            }
+          });
+        })();
+      </script>
+      </>
+    )}
   </body>
 </html>
