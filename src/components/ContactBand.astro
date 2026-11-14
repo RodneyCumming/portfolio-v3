@@ -1,0 +1,532 @@
+---
+import Odo from './Odo.astro';
+import { siGithub } from 'simple-icons';
+const email = 'rodneycumming@gmail.com';
+const github = 'https://github.com/RodneyCumming';
+---
+
+<section class="section contact" aria-labelledby="contact-heading" id="contact">
+  <div class="section__inner">
+    <div class="band" data-live>
+      <div class="band__main">
+        <p class="eyebrow" data-live><Odo value="03" />&nbsp; Contact</p>
+        <h2 id="contact-heading" class="section__heading is-left"><span class="heading-text">CONTACT</span></h2>
+        <p class="sub">Working on something interesting? <em>Let's talk.</em></p>
+        <div class="mail">
+          <svg class="mail__icon draw" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="--dd: 0.4s"><rect x="2" y="4" width="20" height="16" rx="2" pathLength="1"></rect><path d="m22 6-10 7L2 6" pathLength="1"></path></svg>
+          <a href={`mailto:${email}`}>{email.split('@')[0]}<wbr />@{email.split('@')[1]}</a>
+          <button class="copy" type="button" data-copy={email} data-ripple>
+            <svg class="copy__icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <g class="copy__sheets"><rect x="9" y="9" width="12" height="12" rx="2" pathLength="1"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" pathLength="1"></path></g>
+              <path class="copy__tick" d="M4.5 12.5l5 5L20 7" pathLength="1"></path>
+            </svg>
+            <span class="copy__label"><span>Copy email</span><span aria-hidden="true">Copied</span></span>
+          </button>
+          <span class="visually-hidden" role="status" data-copy-status></span>
+        </div>
+        <p class="chips">
+          <span>
+            <svg class="nz" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path d="M12.2 1.1 12.7 1.0 13.3 2.0 14.1 2.4 14.7 3.6 14.8 4.0 15.1 4.6 15.3 5.4 16.0 4.7 16.5 5.4 16.6 6.4 16.9 6.8 18.0 7.4 18.5 7.5 20.2 6.9 19.8 8.1 19.4 8.7 19.3 9.4 18.0 10.1 18.2 10.4 17.6 11.6 17.0 12.7 15.7 13.9 15.1 13.4 15.3 12.8 15.6 11.9 15.3 11.0 14.4 10.3 13.7 9.8 14.1 9.4 14.8 8.7 15.1 7.6 15.2 7.1 14.7 5.8 14.1 4.6 13.7 3.7 13.1 3.0 12.8 2.4 12.6 1.6Z" pathLength="1"></path>
+              <path d="M12.2 11.9 12.6 12.0 12.5 12.5 12.7 12.6 13.0 13.3 13.8 12.5 14.4 12.8 14.4 14.2 13.6 15.4 12.7 16.4 12.3 17.4 12.8 18.0 11.8 18.0 10.3 18.9 9.9 20.2 9.6 21.5 8.3 22.6 7.0 23.0 6.3 22.9 5.3 22.3 4.0 22.1 3.8 21.4 5.7 19.2 6.7 18.2 7.3 18.0 9.9 15.9 10.2 15.4 10.5 14.2 11.4 13.3 11.6 12.4Z" pathLength="1"></path>
+            </svg>
+            Based in New Zealand
+          </span>
+        </p>
+      </div>
+
+      <div class="band__side">
+        <a class="tile" href={github} rel="noopener" style="--t: 0">
+          <svg class="tile__icon trace" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" style="--dd: 0.6s"><path d={siGithub.path} pathLength="1"></path></svg>
+          <small>GitHub</small>
+          <strong>RodneyCumming</strong>
+          <span class="tile__text">Code for this site and some of my projects.</span>
+          <span class="tile__link">Open GitHub →</span>
+        </a>
+        <div class="tile" style="--t: 1">
+          <small>Local time</small>
+          <strong data-nz-time>New Zealand</strong>
+          <span class="tile__text" data-nz-zone>New Zealand</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    // Copy email (its hover fill and ripples are the shared [data-ripple]
+    // ones): on copying the icon turns into a tick and the label rolls to
+    // Copied
+    document.querySelectorAll('[data-copy]').forEach(function (b) {
+      if (!navigator.clipboard) return b.remove();
+      var status = b.parentNode.querySelector('[data-copy-status]');
+      var timer;
+
+      b.addEventListener('click', function () {
+        navigator.clipboard.writeText(b.dataset.copy).then(function () {
+          b.classList.add('is-copied');
+          b.classList.remove('ring');
+          void b.offsetWidth;
+          b.classList.add('ring');
+          status.textContent = 'Email copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            b.classList.remove('is-copied');
+            status.textContent = '';
+          }, 1800);
+        });
+      });
+    });
+
+    // Rodney's local time on a mechanical counter: the digit reels roll
+    // over as the minutes change
+    var time = document.querySelector('[data-nz-time]');
+    var zone = document.querySelector('[data-nz-zone]');
+    if (!time || !window.Intl) return;
+    var clock = new Intl.DateTimeFormat('en-NZ', { timeZone: 'Pacific/Auckland', hour: 'numeric', minute: '2-digit' });
+    var tz = new Intl.DateTimeFormat('en-NZ', { timeZone: 'Pacific/Auckland', timeZoneName: 'short' });
+    var reels = null;
+    function draw(text) {
+      var shape = text.replace(/\d/g, '0');
+      if (!reels || reels.shape !== shape) {
+        var html = '';
+        for (var i = 0; i < text.length; i++) {
+          var c = text[i];
+          html += /\d/.test(c)
+            ? '<span class="odo__col" style="--d: 0; --i: ' + i + '"><span class="odo__reel">' +
+              '<i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></span></span>'
+            : '<span class="odo__sep">' + c + '</span>';
+        }
+        time.innerHTML = '<span class="odo" aria-hidden="true">' + html + '</span><span class="visually-hidden"></span>';
+        reels = { shape: shape, cols: time.querySelectorAll('.odo__col, .odo__sep') };
+        requestAnimationFrame(function () {
+          draw(text);
+        });
+        return;
+      }
+      for (var k = 0; k < text.length; k++) {
+        if (/\d/.test(text[k])) reels.cols[k].style.setProperty('--d', text[k]);
+      }
+      time.querySelector('.visually-hidden').textContent = text;
+    }
+    function tick() {
+      var now = new Date();
+      draw(clock.format(now).toUpperCase());
+      var name = tz.formatToParts(now).find(function (p) {
+        return p.type === 'timeZoneName';
+      });
+      zone.textContent = 'New Zealand' + (name ? ' (' + name.value + ')' : '');
+    }
+    tick();
+    setInterval(tick, 10000);
+  })();
+</script>
+
+<style>
+  .contact {
+    background: var(--ebony-clay);
+  }
+
+  .band {
+    display: grid;
+    gap: 40px;
+    padding: 48px 24px;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background: var(--panel);
+  }
+
+  .band .section__heading {
+    font-size: clamp(64px, 16vw, 118px);
+  }
+
+  .mail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+    max-width: 560px;
+    margin-top: 36px;
+    padding: 8px 8px 8px 20px;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--bluewood);
+  }
+
+  .mail a {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font: 700 18px var(--font-body);
+    color: #1b2234;
+    text-decoration: none;
+  }
+
+  /* Copy email: the hover fill, press ripple and focus pulse come from
+     [data-ripple] (global.css). Hover fills it a darker navy; a press
+     ripples a lighter blue */
+  .copy {
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --fill: #232a40;
+    --ripple: #3b4873;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 18px 13px 15px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--bluewood);
+    color: #fff;
+    font: 700 15px var(--font-body);
+    cursor: pointer;
+    box-shadow:
+      0 3px 1px -2px rgb(0 0 0 / 0.2),
+      0 2px 2px 0 rgb(0 0 0 / 0.14),
+      0 1px 5px 0 rgb(0 0 0 / 0.12);
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+    transition:
+      background-color 250ms var(--ease),
+      box-shadow 250ms var(--ease),
+      outline-color 250ms var(--ease);
+  }
+
+  @media (hover: hover) {
+    .copy:hover {
+      box-shadow:
+        0 2px 4px -1px rgb(0 0 0 / 0.2),
+        0 4px 5px 0 rgb(0 0 0 / 0.14),
+        0 1px 10px 0 rgb(0 0 0 / 0.12);
+    }
+  }
+
+  .copy:focus-visible {
+    outline-color: var(--curious-blue);
+    box-shadow:
+      0 3px 5px -1px rgb(0 0 0 / 0.2),
+      0 6px 10px 0 rgb(0 0 0 / 0.14),
+      0 1px 18px 0 rgb(0 0 0 / 0.12);
+  }
+
+  .copy:active {
+    box-shadow:
+      0 5px 5px -3px rgb(0 0 0 / 0.2),
+      0 8px 10px 1px rgb(0 0 0 / 0.14),
+      0 3px 14px 2px rgb(0 0 0 / 0.12);
+  }
+
+  .copy__icon {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .copy__icon :is(rect, path) {
+    stroke-dasharray: 1;
+    transition: stroke-dashoffset 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .copy__tick {
+    stroke: var(--accent);
+    stroke-width: 2.4;
+    stroke-dashoffset: 1;
+  }
+
+  .copy__sheets {
+    transition: opacity 0.2s 0.1s;
+  }
+
+  .copy.is-copied .copy__sheets {
+    opacity: 0;
+  }
+
+  .copy.is-copied .copy__sheets :is(rect, path) {
+    stroke-dashoffset: -1;
+    transition-duration: 0.25s;
+  }
+
+  .copy.is-copied .copy__tick {
+    stroke-dashoffset: 0;
+    transition-delay: 0.15s;
+  }
+
+  /* The label rolls up to Copied, and the button keeps its width */
+  .copy__label {
+    display: grid;
+    justify-items: start;
+    overflow: hidden;
+  }
+
+  .copy__label > span {
+    grid-area: 1 / 1;
+    transition:
+      transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 0.3s;
+  }
+
+  .copy__label > span + span {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  .copy.is-copied .copy__label > span:first-child {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  .copy.is-copied .copy__label > span + span {
+    transform: none;
+    opacity: 1;
+  }
+
+
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .chips span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    border-radius: 999px;
+    background: var(--bluewood);
+    font-size: 14px;
+    color: #c6cde2;
+  }
+
+  /* Copying also sends a ring out from the button, like a drop in water */
+  .copy::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1.5px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .copy.ring::after {
+    animation: button-ripple 0.9s ease-out;
+  }
+
+  @keyframes button-ripple {
+    from {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.35, 1.8);
+    }
+  }
+
+  .mail__icon :is(rect, path) {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Based in New Zealand: the two islands in line, traced from the real
+     coastline. They draw themselves as the chip scrolls up into view, the
+     North Island then the South */
+  .nz {
+    flex: none;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nz path {
+    stroke-dasharray: 1;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .chips span {
+        view-timeline: --nz block;
+      }
+      .nz path {
+        animation: nz-draw linear both;
+      }
+      .contact .nz path {
+        animation-timeline: --nz;
+        animation-range: cover 6vh cover 24vh;
+      }
+      .contact .nz path + path {
+        animation-range: cover 18vh cover 34vh;
+      }
+    }
+  }
+
+  @keyframes nz-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .tile__icon {
+    float: right;
+    color: var(--accent);
+    fill: var(--accent);
+    overflow: visible;
+  }
+
+  .band__side {
+    display: grid;
+    gap: 16px;
+    align-content: center;
+  }
+
+  .tile {
+    display: block;
+    padding: 24px 26px;
+    border-radius: 18px;
+    background: var(--bluewood);
+    color: #c6cde2;
+    text-decoration: none;
+  }
+
+  a.tile {
+    transition: background-color 0.2s;
+  }
+
+  a.tile:hover {
+    background: #343d5c;
+  }
+
+  .tile small {
+    font: 700 11px var(--font-body);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #8792b3;
+  }
+
+  .tile strong {
+    display: block;
+    margin-top: 10px;
+    font: 700 clamp(30px, 3.4vw, 46px) / 1 var(--font-display);
+    letter-spacing: 0.5px;
+    color: var(--ink);
+  }
+
+  .tile__text {
+    display: block;
+    margin-top: 8px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .tile__link {
+    display: inline-block;
+    margin-top: 12px;
+    font: 700 15px var(--font-body);
+    color: var(--accent);
+  }
+
+  .sub em {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 2px no-repeat;
+    padding-bottom: 2px;
+  }
+
+  /* Scroll choreography: the band opens out to full size, its parts rise
+     in, and "Let's talk." underlines itself */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .band {
+        animation: open-up linear both;
+      }
+      .contact .band {
+        animation-timeline: view();
+        animation-range: cover 0vh cover 28vh;
+      }
+      .band__main > *,
+      .tile {
+        animation: fade-rise linear both;
+      }
+      .contact .band__main > *,
+      .contact .tile {
+        animation-timeline: view();
+        animation-range: cover 2vh cover 24vh;
+      }
+      .contact .tile {
+        animation-range: cover calc(4vh + var(--t) * 4vh) cover calc(24vh + var(--t) * 4vh);
+      }
+      .band {
+        view-timeline: --band block;
+      }
+      .sub em {
+        animation: underline linear both;
+      }
+      .contact .sub em {
+        animation-timeline: view();
+        animation-range: cover 10vh cover 26vh;
+      }
+    }
+  }
+
+  @keyframes open-up {
+    from {
+      transform: scale(0.88);
+      border-radius: 64px;
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes underline {
+    from {
+      background-size: 0 2px;
+    }
+  }
+
+  /* Phones: the address keeps to one line, with Copy email full width
+     under it, and the panel gives a little more room to its contents */
+  @media (max-width: 560px) {
+    .band {
+      padding: 36px 18px;
+    }
+    .mail {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      padding: 14px;
+    }
+    .mail a {
+      overflow-wrap: normal;
+      font-size: clamp(14px, 4.3vw, 16px);
+    }
+    .tile {
+      padding: 22px 20px;
+    }
+    .tile strong {
+      font-size: clamp(26px, 9vw, 34px);
+    }
+    .copy {
+      grid-column: 1 / -1;
+      justify-content: center;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .band {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 60px;
+      align-items: center;
+      padding: 96px 90px;
+    }
+  }
+</style>

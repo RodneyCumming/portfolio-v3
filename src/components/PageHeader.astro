@@ -1,0 +1,157 @@
+---
+interface Props {
+  heading: string;
+  body: string;
+  button: { label: string; href: string };
+  background: string;
+  buttonColour: string;
+  buttonHover: string;
+  /** Seat the fox on the heading (the 404 page) */
+  fox?: boolean;
+}
+const { heading, body, button, background, buttonColour, buttonHover, fox = false } = Astro.props;
+const external = button.href.startsWith('http');
+---
+
+<section class="header" style={`--bg: ${background}; --btn: ${buttonColour}; --btn-hover: ${buttonHover}`}>
+  <div class="header__inner">
+    {fox ? (
+      <div class="perch">
+        <h1 class="faceted">{heading}</h1>
+        <div class="lost-fox" aria-hidden="true"><div></div></div>
+      </div>
+    ) : (
+      <h1 class="faceted">{heading}</h1>
+    )}
+    <p>{body}</p>
+    <a class="cta" href={button.href} {...(external ? { rel: 'noopener' } : {})}>{button.label}</a>
+  </div>
+</section>
+
+<style>
+  .header {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 150px 20px 100px;
+  }
+
+  @media (min-width: 1025px) {
+    .header {
+      min-height: min(100svh, 1000px);
+      padding: 100px 20px;
+    }
+  }
+
+  .header__inner {
+    max-width: 1200px;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0 0 20px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(64px, 18vw, 150px);
+    line-height: 1;
+    letter-spacing: 3px;
+  }
+
+  /* The fox sits on the end of the heading, looking about */
+  .perch {
+    position: relative;
+    display: inline-block;
+  }
+
+  .lost-fox {
+    position: absolute;
+    right: -4px;
+    bottom: calc(100% - 26px);
+    width: 80px;
+    height: 56px;
+  }
+
+  .lost-fox div {
+    width: 100%;
+    height: 100%;
+    background: url('/images/fox-sprite.svg') 0 0 / 5120px 56px no-repeat;
+    transform-origin: 50% 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lost-fox {
+      animation: unblur 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s both;
+    }
+  }
+
+  p {
+    color: var(--nobel);
+    font-size: 22px;
+    line-height: 1.6em;
+  }
+
+  .cta {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 15px 100px;
+    border-radius: 10px;
+    background: var(--btn);
+    color: #fff;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .cta:hover {
+    background: var(--btn-hover) url('/images/button-bg.svg') center / cover;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    h1 {
+      animation: unblur 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+  }
+
+  /* The 2020 site brought these headings in from a blur */
+  @keyframes unblur {
+    from {
+      filter: blur(20px);
+      opacity: 0;
+    }
+  }
+</style>
+
+{fox && (
+  <script is:inline>
+    (function () {
+      var el = document.querySelector('.lost-fox div');
+      if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      // Frames: 0 sit, 1 blink, 2 tail flick, 3 ear, 39 look up
+      function show(f, flip) {
+        el.style.backgroundPosition = -f * 80 + 'px 0';
+        if (flip !== undefined) el.style.transform = flip ? 'scaleX(-1)' : '';
+      }
+      var flip = false;
+      (function next() {
+        var r = Math.random();
+        if (r < 0.35) {
+          flip = !flip;
+          show(0, flip);
+        } else if (r < 0.55) {
+          show(39);
+          setTimeout(function () { show(0); }, 1400);
+        } else if (r < 0.8) {
+          show(1);
+          setTimeout(function () { show(0); }, 160);
+        } else {
+          show(r < 0.9 ? 2 : 3);
+          setTimeout(function () { show(0); }, 260);
+        }
+        setTimeout(next, 1400 + Math.random() * 1800);
+      })();
+    })();
+  </script>
+)}

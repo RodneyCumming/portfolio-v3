@@ -1,0 +1,697 @@
+---
+import Odo from './Odo.astro';
+import { Image } from 'astro:assets';
+// Tall captures of each live site at 1100px wide, so the whole width
+// fits the card and the picture fills its height
+import houseReport from '../assets/projects/house-report.jpg';
+import smartcompare from '../assets/projects/smartcompare.jpg';
+import stoicism from '../assets/projects/stoicism-now.jpg';
+import seoLamp from '../assets/projects/seo-lamp.jpg';
+import habits from '../assets/projects/quantified-habits.jpg';
+// The real Immerse reader, open on its test book (written for the project)
+import immerse from '../assets/projects/immerse-ipad.jpg';
+// Quantified Gym's home screen, from the Android app in an emulator
+import gym from '../assets/projects/quantified-gym-home.jpg';
+
+/*
+  The portfolio as a stack. Each product gets a big card that sticks near
+  the top of the screen while the next slides up over it (native scroll,
+  position: sticky). The card behind shrinks back and darkens, the section
+  takes on each product's colour, and a list on the right shows where you
+  are. Hovering a picture tilts it toward the pointer.
+
+  The apps are real screenshots too: Quantified Gym's home screen (it links
+  to its Play Store listing) and Immerse's reader (no link).
+*/
+const picks = [
+  {
+    id: 'hr', name: 'HouseReport', where: 'Web',
+    text: 'Property reports for Auckland houses. It gathers data from a range of online services and APIs, then generates each report as a PDF with Playwright.',
+    stack: 'Next.js · MapLibre · ArcGIS · Playwright', href: 'https://www.housereport.co.nz', host: 'housereport.co.nz',
+    card: '#3f51b5', tint: '#1f2752', image: houseReport,
+  },
+  {
+    id: 'seo', name: 'SEO Lamp', where: 'Web',
+    text: 'SEO tools and whole-site audits. It crawls a site in a headless browser, runs every page through a set of technical checks, and ranks what it finds by impact.',
+    stack: 'Next.js · Puppeteer · Supabase', href: 'https://seolamp.com', host: 'seolamp.com',
+    card: '#2b2e36', tint: '#1b1d22', image: seoLamp,
+  },
+  {
+    id: 'st', name: 'Stoicism Now', where: 'Web',
+    text: 'A library of Stoic texts with quote search. The full texts are processed into a searchable index, so every quote links back to its exact place in the book.',
+    stack: 'Next.js · Postgres', href: 'https://stoicismnow.com', host: 'stoicismnow.com',
+    card: '#2f3577', tint: '#262c55', image: stoicism,
+  },
+  {
+    id: 'hb', name: 'Quantified Habits', where: 'Web',
+    text: 'Habits, tasks and todos on one board. It’s an installable web app that syncs across devices and keeps working offline.',
+    stack: 'Next.js · MUI · Supabase', href: 'https://quantifiedhabits.com', host: 'quantifiedhabits.com',
+    card: '#5c2a1c', tint: '#3a2622', image: habits,
+  },
+  {
+    id: 'gy', name: 'Quantified Gym', where: 'Android',
+    text: 'A workout log for Android. It’s a web app wrapped as a native app, with everything stored on the phone so it works fully offline.',
+    stack: 'React · Ionic · Capacitor',
+    href: 'https://play.google.com/store/apps/details?id=com.quantifiedgym.app', label: 'Get it on Google Play',
+    card: '#23366e', tint: '#1f2a4f', phone: gym,
+  },
+  {
+    id: 'sc', name: 'Smart Compare', where: 'Web',
+    text: 'Every NZ mobile plan in one place. Pages are pre-rendered for speed, with the filters, plan finder and calculators running in the browser on top.',
+    stack: 'Next.js · React · CSS Modules', href: 'https://www.smartcompare.co.nz', host: 'smartcompare.co.nz',
+    card: '#0f4d34', tint: '#17332c', image: smartcompare,
+  },
+  {
+    id: 'im', name: 'Immerse', where: 'Mac · iPad · Android',
+    text: 'Sync any audiobook with its ebook for immersive reading. Listen or read whenever you like, and it keeps your place in both.',
+    stack: 'Swift · Kotlin · Python · whisper.cpp',
+    card: '#4a4973', tint: '#2a2940', tablet: immerse,
+  },
+];
+const n = (i: number) => String(i + 1).padStart(2, '0');
+---
+
+<section class="section work" id="portfolio" aria-labelledby="work-heading">
+  <div class="section__inner">
+    <p class="eyebrow" data-live><Odo value="02" />&nbsp; Portfolio</p>
+    <h2 id="work-heading" class="section__heading is-left"><span class="heading-text">PORTFOLIO</span></h2>
+    <p class="sub">Things I've made <em>in my spare time.</em></p>
+
+    <div class="stack-wrap">
+      <ol class="stack" role="list">
+        {picks.map((p, i) => (
+          <li class="slot" id={`pick-${p.id}`} style={`--i: ${i}; view-timeline-name: --slot-${i + 1}`} data-tint={p.tint}>
+            <article
+              class="card"
+              aria-labelledby={`pick-${p.id}-name`}
+              style={`--card: ${p.card};${i < picks.length - 1 ? ` animation-timeline: --slot-${i + 2};` : ''}`}
+              data-last={i === picks.length - 1 ? '' : undefined}
+            >
+              <div class="info">
+                <span class="n">{n(i)} / {n(picks.length - 1)}</span>
+                <h3 id={`pick-${p.id}-name`}>{p.name}</h3>
+                <p>{p.text}</p>
+                <dl>
+                  <dt>Stack</dt><dd>{p.stack}</dd>
+                  <dt>Runs on</dt><dd>{p.where}</dd>
+                </dl>
+                {p.href && (
+                  <a class="visit" href={p.href} rel="noopener" data-ripple>
+                    {p.label ?? `Visit ${p.host}`}
+                    <svg class="visit__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <g class="visit__arrow"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path></g>
+                    </svg>
+                  </a>
+                )}
+              </div>
+              <div class:list={['pic', `pic--${p.id}`]} aria-hidden="true">
+                <div class="tilt">
+                  {p.image && (
+                    <Image src={p.image} alt="" widths={[700, 1100, 1650]} sizes="(min-width: 1000px) 640px, 92vw" loading="lazy" />
+                  )}
+                  {p.tablet && (
+                    <div class="tablet">
+                      <Image src={p.tablet} alt="" widths={[600, 1000, 1640]} sizes="(min-width: 1000px) 600px, 92vw" loading="lazy" />
+                    </div>
+                  )}
+                  {p.phone && (
+                    <div class="phone">
+                      <Image src={p.phone} alt="" widths={[300, 600, 900]} sizes="300px" loading="lazy" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ol>
+
+      <!-- Where you are in the stack: the number and name of the card at the
+           front, a segment per card (each a link to it), and the next one -->
+      <nav class="rail" aria-label="Projects">
+        <div class="rail__in">
+          <p class="rail__num" aria-hidden="true"><b>01</b><span>/{n(picks.length - 1)}</span></p>
+          <p class="rail__name" aria-hidden="true">{picks[0].name}</p>
+          <ol class="rail__segs" role="list">
+            {picks.map((p, i) => (
+              <li><a href={`#pick-${p.id}`} data-name={p.name} aria-label={`${p.name}, ${i + 1} of ${picks.length}`}><i></i></a></li>
+            ))}
+          </ol>
+          <a class="rail__next" href={`#pick-${picks[1].id}`}>Next: <b>{picks[1].name}</b> <span aria-hidden="true">↓</span></a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var work = document.querySelector('.work');
+    var slots = [].slice.call(document.querySelectorAll('.work .slot'));
+    var segs = [].slice.call(document.querySelectorAll('.work .rail__segs a'));
+    var railNum = document.querySelector('.work .rail__num b');
+    var railName = document.querySelector('.work .rail__name');
+    var railNext = document.querySelector('.work .rail__next');
+    var shown = -2;
+    function pad(n) {
+      return (n < 10 ? '0' : '') + n;
+    }
+    if (!work || !slots.length) return;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function hex(h) {
+      return [1, 3, 5].map(function (k) {
+        return parseInt(h.slice(k, k + 2), 16);
+      });
+    }
+    var base = hex('#2c344e');
+    var tints = slots.map(function (s) {
+      return hex(s.dataset.tint);
+    });
+
+    // Which card is at the front, and how far the next one has come up:
+    // drives the section's colour and the list on the right
+    var ticking = false;
+    function frame() {
+      ticking = false;
+      var front = -1, k = 0;
+      for (var i = 0; i < slots.length; i++) {
+        var top = parseFloat(getComputedStyle(slots[i]).top) || 0;
+        var r = slots[i].getBoundingClientRect();
+        if (r.top <= top + 2) {
+          front = i;
+        } else {
+          k = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight - top)));
+          break;
+        }
+      }
+      var from = front < 0 ? base : tints[front];
+      var to = tints[Math.min(slots.length - 1, front + 1)];
+      if (front === slots.length - 1) k = 0;
+      var c = from.map(function (v, j) {
+        return Math.round(v + (to[j] - v) * k);
+      });
+      // Back to the usual colour once the stack has scrolled away
+      if (slots[slots.length - 1].getBoundingClientRect().bottom < innerHeight * 0.5) c = base;
+      work.style.backgroundColor = 'rgb(' + c.join(',') + ')';
+      // The index: before the first card arrives it shows the first
+      var at = Math.max(0, front);
+      segs.forEach(function (a, j) {
+        a.classList.toggle('is-on', j === at);
+        a.classList.toggle('is-done', j < at);
+        if (j === at) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+      if (railNum && at !== shown) {
+        shown = at;
+        railNum.textContent = pad(at + 1);
+        railName.textContent = segs[at].dataset.name;
+        // The number and name slide up into place when they change
+        railNum.parentNode.classList.remove('is-new');
+        railName.classList.remove('is-new');
+        void railNum.offsetWidth;
+        railNum.parentNode.classList.add('is-new');
+        railName.classList.add('is-new');
+        var nxt = segs[at + 1];
+        railNext.hidden = !nxt;
+        if (nxt) {
+          railNext.href = nxt.getAttribute('href');
+          railNext.querySelector('b').textContent = nxt.dataset.name;
+        }
+      }
+    }
+    function request() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(frame);
+      }
+    }
+    addEventListener('scroll', request, { passive: true });
+    addEventListener('resize', request);
+    frame();
+
+    // Jumping to a card: a card behind the front one is stuck in place, so
+    // the browser thinks it's already in view and won't scroll back to it.
+    // Scroll to where it sits in the page instead, just as it settles.
+    document.querySelector('.work .rail').addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="#pick-"]');
+      if (!a) return;
+      var slot = document.getElementById(a.getAttribute('href').slice(1));
+      if (!slot) return;
+      e.preventDefault();
+      // A sticky card's offsetTop includes how far it's being held, so work
+      // its place out from the top of the stack: the cards and gaps before it
+      var stack = slot.parentNode, y = 0, n = stack;
+      while (n) {
+        y += n.offsetTop;
+        n = n.offsetParent;
+      }
+      for (var i = 0; i < slots.length; i++) {
+        y += parseFloat(getComputedStyle(slots[i]).marginTop) || 0;
+        if (slots[i] === slot) break;
+        y += slots[i].offsetHeight;
+      }
+      var top = parseFloat(getComputedStyle(slot).top) || 0;
+      scrollTo({ top: y - top + 2, behavior: reduce ? 'auto' : 'smooth' });
+      history.replaceState(null, '', a.getAttribute('href'));
+    });
+
+    // Hover: the picture tilts toward the pointer
+    if (reduce) return;
+    document.querySelectorAll('.work .pic').forEach(function (pic) {
+      var tilt = pic.querySelector('.tilt');
+      pic.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        var r = pic.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        tilt.style.transform = 'perspective(1200px) rotateY(' + (x * 7).toFixed(2) + 'deg) rotateX(' + (-y * 5).toFixed(2) + 'deg) scale(1.02)';
+      });
+      pic.addEventListener('pointerleave', function () {
+        tilt.style.transform = '';
+      });
+    });
+  })();
+</script>
+
+<style>
+  .work {
+    --top: 84px;
+    background: var(--bluewood);
+    transition: background-color 0.35s linear;
+    timeline-scope: --slot-1, --slot-2, --slot-3, --slot-4, --slot-5, --slot-6, --slot-7;
+  }
+
+  .stack-wrap {
+    position: relative;
+    margin-top: 64px;
+  }
+
+  .stack {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each card sticks a little lower than the one before, so the edges of
+     the cards behind show above it */
+  .slot {
+    position: sticky;
+    top: calc(var(--top) + var(--i) * 14px);
+    scroll-margin-top: calc(var(--top) + var(--i) * 14px);
+  }
+
+  .slot + .slot {
+    margin-top: 32vh;
+  }
+
+  .card {
+    --card: #2f3577;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: clip;
+    border-radius: 22px;
+    background: var(--card);
+    color: #f1f3fa;
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.4);
+    transform-origin: 50% 0;
+  }
+
+  /* The card behind: shrinks back and darkens as the next comes up */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: #0b0e17;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .card:not([data-last]) {
+        animation-name: recede;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-range: cover 0px cover calc(100vh - var(--top));
+      }
+      .card:not([data-last])::after {
+        animation: darken linear both;
+        animation-timeline: inherit;
+        animation-range: cover 0px cover calc(100vh - var(--top));
+      }
+    }
+  }
+
+  @keyframes rail-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes recede {
+    to {
+      transform: scale(0.94);
+    }
+  }
+
+  @keyframes darken {
+    to {
+      opacity: 0.5;
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 24px 30px;
+  }
+
+  .n {
+    font: 700 12px var(--font-body);
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+  }
+
+  .card h3 {
+    margin-top: 12px;
+    /* Long names wrap onto two even lines rather than run to the edge */
+    max-width: 85%;
+    font: 700 36px/0.95 var(--font-display);
+    text-wrap: balance;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .info p {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.86;
+  }
+
+  .info dl {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 8px 12px;
+    margin-top: 18px;
+    font-size: 14px;
+  }
+
+  .info dt {
+    padding-top: 2px;
+    font: 700 11px var(--font-body);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  /* Visit: Material state layers (the fill and ripples come from
+     [data-ripple]). The text is a deeper shade of the card colour; hover
+     lays that over the white at 8%, focus at 10%, a press ripples at 20% */
+  .visit {
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --ink: color-mix(in srgb, var(--card) 75%, #000);
+    --fill: color-mix(in srgb, var(--ink) 8%, #fff);
+    --ripple: color-mix(in srgb, var(--ink) 20%, #fff);
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 22px;
+    padding: 12px 20px 12px 22px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font: 700 14px var(--font-body);
+    text-decoration: none;
+    box-shadow:
+      0 3px 1px -2px rgb(0 0 0 / 0.2),
+      0 2px 2px 0 rgb(0 0 0 / 0.14),
+      0 1px 5px 0 rgb(0 0 0 / 0.12);
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+    transition:
+      background-color 250ms var(--ease),
+      box-shadow 250ms var(--ease),
+      outline-color 250ms var(--ease);
+  }
+
+  @media (hover: hover) {
+    .visit:hover {
+      box-shadow:
+        0 2px 4px -1px rgb(0 0 0 / 0.2),
+        0 4px 5px 0 rgb(0 0 0 / 0.14),
+        0 1px 10px 0 rgb(0 0 0 / 0.12);
+    }
+  }
+
+  /* Opens in another site: a box with an arrow leaving it, which nudges
+     out on hover */
+  .visit__icon {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  .visit__arrow {
+    transition: transform 250ms var(--ease);
+  }
+
+  .visit:hover .visit__arrow,
+  .visit:focus-visible .visit__arrow {
+    transform: translate(1.5px, -1.5px);
+  }
+
+  /* Keyboard focus: a white ring, clear on every card colour */
+  .visit:focus-visible {
+    outline-color: #fff;
+    background: color-mix(in srgb, var(--ink) 10%, #fff);
+    box-shadow:
+      0 3px 5px -1px rgb(0 0 0 / 0.2),
+      0 6px 10px 0 rgb(0 0 0 / 0.14),
+      0 1px 18px 0 rgb(0 0 0 / 0.12);
+  }
+
+  .visit:active {
+    box-shadow:
+      0 5px 5px -3px rgb(0 0 0 / 0.2),
+      0 8px 10px 1px rgb(0 0 0 / 0.14),
+      0 3px 14px 2px rgb(0 0 0 / 0.12);
+  }
+
+
+  /* The picture */
+  .pic {
+    position: relative;
+    min-height: 240px;
+    overflow: clip;
+    background: #f4f6fa;
+  }
+
+  .tilt {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Full width, from the top of the page down as far as the card goes */
+  .pic :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  /* Immerse: the reader in an iPad frame, sized to fit the picture with
+     room around it, so the whole screen shows at any card size */
+  .pic--im {
+    background: #e4e3ef;
+  }
+
+  .tablet {
+    position: absolute;
+    inset: 26px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pic .tablet :global(img) {
+    width: auto;
+    height: auto;
+    min-width: 0;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-sizing: border-box;
+    border: 9px solid #1b2133;
+    border-radius: 22px;
+    box-shadow: 0 20px 50px rgb(0 0 0 / 0.22);
+  }
+
+  .pic--gy {
+    background: #dfe5f5;
+  }
+
+  /* An app screen in a phone frame, rising from the bottom of the picture */
+  .phone {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    bottom: 0;
+    width: min(60%, 280px);
+    translate: -50% 0;
+    overflow: clip;
+    border: 8px solid #1b2133;
+    border-bottom: 0;
+    border-radius: 34px 34px 0 0;
+    background: #f7f8fa;
+    box-shadow: 0 20px 50px rgb(0 0 0 / 0.2);
+  }
+
+  .pic .phone :global(img) {
+    height: auto;
+    object-fit: initial;
+  }
+
+  /* Where you are: only on wide screens */
+  .rail {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .work {
+      --top: 110px;
+    }
+    .card {
+      grid-template-rows: none;
+      grid-template-columns: 380px minmax(0, 1fr);
+      height: min(560px, calc(100vh - var(--top) - 110px));
+    }
+    .info {
+      padding: 38px 34px 40px;
+    }
+    .info p {
+      font-size: 16px;
+    }
+    .card h3 {
+      font-size: 38px;
+    }
+    .visit {
+      margin-top: auto;
+    }
+    .pic {
+      min-height: 0;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    /* Room on the right for the list, inside the page's own margins */
+    .stack {
+      margin-right: 220px;
+    }
+    .rail {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: block;
+      width: 196px;
+    }
+    /* The list sticks as one block, so it stays together and scrolls away
+       with the end of the stack */
+    .rail__in {
+      position: sticky;
+      top: calc(50vh - 100px);
+    }
+    .rail__num {
+      display: flex;
+      align-items: baseline;
+      font: 700 112px/0.85 var(--font-display);
+      color: #fff;
+    }
+    .rail__num span {
+      margin-left: 6px;
+      font-size: 32px;
+      color: rgb(255 255 255 / 0.35);
+    }
+    .rail__name {
+      margin-top: 14px;
+      font: 700 12px var(--font-body);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .rail__num.is-new b,
+      .rail__name.is-new {
+        animation: rail-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+    }
+    /* A segment per card: drawn thin, but each is a 44px-tall link */
+    .rail__segs {
+      display: flex;
+      gap: 6px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .rail__segs li {
+      flex: 1;
+    }
+    .rail__segs a {
+      display: flex;
+      align-items: center;
+      height: 44px;
+    }
+    .rail__segs i {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: rgb(255 255 255 / 0.14);
+      transition: background-color 0.25s, transform 0.25s;
+    }
+    .rail__segs a:hover i {
+      background: rgb(255 255 255 / 0.4);
+      transform: scaleY(1.5);
+    }
+    .rail__segs a.is-done i {
+      background: rgb(255 255 255 / 0.55);
+    }
+    .rail__segs a.is-on i {
+      background: #fff;
+    }
+    .rail__segs a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    .rail__next {
+      display: inline-block;
+      margin-top: 4px;
+      font: 400 13px var(--font-body);
+      color: rgb(255 255 255 / 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .rail__next b {
+      font-weight: 700;
+      color: rgb(255 255 255 / 0.8);
+    }
+    .rail__next:hover {
+      color: rgb(255 255 255 / 0.75);
+    }
+    .rail__next[hidden] {
+      display: none;
+    }
+  }
+</style>

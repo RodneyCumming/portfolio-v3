@@ -1,0 +1,639 @@
+---
+import { Picture } from 'astro:assets';
+import mountainsBack from '../assets/mountains-back.png';
+
+// Three gulls crossing the sky: a pair, and one further off on its own.
+// --c is the length of one flap-and-glide cycle; the negative delays keep
+// them out of step with each other.
+const gulls = [
+  { y: 112, d: 38, delay: -6, s: 0.9, c: 3.4, cd: -0.2 },
+  { y: 142, d: 40, delay: -8, s: 0.72, c: 3.9, cd: -1.7 },
+  { y: 196, d: 58, delay: -30, s: 0.55, c: 4.6, cd: -2.9 },
+];
+---
+
+<!--
+  Same art and layout as the 2020 site. The old version scrolled the whole page
+  inside a 3D "perspective" container; this keeps the same layer speeds but
+  drives them from the normal page scroll with CSS scroll-driven animations,
+  so scrolling, the scrollbar and back/forward position all behave natively.
+  --lag is how far behind the page each layer falls: 0.75 moves at a quarter
+  of scroll speed, 0 moves with the page.
+-->
+<section class="hero" aria-labelledby="hero-name">
+  <div class="layer sky" style="--lag: 0.75">
+    <div class="sky__box">
+      <!-- Gulls crossing the sky, side on, in the original faceted style.
+           Two animated numbers drive the wings: --a lifts the inner wing
+           (shoulder to wrist), --b the outer wing, a beat behind. Each
+           moving facet is the same triangle as the old sprite frames, placed
+           by a transform built from those numbers, so the wingbeat is smooth
+           at the screen's refresh rate instead of stepping through frames. -->
+      <div class="birds" aria-hidden="true" data-live>
+        {gulls.map((g) => (
+          <span class="bird" style={`--y: ${g.y}px; --d: ${g.d}s; --delay: ${g.delay}s; --s: ${g.s}`}>
+            <svg class="gull loop" viewBox="0 0 48 44" width="48" height="44" style={`--c: ${g.c}s; --cd: ${g.cd}s`}>
+              <g class="gull__body">
+                <!-- far wing: a greyer, shorter echo behind the body -->
+                <g transform="translate(21 22)">
+                  <polygon class="f-in" points="0,0 3,-8 7,0" fill="#b3bec8" />
+                  <polygon class="f-trail" points="0,0 1,0 0,1" fill="#b3bec8" />
+                </g>
+                <!-- beak, head, back, belly, tail -->
+                <polygon points="3,23 8,21 8,24" fill="#aab6c1" />
+                <polygon points="8,21 14,19 15,24 8,24" fill="#ffffff" />
+                <polygon points="14,19 30,21 15,24" fill="#f3f6f8" />
+                <polygon points="15,24 30,21 28,25" fill="#dfe6eb" />
+                <polygon points="28,21 42,18 39,23 29,25" fill="#eaeff2" />
+                <!-- near wing: trailing edge, inner panel, then the outer
+                     panel riding on the wrist -->
+                <g transform="translate(21 22)">
+                  <polygon class="w-trail" points="0,0 1,0 0,1" fill="#c9d2da" />
+                  <polygon class="w-in" points="0,0 3,-10 8,0" fill="#dbe2e8" />
+                  <g class="w-out">
+                    <polygon points="0,0 8,-11 11,-2" fill="#c3ccd4" />
+                    <polygon points="5.6,-7.7 8,-11 8.9,-6.9" fill="#949fa9" />
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </span>
+        ))}
+      </div>
+      <div class="heading">
+        <img class="cloud cloud--right" src="/images/cloud.svg" alt="" width="222" height="55" />
+        <div class="name-wrap"><h1 id="hero-name" class="name" data-text="RODNEY CUMMING">RODNEY CUMMING</h1></div>
+        <p class="role">Developer</p>
+        <img class="cloud cloud--left" src="/images/cloud-2.svg" alt="" width="200" height="42" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Morphing facets: Chrome and Edge paint the name with a live mesh
+       (public/worklets/facets.js); other browsers keep the faceted texture. -->
+  <script is:inline>
+    if (window.CSS && CSS.paintWorklet) {
+      CSS.paintWorklet.addModule('/worklets/facets.js').then(function () {
+        document.documentElement.classList.add('facets-live');
+      });
+      // Stop repainting the mesh while the hero is off screen
+      document.addEventListener('DOMContentLoaded', function () {
+        var hero = document.querySelector('.hero');
+        if (!hero || !window.IntersectionObserver) return;
+        new IntersectionObserver(function (e) {
+          document.documentElement.classList.toggle('hero-away', !e[0].isIntersecting);
+        }).observe(hero);
+      });
+    }
+  </script>
+
+  <!-- Each layer is a wrapper (parallax) around its art (intro), so the two
+       animations never fight over the same element -->
+  <div class="layer range range--1" style="--lag: 0.6; --i: 1">
+    <Picture
+      class="art"
+      src={mountainsBack}
+      formats={['avif', 'webp']}
+      width={3000}
+      height={455}
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      sizes="3000px"
+    />
+  </div>
+  <div class="layer range range--2" style="--lag: 0.5; --i: 2">
+    <img class="art" src="/images/mountains-2.svg" alt="" width="3000" height="455" fetchpriority="high" />
+  </div>
+  <div class="layer range range--3" style="--lag: 0.333; --i: 3">
+    <img class="art" src="/images/mountains-3.svg" alt="" width="3000" height="455" fetchpriority="high" />
+  </div>
+  <div class="range--4" style="--i: 4">
+    <img class="art" src="/images/mountains-4.svg" alt="" width="3000" height="200" fetchpriority="high" />
+  </div>
+</section>
+
+<!--
+  Intro: the scene stays hidden only until its images and fonts are decoded
+  (or 1.2 s, whichever comes first), then comes in back to front in one smooth
+  pass. That avoids the old pop-in where layers arrived one by one. It plays
+  once per visit; later page views show the hero straight away.
+-->
+<script is:inline>
+  (function () {
+    var d = document.documentElement;
+    if (!d.classList.contains('intro')) return;
+    var go = function () {
+      if (d.classList.contains('intro-go')) return;
+      requestAnimationFrame(function () {
+        d.classList.add('intro-go');
+      });
+    };
+    var imgs = [].slice.call(document.querySelectorAll('.hero img'));
+    var ready = imgs.map(function (img) {
+      return img.decode ? img.decode().catch(function () {}) : Promise.resolve();
+    });
+    if (document.fonts) ready.push(document.fonts.ready);
+    Promise.all(ready).then(go);
+    setTimeout(go, 1200);
+  })();
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    /* The front range sits in the flow; everything after it scrolls normally */
+    padding-top: 450px;
+    overflow-x: clip;
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      padding-top: 650px;
+    }
+  }
+
+  .layer {
+    position: absolute;
+    left: 50%;
+    margin-left: -1500px;
+    width: 3000px;
+    will-change: transform;
+  }
+
+  .sky {
+    top: 0;
+  }
+
+  .sky__box {
+    height: 850px;
+    background: var(--jagged-ice);
+    box-shadow: inset 0 0 400px -150px #000;
+    /* Inset shadow on the visible width only, like the old 101vw box */
+    width: 101vw;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .birds {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bird {
+    position: absolute;
+    top: var(--y);
+    left: 0;
+    width: 48px;
+    height: 44px;
+    scale: var(--s);
+    translate: calc(101vw + 60px) 0;
+  }
+
+  .gull {
+    display: block;
+    overflow: visible;
+    --a: -0.3;
+    --b: -0.4;
+  }
+
+  /* Inner wing: the wrist sits 10 up from the shoulder at --a 1, 10 down
+     at -1 (the same geometry as the old sprite, narrower and swept back). The outer wing hangs off the wrist and scales by --b. The
+     trailing facets join moving points, so each is a unit triangle mapped
+     onto its three corners with a matrix. */
+  .w-in {
+    transform: scaleY(var(--a));
+  }
+
+  .w-out {
+    transform: translate(3px, calc(var(--a) * -10px)) scaleY(var(--b));
+  }
+
+  .w-trail {
+    transform: matrix(11, calc(var(--b) * -2), 5, calc(var(--a) * 10), 3, calc(var(--a) * -10));
+  }
+
+  .f-in {
+    transform: scaleY(var(--a));
+  }
+
+  .f-trail {
+    transform: matrix(3, calc(var(--b) * -8), 4, calc(var(--a) * 8), 3, calc(var(--a) * -8));
+  }
+
+  .gull__body {
+    transform-origin: 22px 22px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .bird {
+      animation:
+        fly var(--d) linear var(--delay) infinite,
+        glide 5s ease-in-out var(--delay) infinite alternate;
+    }
+    .gull {
+      animation:
+        wing-in var(--c) ease-in-out var(--cd) infinite,
+        wing-out var(--c) ease-in-out var(--cd) infinite;
+    }
+    .gull__body {
+      animation: gull-bob var(--c) ease-in-out var(--cd) infinite;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .birds {
+      display: none;
+    }
+  }
+
+  @keyframes fly {
+    to {
+      translate: -80px 0;
+    }
+  }
+
+  /* A gentle rise and fall as they go */
+  @keyframes glide {
+    from {
+      transform: translateY(-6px);
+    }
+    to {
+      transform: translateY(8px);
+    }
+  }
+
+  @property --a {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: -0.3;
+  }
+
+  @property --b {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: -0.4;
+  }
+
+  /* One cycle: three slow, deep beats, then a long glide with the wings
+     held out, a little below the body (seen from below). 1 is fully up, -1 fully down. The outer wing runs
+     a beat behind the inner one, so the wing bends and whips. The easing
+     applies to each step. */
+  @keyframes wing-in {
+    0%, 100% { --a: -0.3; }
+    6% { --a: 1; }
+    13% { --a: -0.85; }
+    20% { --a: 1; }
+    27% { --a: -0.85; }
+    34% { --a: 1; }
+    41% { --a: -0.85; }
+    50% { --a: -0.3; }
+    75% { --a: -0.24; }
+  }
+
+  @keyframes wing-out {
+    0%, 100% { --b: -0.4; }
+    3% { --b: -0.45; }
+    9% { --b: 1; }
+    16% { --b: -0.7; }
+    23% { --b: 1; }
+    30% { --b: -0.7; }
+    37% { --b: 1; }
+    44% { --b: -0.7; }
+    54% { --b: -0.45; }
+    78% { --b: -0.34; }
+  }
+
+  /* The body lifts on each downstroke; in the glide it sinks a little and
+     noses down, until the next beats lift it again */
+  @keyframes gull-bob {
+    0%, 100% { transform: translateY(1.6px) rotate(-3deg); }
+    9.5% { transform: translateY(-0.6px) rotate(0deg); }
+    16.5% { transform: translateY(1px) rotate(0deg); }
+    23.5% { transform: translateY(-1.2px) rotate(0deg); }
+    30.5% { transform: translateY(0.4px) rotate(0deg); }
+    37.5% { transform: translateY(-1.6px) rotate(0deg); }
+    50% { transform: translateY(-1.2px) rotate(0deg); }
+  }
+
+  .heading {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 160px;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .heading {
+      padding-top: 250px;
+    }
+  }
+
+  .name {
+    margin: 0 20px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    /* Fits a phone's width instead of running off the edge */
+    font-size: clamp(36px, 12vw, 110px);
+    line-height: 0.82;
+    color: #00c2e6;
+    background-image: url('/images/hero-text-bg-static.svg');
+    background-size: 500px;
+    background-position: center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+  }
+
+  /* Two more copies of the facet pattern, clipped to the same letters at other
+     scales and blend modes, for a richer static texture where the live
+     facets (CSS Paint API) aren't supported. */
+  .name::before,
+  .name::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/hero-text-bg-static.svg');
+    background-position: center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    pointer-events: none;
+  }
+
+  .name::before {
+    background-size: 340px;
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+  }
+
+  .name::after {
+    background-size: 760px;
+    mix-blend-mode: screen;
+    opacity: 0.45;
+  }
+
+  /* Phones: the name on two lines, RODNEY over CUMMING, as big as the
+     width allows, and a little higher so it clears the peaks */
+  @media (max-width: 767px) {
+    .heading {
+      padding-top: 104px;
+    }
+    .name {
+      font-size: min(22vw, 120px);
+      line-height: 0.86;
+    }
+  }
+
+  .role {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 5px;
+    margin-top: 4px;
+    /* Deep enough to read on the pale sky (4.7:1) */
+    color: #2a6680;
+  }
+
+  @media (min-width: 768px) {
+    .role {
+      font-size: 26px;
+    }
+  }
+
+  /* The 2020 cloud; the left one is a mirrored, flatter copy so the two differ */
+  .cloud {
+    position: absolute;
+    height: 55px;
+    width: auto;
+  }
+
+  .cloud--right {
+    top: 220px;
+    right: -300px;
+  }
+
+  .cloud--left {
+    width: 200px;
+    height: 42px;
+    bottom: 0;
+    left: -300px;
+  }
+
+  .range {
+    height: 455px;
+  }
+
+  .range--1 {
+    top: 235px;
+  }
+  .range--2 {
+    top: 238px;
+  }
+  /* The old site set this layer back in its 3D parallax without scaling it
+     up again, so it showed at two-thirds size: a distant row of small peaks
+     between the back ranges and the front one. Same size and place here. */
+  .range--3 {
+    top: 374px;
+  }
+  .range--3 .art {
+    width: 2000px;
+    height: 303px;
+    /* The old 3D origin sat right of centre, so the row sits a little left */
+    margin-left: calc(250px + 8.333vw);
+  }
+
+  @media (min-width: 768px) {
+    .range--1 {
+      top: 435px;
+    }
+    .range--2 {
+      top: 438px;
+    }
+    .range--3 {
+      top: 531px;
+    }
+  }
+
+  .range--4 {
+    position: relative;
+    width: 3000px;
+    height: 200px;
+    margin-left: calc(50% - 1500px);
+  }
+
+
+  /* Parallax. Unsupported browsers get the same scene, standing still. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .layer {
+        animation: lag linear both;
+      }
+      /* Kept in a separate rule: if the minifier folds animation-timeline
+         into the animation shorthand, Chrome drops the whole declaration. */
+      .hero .layer {
+        animation-timeline: scroll(root block);
+        animation-range: 0 1000px;
+      }
+    }
+  }
+
+  /* Live facets: the triangles themselves drift and change shape over time
+     (on a clock only; scrolling doesn't affect the name). */
+  @property --facet-t {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  :global(html.facets-live) .name {
+    background-image: paint(facets);
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+
+  :global(html.facets-live) .name::before,
+  :global(html.facets-live) .name::after {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.facets-live) .name {
+      animation: facet-clock 3600s linear infinite;
+    }
+  }
+
+  :global(html.hero-away) .name {
+    animation-play-state: paused;
+  }
+
+  @keyframes facet-clock {
+    to {
+      --facet-t: 3600;
+    }
+  }
+
+  @keyframes lag {
+    to {
+      transform: translateY(calc(var(--lag) * 1000px));
+    }
+  }
+
+  .art {
+    display: block;
+    width: 3000px;
+    height: 100%;
+  }
+
+  /* Intro, back to front. Hidden only while html has .intro but not yet
+     .intro-go; with no JavaScript neither class is set, so it simply shows.
+     "Hidden" is opacity 0.01, not 0: it looks the same, but Chrome only
+     counts an element for Largest Contentful Paint if it's painted visible
+     to begin with, and a page with no LCP gets no performance score. */
+  :global(html.intro:not(.intro-go)) .art,
+  :global(html.intro:not(.intro-go)) .birds,
+  :global(html.intro:not(.intro-go)) .name-wrap,
+  :global(html.intro:not(.intro-go)) .role,
+  :global(html.intro:not(.intro-go)) .cloud {
+    opacity: 0.01;
+  }
+
+  :global(html.intro-go) .art {
+    animation: intro-rise 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 1) * 90ms);
+  }
+  .range--1 .art {
+    --rise: 30px;
+  }
+  .range--2 .art {
+    --rise: 50px;
+  }
+  .range--3 .art {
+    --rise: 70px;
+  }
+  .range--4 .art {
+    --rise: 90px;
+  }
+
+  :global(html.intro-go) .name-wrap {
+    animation: intro-focus 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+  }
+  :global(html.intro-go) .birds {
+    animation: intro-fade 1.6s ease-out 0.9s both;
+  }
+  :global(html.intro-go) .role {
+    animation: intro-fade 1s ease-out 0.7s both;
+  }
+  /* Clouds glide side to side, level, for as long as the page is open. The
+     glide moves `transform` and the intro moves `translate`, so the two add
+     together and the glide picks up seamlessly where the intro drift ends. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cloud--right {
+      animation: glide-a 9s ease-in-out infinite alternate;
+    }
+    .cloud--left {
+      animation: glide-b 11s ease-in-out -3s infinite alternate;
+    }
+    :global(html.intro-go) .cloud--right {
+      animation:
+        intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both,
+        glide-a 9s ease-in-out infinite alternate;
+      --from: 120px;
+    }
+    :global(html.intro-go) .cloud--left {
+      animation:
+        intro-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both,
+        glide-b 11s ease-in-out -3s infinite alternate;
+      --from: -120px;
+    }
+  }
+
+  @keyframes glide-a {
+    to {
+      transform: translateX(-70px);
+    }
+  }
+  @keyframes glide-b {
+    to {
+      transform: translateX(80px);
+    }
+  }
+
+  @keyframes intro-fade {
+    from {
+      opacity: 0.01;
+    }
+  }
+  @keyframes intro-rise {
+    from {
+      opacity: 0.01;
+      translate: 0 var(--rise, 40px);
+    }
+  }
+  @keyframes intro-focus {
+    from {
+      opacity: 0.01;
+      filter: blur(8px);
+      scale: 0.97;
+    }
+  }
+  @keyframes intro-drift {
+    from {
+      opacity: 0.01;
+      translate: var(--from) 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.intro-go) .art,
+    :global(html.intro-go) .name-wrap,
+    :global(html.intro-go) .role,
+    :global(html.intro-go) .cloud {
+      animation: intro-fade 0.4s ease-out both;
+    }
+  }
+</style>

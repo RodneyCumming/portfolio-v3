@@ -1,0 +1,307 @@
+---
+import Odo from './Odo.astro';
+// The intro lights up word by word as it scrolls through the view
+const intro = 'I specialise in frontend, with over ten years of experience.';
+const words = intro.split(' ');
+// Line icons on a 24-unit grid
+const steps = [
+  ['Performance and SEO', 'Fast load times, solid Core Web Vitals, and pages that search engines can crawl and index.', 'M13 2 L4 13.5 H11 L10 22 L20 9.5 H13 Z'],
+  ['UI and UX', 'Clear layouts, considered interactions, and accessible components that work across devices.', 'M10.5 3.5 a7 7 0 1 0 0.01 0 M15.5 15.5 L21 21 M7.5 10.5 H13.5 M10.5 7.5 V13.5'],
+  ['Monitoring', 'Analytics, error tracking and logging, so issues are found and fixed quickly.', 'M2 12.5 H6.5 L9 6 L13 19 L16 9.5 L18 12.5 H22'],
+];
+---
+
+<section class="section about" aria-labelledby="about-heading">
+  <div class="section__inner">
+    <p class="eyebrow" data-live><Odo value="01" />&nbsp; About</p>
+    <h2 id="about-heading" class="section__heading is-left"><span class="heading-text">ABOUT ME</span></h2>
+    <p class="sub">I build fast, smooth apps and websites <em>that feel great to use.</em></p>
+    <p class="lede">
+      {words.map((w, i) => (
+        <>
+          <span class="w" style={`--a: ${(i / words.length).toFixed(3)}`}>{w}</span>{' '}
+        </>
+      ))}
+    </p>
+
+    <!-- A stepper that builds itself as you scroll: each ring draws, then its
+         icon, then a line runs on to the next ring -->
+    <h3 class="steps__title" id="focus-heading">Areas of focus</h3>
+    <ol class="steps" role="list" aria-labelledby="focus-heading">
+      {steps.map(([title, text, icon], i) => (
+        <li style={`--i: ${i}`}>
+          <span class="ring" aria-hidden="true">
+            <svg viewBox="0 0 46 46">
+              <circle cx="23" cy="23" r="21" pathLength="1"></circle>
+              <path d={icon} transform="translate(12 12) scale(0.9167)" pathLength="1"></path>
+            </svg>
+          </span>
+          <h4>{title}</h4>
+          <p>{text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .about {
+    background: var(--ebony-clay);
+  }
+
+  .lede {
+    max-width: 620px;
+  }
+
+
+  .steps {
+    --gap: 32px;
+    position: relative;
+    display: grid;
+    gap: var(--gap);
+    margin: 22px 0 0;
+    padding: 50px 0 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+
+  /* Phone: the steps stack, ring on the left, the line running down */
+  .steps li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    column-gap: 20px;
+    align-items: start;
+  }
+
+  .steps li > :not(.ring) {
+    grid-column: 2;
+  }
+
+  .ring {
+    position: relative;
+    z-index: 1;
+    display: block;
+    grid-row: 1 / span 2;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--ebony-clay);
+  }
+
+  .ring svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .ring circle {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-dasharray: 1;
+    transform: rotate(-90deg);
+    transform-origin: 23px 23px;
+  }
+
+  .ring path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+  }
+
+  /* The line from this ring to the next: a faint track, and the fill that
+     runs along it */
+  .steps li:not(:last-child)::before,
+  .steps li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 22px;
+    top: 23px;
+    width: 2px;
+    height: calc(100% + var(--gap));
+    background: rgb(127 220 245 / 0.14);
+    transform-origin: 50% 0;
+  }
+
+  .steps li:not(:last-child)::after {
+    background: var(--accent);
+  }
+
+  /* The label over the steps, small and quiet under the big heading */
+  .steps__title {
+    margin-top: 80px;
+    font: 700 13px/1 var(--font-body);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  h4 {
+    font: 700 20px var(--font-body);
+    color: var(--ink);
+    margin: 10px 0 0;
+  }
+
+  .steps p {
+    margin-top: 6px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* Wide screens: the steps sit in a row, rings on top, the line running
+     across from one ring to the next */
+  @media (min-width: 900px) {
+    .steps {
+      --gap: 40px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .steps li {
+      display: block;
+    }
+    .steps li:not(:last-child)::before,
+    .steps li:not(:last-child)::after {
+      left: 23px;
+      top: 22px;
+      width: calc(100% + var(--gap));
+      height: 2px;
+      transform-origin: 0 50%;
+    }
+    h4 {
+      margin-top: 22px;
+    }
+    /* After the last ring the line keeps going to the edge of the page
+       and ends in a dot, so the row runs the full width */
+    .steps li:last-child::before,
+    .steps li:last-child::after {
+      content: '';
+      position: absolute;
+      left: 23px;
+      top: 22px;
+      width: calc(100% - 23px - 5px);
+      height: 2px;
+      background: rgb(127 220 245 / 0.14);
+      transform-origin: 0 50%;
+    }
+    .steps li:last-child::after {
+      background: var(--accent);
+    }
+    .steps::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: calc(50px + 23px - 5px);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgb(127 220 245 / 0.14);
+    }
+  }
+
+  /* Scroll choreography, all on one timeline so it plays in order: ring 1
+     and its icon draw, the line runs to ring 2, ring 2 draws, and so on. The
+     intro lights up word by word above it. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .lede {
+        view-timeline: --lede block;
+      }
+      .w {
+        animation: light-up linear both;
+      }
+      .about .w {
+        animation-timeline: --lede;
+        animation-range: cover calc(4vh + var(--a) * 30vh) cover calc(9vh + var(--a) * 30vh);
+      }
+
+      .steps {
+        view-timeline: --steps block;
+      }
+      .ring circle {
+        animation: draw linear both;
+      }
+      .about .ring circle {
+        animation-timeline: --steps;
+        animation-range: cover calc(6vh + var(--i) * 13vh) cover calc(11vh + var(--i) * 13vh);
+      }
+      .ring path {
+        animation: draw linear both;
+      }
+      .about .ring path {
+        animation-timeline: --steps;
+        animation-range: cover calc(8vh + var(--i) * 13vh) cover calc(14vh + var(--i) * 13vh);
+      }
+      .steps h4,
+      .steps p {
+        --rise: 12px;
+        animation: fade-rise linear both;
+      }
+      .about .steps h4,
+      .about .steps p {
+        animation-timeline: --steps;
+        animation-range: cover calc(8vh + var(--i) * 13vh) cover calc(14vh + var(--i) * 13vh);
+      }
+      .steps li:not(:last-child)::after {
+        animation: run-y linear both;
+      }
+      .about .steps li::after {
+        animation-timeline: --steps;
+        animation-range: cover calc(12vh + var(--i) * 13vh) cover calc(19vh + var(--i) * 13vh);
+      }
+      @media (min-width: 900px) {
+        .steps li::after {
+          animation: run-x linear both;
+        }
+        .steps::after {
+          animation: pop linear both;
+        }
+        .about .steps::after {
+          animation-timeline: --steps;
+          animation-range: cover 45vh cover 49vh;
+        }
+      }
+    }
+  }
+
+  @keyframes light-up {
+    from {
+      color: rgb(154 163 189 / 0.28);
+    }
+    to {
+      color: #c9cfe2;
+    }
+  }
+
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes pop {
+    from {
+      transform: scale(0);
+    }
+  }
+
+  @keyframes run-y {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes run-x {
+    from {
+      transform: scaleX(0);
+    }
+  }
+</style>

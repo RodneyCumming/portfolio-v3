@@ -1,0 +1,24 @@
+---
+/*
+  A number on a mechanical counter: each digit is a reel that rolls to its
+  value. It rolls in from 0 the first time its [data-live] block is seen,
+  and scripts can roll it to a new value with window.setOdo(el, '12:05').
+*/
+interface Props {
+  value: string;
+}
+const { value } = Astro.props;
+const digits = Array.from({ length: 10 }, (_, n) => n);
+---
+
+<span class="odo" data-odo aria-hidden="true">
+  {[...value].map((c, i) =>
+    /\d/.test(c) ? (
+      <span class="odo__col" style={`--d: ${c}; --i: ${i}`}>
+        <span class="odo__reel">{digits.map((n) => <i>{n}</i>)}</span>
+      </span>
+    ) : (
+      <span class="odo__sep">{c}</span>
+    )
+  )}
+</span><span class="visually-hidden">{value}</span>
